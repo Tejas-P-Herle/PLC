@@ -1,14 +1,6 @@
-verbose = None
-
-def status_set_verbose(val):
-	global verbose
-	verbose = (val == 'y')
-
-def print_v(*args, **kwargs):
-	if verbose:
-		print(*args, **kwargs)
+from mod_class import ModClass
 
 
-class Status:
+class Status(ModClass):
 	def __init__(self):
 		self.condition = None

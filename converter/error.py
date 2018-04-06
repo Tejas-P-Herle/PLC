@@ -1,18 +1,8 @@
 import sys
-
-verbose = None
-
-
-def error_set_verbose(val):
-	global verbose
-	verbose = (val == 'y')
-
-def print_v(*args, **kwargs):
-	if verbose:
-		print(*args, **kwargs)
+from mod_class import ModClass
 
 
-class Error():
+class Error(ModClass):
 	error_class_dict = {'01': 'File Operation Error',
 						'02': 'Input Parameter Error',
 						'03': 'User Input Error'}
@@ -25,14 +15,14 @@ class Error():
 	error_dict = {0: error_class_dict, 1: error_sub_class_dict, 2: error_description_dict}
 	
 	def __init__(self, error_code, raise_error=True, *args, **kwargs):
-		print_v('\nInitiating Error Class...')
-		print_v('Getting error_class...')
+		self.print_v('\nInitiating Error Class...')
+		self.print_v('Getting error_class...')
 		error_class = self.get_error_class(error_code)
 		self.error_class = error_class
-		print_v('Getting error_sub_class...')
+		self.print_v('Getting error_sub_class...')
 		error_sub_class = self.get_error_sub_class(error_code)
 		self.error_sub_class = error_sub_class
-		print_v('Getting error_description...')
+		self.print_v('Getting error_description...')
 		error_description = self.get_error_description(error_code)
 		if kwargs:
 			for key, value in kwargs.items():
@@ -42,7 +32,7 @@ class Error():
 		
 		
 		if raise_error:
-			print_v('Raising Error...')
+			self.print_v('Raising Error...')
 			print('\n{}[{}]: {}\n'.format(error_class, error_sub_class, error_description))
 			
 			sys.exit('error_code: {}'.format(error_code))
@@ -70,11 +60,11 @@ class Error():
 			error_section_content = 'error_description'
 		else:
 			raise ValueError('Invalid error section_start value')
-		print_v('{}_code: {}'.format(error_section_content, error_section_code))
+		self.print_v('{}_code: {}'.format(error_section_content, error_section_code))
 		error_section_number = section_start / 2
 		if error_section_code in self.error_dict[error_section_number].keys():
 			error_section = self.error_dict[error_section_number][error_section_code]
 		else:
 			error_section = 'Unknown Error'
-		print_v('{}: {}'.format(error_section_content, error_section))
+		self.print_v('{}: {}'.format(error_section_content, error_section))
 		return error_section

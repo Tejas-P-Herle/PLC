@@ -1,21 +1,12 @@
 from file_class import File
+from mod_class import ModClass
 
-
-verbose = None
-
-def java_set_verbose(val):
-	global verbose
-	verbose = (val == 'y')
-
-def print_v(*args, **kwargs):
-	if verbose:
-		print(*args, **kwargs)
 	
-class JavaConverter:
+class JavaConverter(ModClass):
 	file = []
 	
 	def __init__(self):
-		print_v('\nInitiating JavaConverter Class...')
+		self.print_v('\nInitiating JavaConverter Class...')
 		#self.file.new_row()
 		
 	def convert_file(self, file):
