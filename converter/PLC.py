@@ -1,8 +1,7 @@
-import sys
-from file_class import File
-from convert import Convert
-from options import Options
-from mod_class import ModClass
+from converter.file_class import File
+from converter.convert import Convert
+from converter.options import Options
+from converter.mod_class import ModClass
 
 
 verbose_options = {'ask': False, 'verbose_value': 'y'}
@@ -23,14 +22,14 @@ def main():
     print('Setting verbose to', verbose)
     set_verbose(verbose)
     
-    print('Requesting in_file paramaters')
+    print('Requesting in_file parameters')
     in_file = File().get_file()
     print('\nin_file:', in_file.name)
     
-    print('\nGetting options for convertion...')
+    print('\nGetting options for conversion...')
     options = Options.get('default conversion')
     
-    print('\nInitiating convertions of in_file')
+    print('\nInitiating conversions of in_file')
     out_file = Convert(in_file, options)
     
     print('\nGetting options for out_file...')
@@ -41,10 +40,12 @@ def main():
     
     print('\nProgram Execution Successful. Press any key to continue...')
     return 0
-    
+
+
 def set_verbose(verbose):
     ModClass.verbose = verbose
-    
+
+
 if __name__ == '__main__':
     main()
     input()

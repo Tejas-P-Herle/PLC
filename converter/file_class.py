@@ -1,9 +1,9 @@
 import os
-from input_cls import Input
-from status import Status
-from error import Error
-from options import Options
-from mod_class import ModClass
+from converter.input_cls import Input
+from converter.status import Status
+from converter.error import Error
+from converter.options import Options
+from converter.mod_class import ModClass
 
 
 print_option = 'f'
@@ -12,7 +12,11 @@ print_option = 'f'
 class File(ModClass):
     file = []
     
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.print_v('\nInitiating File Class...')
+        self.length = None
+        self.name = None
         self.print_v('\n')
         
     @classmethod
@@ -41,7 +45,7 @@ class File(ModClass):
         cls.print_v('Checking file_path validity')
         status = cls.check_file_path(response)
         if status.condition != 'passed':
-            self.print_v('Incorrect file_path')
+            cls.print_v('Incorrect file_path')
             raise ValueError('Incorrect file path value')
         file_path = response
         cls.print_v('file_path:', file_path)
@@ -63,7 +67,7 @@ class File(ModClass):
         file_exists = cls.isfile(file_path)
         if not file_exists:
             cls.print_v("File doesn't exist")
-            cls.print_v('Raising error File opetaion error...')
+            cls.print_v('Raising error File operation error...')
             status.condition = 'failed'
             err_code_cls, err_code_sub_cls, err_code_desc = '01', '01', '01'
             error_code = err_code_cls + err_code_sub_cls + err_code_desc
@@ -86,7 +90,7 @@ class File(ModClass):
         return file_exists
     
     @classmethod
-    def write_file(self, file, options):
+    def write_file(cls, file, options):
         pass
         
     def open(self, file_path):
@@ -98,13 +102,12 @@ class File(ModClass):
                 self.print_v('File name:', self.name)
                 self.length = len(file_lines)
                 self.print_v('File Length: {} lines'.format(self.length))
+                options = Options()
                 if print_option == 'o':
-                    options = Options()
                     options.detail = 'overview'
                     options.overview = Options()
                     options.overview.lines = 2
                 else:
-                    options = Options()
                     options.detail = 'full'
                 self.print_file(options)
         except Exception as e:
@@ -116,7 +119,7 @@ class File(ModClass):
         elif options.detail == 'overview':
             no_of_lines = options.overview.lines
             self.print_v('no_of_lines:', no_of_lines)
-            if no_of_lines >= self.length - 2 and no_of_lines <= self.length:
+            if (self.length - 3) < no_of_lines and (no_of_lines - 1) < self.length:
                 self.print_v('File Lines(All):\n' + ''.join(self.file) + '\n---EOF---')
             elif no_of_lines > self.length - 2:
                 err_code_cls, err_code_sub_cls, err_code_desc = '01', '02', '01'
