@@ -1,11 +1,12 @@
 from converter.file_class import File
-from converter.mod_class import ModClass
+from converter.language import Language
 
 
-class JavaConverter(ModClass):
+class Java(Language):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.print_v('\nInitiating JavaConverter Class...')
+        self.print_v('\nInitiating Java Class...')
+        self.ext = '.java'
         self.file = File()
         # self.file.new_row()
 

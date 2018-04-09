@@ -1,69 +1,120 @@
 import sys
+import time
+import os
 from converter.mod_class import ModClass
 
 
-class Error(ModClass):
-    error_class_dict = {'01': 'File Operation Error',
-                        '02': 'Input Parameter Error',
-                        '03': 'User Input Error'}
-    error_sub_class_dict = {'0101': 'File Not Found', '0102': 'File Read Error', '0201': 'Parameter Value Error',
-                            '0301': 'Input Value Error'}
-    error_description_dict = {'010101': 'Target File {file_path} was not found',
-                              '010201': 'Failed to read target file {file_name}',
-                              '020101': "Invalid value for '{function_name}' function, input parameter '{parameter}'",
-                              '030101': "Unknown Language: '{language}'"}
-    error_dict = {0: error_class_dict, 1: error_sub_class_dict, 2: error_description_dict}
+CURR_PATH = os.path.dirname(os.path.realpath(__file__))
 
-    def __init__(self, error_code, raise_error=True, *args, **kwargs):
+
+class Error(ModClass):
+    err_cls_dict = {}
+    err_sub_cls_dict = {}
+    err_desc_dict = {}
+    err_dict = {0: err_cls_dict, 1: err_sub_cls_dict, 2: err_desc_dict}
+
+    def __init__(self, err_code_cls, err_code_sub_cls, err_code_desc, raise_error=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.print_v('\nInitiating Error Class...')
-        self.print_v('Getting error_class...')
-        error_class = self.get_error_class(error_code)
-        self.error_class = error_class
-        self.print_v('Getting error_sub_class...')
-        error_sub_class = self.get_error_sub_class(error_code)
-        self.error_sub_class = error_sub_class
-        self.print_v('Getting error_description...')
-        error_description = self.get_error_description(error_code)
+
+        self.print_v('Reading Error DB...')
+        self.read_err_db()
+
+        self.print_v('Sorting Error code')
+        err_sec = []
+        err_code_sub_cls = err_code_cls + err_code_sub_cls
+        err_code_desc = err_code_sub_cls + err_code_desc
+        i = 0
+        for err_sec_cont, err_sec_code in {'err_cls': err_code_cls,
+                                           'err_sub_cls': err_code_sub_cls,
+                                           'err_desc': err_code_desc}.items():
+            self.print_v('Getting {}...'.format(err_sec_cont))
+            err_sec.append(self.get_err_code_sec(err_sec_code, i, err_sec_cont))
+            i += 1
+
+        self.err_cls = err_cls = err_sec[0]
+        self.err_sub_cls = err_sub_cls = err_sec[1]
+        self.err_desc = err_desc = err_sec[2]
+
+        self.print_v('Replacing Key Words...')
         if kwargs:
             for key, value in kwargs.items():
-                key = '{' + key + '}'
-                error_description = error_description.replace(key, value)
-        self.error_description = error_description
+                err_desc = self.replace(err_desc, key, value)
+            self.err_desc = err_desc
+
+        self.print_v('Forming Print Message...')
+        err_msg = '{}[{}]: {}'.format(err_cls, err_sub_cls, err_desc)
+
+        self.print_v('Logging Error...')
+        log_file_path = CURR_PATH.replace('converter', 'err.log')
+        sys.stderr = open(log_file_path, 'a+')
+        log_text = '[{}] {}\n'.format(time.asctime(time.localtime(time.time())).replace('  ', ' '), err_msg)
+        sys.stderr.write(log_text)
 
         if raise_error:
-            self.print_v('Raising Error...')
-            print('\n{}[{}]: {}\n'.format(error_class, error_sub_class, error_description))
+            self.print_v('Raising Error...\n')
+            print(err_msg)
 
-            sys.exit('error_code: {}'.format(error_code))
+            sys.exit(1)
 
-    def get_error_class(self, error_code):
-        error_class_section_start = 0
-        return self.get_error_code_section(error_code, error_class_section_start)
+    @classmethod
+    def replace(cls, err_msg, key, val):
+        cls.print_v('Error Class: Method replace initiated')
 
-    def get_error_sub_class(self, error_code):
-        error_sub_class_section_start = 2
-        return self.get_error_code_section(error_code, error_sub_class_section_start)
+        cls.print_v('Replacing key words')
+        key = '{' + key + '}'
+        return err_msg.replace(key, val)
 
-    def get_error_description(self, error_code):
-        error_description_section_start = 4
-        return self.get_error_code_section(error_code, error_description_section_start)
+    @classmethod
+    def read_err_db(cls):
+        cls.print_v('Error Class: Method read_err_db initiated')
 
-    def get_error_code_section(self, error_code, section_start):
-        error_section_code = error_code[0: section_start + 2]
-        if section_start == 0:
-            error_section_content = 'error_class'
-        elif section_start == 2:
-            error_section_content = 'error_sub_class'
-        elif section_start == 4:
-            error_section_content = 'error_description'
+        cls.print_v('Reading File...')
+        err_db_path = CURR_PATH + '\\err_db.txt'
+        with open(err_db_path, 'r') as file:
+            err_db = list(map(lambda x: x.replace('\n', '').replace(',', ''), file.readlines()))
+
+            cls.print_v('Splitting Sections...')
+            err_db_sec = cls.split_sec(err_db)
+
+            cls.print_v('Storing Error Sections...')
+            for i in range(len(err_db_sec)):
+                cls.store_err(i, err_db_sec[i])
+
+    @classmethod
+    def split_sec(cls, err_db):
+        cls.print_v('Error Class: Method split_sec initiated')
+        err_db_sec = [[], [], []]
+
+        cls.print_v('Splitting sections...')
+        sec_no = 0
+        for line in err_db:
+            if not line == '#':
+                err_db_sec[sec_no].append(line)
+            else:
+                sec_no += 1
+
+        return err_db_sec
+
+    @classmethod
+    def store_err(cls, sec_no, sec):
+        cls.print_v('Error Class: Method store_err initiated')
+        sec_dict = cls.err_dict[sec_no]
+
+        cls.print_v('Storing error section...')
+        for line in sec:
+            line_split = line.split(': ', 1)
+            sec_dict[line_split[0]] = line_split[1]
+
+    def get_err_code_sec(self, err_sec_code, err_sec_num, err_cont):
+        self.print_v('Error Class: Method get_err_code initiated')
+        self.print_v('{}_code: {}'.format(err_cont, err_sec_code))
+
+        self.print_v('Getting Section')
+        if err_sec_code in self.err_dict[err_sec_num].keys():
+            err_sec = self.err_dict[err_sec_num][err_sec_code]
         else:
-            raise ValueError('Invalid error section_start value')
-        self.print_v('{}_code: {}'.format(error_section_content, error_section_code))
-        error_section_number = section_start / 2
-        if error_section_code in self.error_dict[error_section_number].keys():
-            error_section = self.error_dict[error_section_number][error_section_code]
-        else:
-            error_section = 'Unknown Error'
-        self.print_v('{}: {}'.format(error_section_content, error_section))
-        return error_section
+            err_sec = 'Unknown Error'
+
+        self.print_v('{}: {}'.format(err_cont, err_sec))
+        return err_sec

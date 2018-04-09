@@ -1,7 +1,8 @@
 from converter.file_class import File
 from converter.convert import Convert
-from converter.options import Options
 from converter.mod_class import ModClass
+from converter.input_cls import Input
+from converter.language import Language
 
 
 verbose_options = {'ask': False, 'verbose_value': 'y'}
@@ -27,13 +28,19 @@ def main():
     print('\nin_file:', in_file.name)
     
     print('\nGetting options for conversion...')
-    options = Options.get('default conversion')
+    options = dict()
+    cnv_queries = {'lang': ['Language(To Convert)', Language.is_lang]}
+    for var_name, query in cnv_queries.items():
+        options[var_name] = Input(query[0], check_func=query[1], raise_error=True)
     
     print('\nInitiating conversions of in_file')
     out_file = Convert(in_file, options)
     
     print('\nGetting options for out_file...')
-    options = Options.get('default out_file')
+    options = dict()
+    out_file_queries = {'out_file_name': ['Output File Name', File.check_file_path]}
+    for var_name, query in out_file_queries.items():
+        options[var_name] = Input(query[0], check_func=query[1], raise_error=True)
     
     print('\nInitiating file write...')
     File.write_file(out_file, options)

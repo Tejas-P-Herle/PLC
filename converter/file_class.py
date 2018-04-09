@@ -2,8 +2,8 @@ import os
 from converter.input_cls import Input
 from converter.status import Status
 from converter.error import Error
-from converter.options import Options
 from converter.mod_class import ModClass
+from converter.language import Language
 
 
 print_option = 'f'
@@ -33,21 +33,9 @@ class File(ModClass):
         cls.print_v("File Class: Method get_file_path initiated")
         cls.print_v('Requesting file path')
         text = 'Source File Path'
-        options = Options()
-        options.text = text
-        user_input = Input(options)
-        cls.print_v('Checking input status')
-        if user_input.status.condition != 'passed':
-            raise RuntimeError('Input Error')
-        # TODO Make own error
+        usr_input = Input(text, cls.check_file_path, raise_error=True)
         cls.print_v('Retrieving file path')
-        response = user_input.response
-        cls.print_v('Checking file_path validity')
-        status = cls.check_file_path(response)
-        if status.condition != 'passed':
-            cls.print_v('Incorrect file_path')
-            raise ValueError('Incorrect file path value')
-        file_path = response
+        file_path = usr_input.response
         cls.print_v('file_path:', file_path)
         return file_path
     
@@ -69,9 +57,8 @@ class File(ModClass):
             cls.print_v("File doesn't exist")
             cls.print_v('Raising error File operation error...')
             status.condition = 'failed'
-            err_code_cls, err_code_sub_cls, err_code_desc = '01', '01', '01'
-            error_code = err_code_cls + err_code_sub_cls + err_code_desc
-            status.error = Error(error_code, raise_error, file_path=file_path)
+            status.error = Error(err_code_cls='01', err_code_sub_cls='01', err_code_desc='01',
+                                 raise_error=raise_error, file_path=file_path)
         # TODO Perform file_path validation
         else:
             cls.print_v('File exists')
@@ -102,29 +89,28 @@ class File(ModClass):
                 self.print_v('File name:', self.name)
                 self.length = len(file_lines)
                 self.print_v('File Length: {} lines'.format(self.length))
-                options = Options()
+                options = dict()
                 if print_option == 'o':
-                    options.detail = 'overview'
-                    options.overview = Options()
-                    options.overview.lines = 2
+                    options['detail'] = 'overview'
+                    options['overview'] = dict()
+                    options['overview']['lines'] = 2
                 else:
-                    options.detail = 'full'
+                    options['detail'] = 'full'
                 self.print_file(options)
         except Exception as e:
             raise e
             
     def print_file(self, options):
-        if options.detail == 'full':
+        if options['detail'] == 'full':
             self.print_v('File Lines(All):\n' + ''.join(self.file) + '\n---EOF---')
-        elif options.detail == 'overview':
-            no_of_lines = options.overview.lines
+        elif options['detail'] == 'overview':
+            no_of_lines = options['overview']['lines']
             self.print_v('no_of_lines:', no_of_lines)
             if (self.length - 3) < no_of_lines and (no_of_lines - 1) < self.length:
                 self.print_v('File Lines(All):\n' + ''.join(self.file) + '\n---EOF---')
             elif no_of_lines > self.length - 2:
-                err_code_cls, err_code_sub_cls, err_code_desc = '01', '02', '01'
-                error_code = err_code_cls + err_code_sub_cls + err_code_desc
-                Error(error_code, raise_error=True, file_name=self.name)
+                Error(err_code_cls='01', err_code_sub_cls='02', err_code_desc='01',
+                      raise_error=True, file_name=self.name)
             else:
                 self.print_v('File Lines(Overview):\n' + ''.join(self.file[0:no_of_lines]), end='')
                 self.print_v('....')

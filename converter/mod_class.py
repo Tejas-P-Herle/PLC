@@ -2,4 +2,5 @@ from converter.verbose import Verbose
 
 
 class ModClass(Verbose):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__()
