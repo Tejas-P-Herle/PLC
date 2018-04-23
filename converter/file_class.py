@@ -54,8 +54,7 @@ class File:
     def write_file(self, options, mode='w'):
         out_file_name = options['out_file_name'].resp
         with open(out_file_name, mode) as file:
-            file_str = ''.join(self.file)
-            file.write(file_str)
+            file.write(self.file)
         
     def open(self, file_path):
 
@@ -69,5 +68,5 @@ class File:
         file = []
         return file
         
-    def write_line(self, line):
-        self.file.append(line)
+    def write_ln(self, ln):
+        self.file.append(ln)

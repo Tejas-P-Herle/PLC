@@ -13,7 +13,7 @@ class Convert:
     def __init__(self, in_file, options_cnv, options_out_file, *args, **kwargs):
         self.options = dict()
 
-        lang = options_cnv['lang'].resp
+        lang = options_cnv['lang'].resp.lower()
         options = options_cnv['lang'].options
 
         out_file_name = options_out_file['out_file_name'].resp

@@ -1,5 +1,9 @@
 from converter.error import Error
 from converter.status import Status
+from os import path
+
+
+CURR_PATH = path.dirname(path.realpath(__file__))
 
 
 class Language:
@@ -7,6 +11,9 @@ class Language:
     lang_ext_list = ['.java', '.py', '.c', '.cpp']
     ext = None
     lang = None
+    cnv_dict_file = None
+    curr_path = CURR_PATH
+    kw_list = []
 
     def __init__(self, *args, **kwargs):
         try:
@@ -101,6 +108,70 @@ class Language:
         else:
             status.condition = 'passed'
         return status
+
+    @staticmethod
+    def split_secs(bck):
+        sec_index = [1]
+        j = 0
+        ln_lvl = [int((len(ln) - len(ln.lstrip(' '))) / 4) for ln in bck]
+        min_lvl = min(ln_lvl)
+        base_lvl = min_lvl if ln_lvl.count(min_lvl) != 1 else min_lvl + 1
+        last_lvl = False
+        len_ln = len(ln_lvl)
+
+        for i in range(1, len_ln):
+            lvl_down = ln_lvl[i] == base_lvl == ln_lvl[i - 1] - 1
+            if i != len_ln - 1:
+                lvl_up = ln_lvl[i] == base_lvl == ln_lvl[i + 1] - 1
+                lvl_change = lvl_up or lvl_down
+            else:
+                lvl_change = lvl_down
+            if lvl_change:
+                sec_index.append(i)
+                j += 1
+            sec_index[j] += 1
+        sec_index[-1] += 1
+        sec_bck_list = [bck[i:j] for i, j in zip([0] + sec_index, sec_index)]
+
+        if sec_bck_list[0] == bck:
+            sec_bck_list = sec_bck_list[0]
+            last_lvl = True
+
+        return sec_bck_list, last_lvl
+
+    @staticmethod
+    def rm_void_ln(bck):
+        i = 0
+        while i < len(bck):
+            if bck[i].strip() == '':
+                del bck[i]
+            else:
+                i += 1
+
+        return bck
+
+    def read_cnv_dict(self):
+        with open(self.cnv_dict_file, 'r') as file:
+            lns = [(ln.replace('\n', '').split(' => ')) for ln in file.readlines()]
+            for from_kw, to_kw in lns:
+                self.kw_list.append((from_kw, to_kw))
+
+    def rec_split_bck(self, bck_in, fst_lvl):
+        bck_list = []
+        if fst_lvl:
+            for i in bck_in:
+                bck_list.append([])
+        for i, bck in enumerate(bck_in):
+            bck, last_lvl = self.split_secs(bck)
+            if not last_lvl:
+                bck_list_lcl = self.rec_split_bck(bck, False)
+            else:
+                bck_list_lcl = [bck]
+            if fst_lvl:
+                bck_list[i] += bck_list_lcl
+            else:
+                bck_list += bck_list_lcl
+        return bck_list
 
     def convert(self, in_file, out_file_name):
         return self.lang_inst.convert(in_file, out_file_name)

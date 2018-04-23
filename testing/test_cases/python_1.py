@@ -5,7 +5,6 @@
 #
 # Author: Tejas. P. Herle
 
-
 def main():
     print('Hello World')
 
