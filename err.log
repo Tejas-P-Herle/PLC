@@ -1,8 +1,0 @@
-[Tue Apr 17 12:20:00 2018] File Operation Error[File Not Found]: Target File 'get_args_list' was not found
-[Tue Apr 17 19:34:42 2018] File Operation Error[File Not Found]: Target File '.format(var=var, start=start)' was not found
-[Tue Apr 17 19:42:56 2018] User Input Error[Input Value Error]: Incorrect file extension '.jvaa'
-[Tue Apr 17 19:50:11 2018] File Operation Error[File Not Found]: Target File '        for i, bck in enumerate(func_bdy):' was not found
-[Tue Apr 17 20:27:55 2018] File Operation Error[File Not Found]: Target File 'java_cls' was not found
-[Wed Apr 18 00:05:49 2018] File Operation Error[File Not Found]: Target File '#' was not found
-[Wed Apr 18 00:33:09 2018] File Operation Error[File Not Found]: Target File '' ' * 4 + 'public static void main(String[] args) {{\n',' was not found
-[Wed Apr 18 00:45:33 2018] File Operation Error[File Not Found]: Target File 'if bck == ["if __name__ == '__main__':", '    main()']:' was not found
