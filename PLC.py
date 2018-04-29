@@ -11,7 +11,7 @@ from language import Language
 logging.basicConfig(filename="PLC_log.log", level=logging.DEBUG)
 
 
-def main():
+def PLC():
 
     # Create user input string template
     input_msg = "{} or 'q' to abort: "
@@ -33,30 +33,12 @@ def main():
 
     #
     # Get User Input
-    #
-
-    file_path_validate_method = (
-        FilePath.validate_file_path,
-        "file_path",
-        input_file_path_msg,
-    )
-
-    language_validate_method = (
-        Language.validate,
-        "to_language",
-        input_language_msg,
-    )
-
-    file_name_validate_method = (
-        FilePath.validate_file_name,
-        'output_file_name',
-        input_file_name_msg,
-    )
+    # 
 
     validate_methods = [
-        file_path_validate_method,
-        language_validate_method,
-        file_name_validate_method,
+        (FilePath.validate_file_path, "file_path", input_file_path_msg),
+        (Language.validate, "to_language", input_language_msg),
+        (FilePath.validate_file_name, "output_file_name", input_file_name_msg),
     ]
 
     # Validate user input
@@ -65,11 +47,14 @@ def main():
         # Get user input
         var = input(input_str)
 
+        # Log debug message
+        logging.debug("{} {}".format(var_name, var))
+        
         # Define function parameters
         function_params = tuple([var])
         
         # Check for special cases
-        if function == FilePath.validate_file_name:     
+        if var_name == "output_file_name":     
             # Define function parameters
             function_params = (var, user_input['to_language'])
             
@@ -104,6 +89,8 @@ def main():
         # If var_name is file_path recognize language of infile
         if var_name == "file_path":
             from_language = Language.recognize(var)
+        elif var_name == "to_language":
+            user_input[var_name] = var.lower()
     #
     # Start Conversion
     #
@@ -115,6 +102,9 @@ def main():
 
     print(from_language, "->", to_language)
     return 0
+
+def main():
+    PLC()
 
 
 if __name__ == "__main__":

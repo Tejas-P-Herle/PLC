@@ -1,0 +1,95 @@
+"""Gets output of print statement(stdiout) and stderr"""
+import sys
+from io import StringIO
+
+
+class GetIO:
+    def __init__(self):
+        """Initiate GetIO class"""
+
+        # Store default stderr and stdout values
+        self.default_stderr = sys.stderr
+        self.default_stdout = sys.stdout
+        
+        # Save if stdout is default
+        self.reset = True
+
+        # Stubs stdout
+        self.stub_output()
+
+
+    def stub_output(self):
+        """Replaces stdout and stderr with StringIO"""
+        
+        # Replace system stderr and stdout to StringIO
+        sys.stderr = StringIO()
+        sys.stdout = StringIO()
+
+        # Store change
+        self.reset = False
+
+    def reset_output(self):
+        """Resets stdout and stderr to deafult"""
+        
+        # Reset stdout to deafult value
+        sys.stderr = self.default_stderr
+        sys.stdout = self.default_stdout
+
+        # Stores reset
+        self.reset = True
+
+    def read_stdout(self):
+        """Reads stdout and returns value"""
+        
+        # If stdout is not set to defaut read stdout
+        if not self.reset:
+            value = sys.stdout.getvalue()
+            self.truncate_stdout()
+            return value
+
+    def read_stderr(self):
+        """Reads stderr and returns value"""
+        
+        # If stderr is not set to default read stderr
+        if not self.reset:
+            value = sys.stderr.getvalue()
+            self.truncate_stderr()
+            return value
+
+    def read_output(self):
+        """Reads both stdout and stderr and returns value"""
+
+        # Read both stdout and stderr
+        return self.read_stdout(), self.read_stderr()
+
+    def print(self, *args, **kwargs):
+        """Print to console"""
+
+        # Temporarily set stdout to default and print string
+        sys.stdout = self.default_stdout
+        print(*args, **kwargs)
+        sys.stdout = StringIO()
+
+    def truncate_stdout(self):
+        """Truncate StringIO object buffer for stdout"""
+
+        # Truncate stdout
+        sys.stdout.truncate(0)
+        sys.stdout.seek(0)
+
+    def truncate_stderr(self):
+        """Truncate StringIO object buffer for stderr"""
+
+        # Truncate and set cursor to 0
+        sys.stderr.truncate(0)
+        sys.stderr.seek(0)
+
+    def truncate(self):
+        """Truncate both stdout and stderr"""
+        
+        # Truncate stdout
+        self.truncate_stdout()
+
+        # Truncate stderr
+        self.truncate_stderr()
+

@@ -5,7 +5,7 @@ from test_file_path import TestFilePath
 from test_error import TestError
 from test_PLC import TestPLC
 
-test_cases = (TestLanguage, TestFilePath, TestError, TestPLC)
+test_cases = (TestPLC, TestLanguage, TestFilePath, TestError)
 
 
 def load_tests():

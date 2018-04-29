@@ -15,17 +15,43 @@ class TestError(unittest.TestCase):
             123,
             "\x03"
         ]
+
+        # Store expected logging messages
+        log_lines = []
+        for test in test_cases:
+            log_lines.append("ERROR:root:" + str(test))
         
         # For test in test_cases, test if functions as expected
         for test in test_cases:
             self.assertEqual(Error.parse(test), None)
         
         # Check if messages are logged in file
-        with open(LOG_FILE, "r") as file:
-            file_buffer = file.read()
-            for test in test_cases:
-                self.assertNotEqual(file_buffer.find(str(test)), -1)
+        with open(LOG_FILE, "r+") as file:
+            
+            # Read lines from file
+            file_lines = [line.strip('\n') for line in file.readlines()]
+            
+            # Count number of lines
+            number_of_lines = len(file_lines)
+            
+            # Check if number of lines is greater than 4
+            self.assertTrue(number_of_lines >= 4)
 
+            # Get lines logged by testing
+            logged_lines = file_lines[number_of_lines - 4:]
+            
+            # Check if all lines are logged properly
+            for line in log_lines:
+                self.assertTrue(line in logged_lines)
+
+            # Delete all logged lines
+            file_lines = file_lines[:number_of_lines - 4]
+            
+            # Truncate file
+            file.truncate(0)
+            
+            # Write all modified lines
+            file.writelines(file_lines)
 
 
 if __name__ == "__main__":
