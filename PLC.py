@@ -5,56 +5,117 @@ Converts Source Code from language A to B
 from language import Language
 from error import Error
 import logging
+from file_path import FilePath
+from language import Language
 
-logging.basicConfig(filename='PLC_log.log', level=logging.DEBUG)
+logging.basicConfig(filename="PLC_log.log", level=logging.DEBUG)
 
 
 def main():
 
-    # Get Input Program File Path
-    file_path = input('Path to Program File: ')
-    
-    # Get To Conversion Language
-    to_language = input('To Language: ')
-    
-    # Get Output file name
-    output_file_name = input('Output File Name: ')
+    # Create user input string template
+    input_msg = "{} or 'q' to abort: "
 
-    logging.debug('file_path', file_path)
-    logging.debug('to_language', to_language)
-    logging.debug('output_file_name', output_file_name)
+    # Create input messages
+    input_file_path_msg = input_msg.format("Path to Program File")
+    input_language_msg = input_msg.format("To Language")
+    input_file_name_msg = input_msg.format("Output File Name")
+    
+    # Create variables for user input
+    user_input = {
+        "file_path": None,
+        "to_language": None,
+        "output_file_name": None,
+    }
+
+    # Create variable to store function result
+    from_language = None
 
     #
-    # Validate Inputs
+    # Get User Input
     #
 
-    # Validate File Path
-    error = FilePath.validate_file_path(file_path)
+    file_path_validate_method = (
+        FilePath.validate_file_path,
+        "file_path",
+        input_file_path_msg,
+    )
+
+    language_validate_method = (
+        Language.validate,
+        "to_language",
+        input_language_msg,
+    )
+
+    file_name_validate_method = (
+        FilePath.validate_file_name,
+        'output_file_name',
+        input_file_name_msg,
+    )
+
+    validate_methods = [
+        file_path_validate_method,
+        language_validate_method,
+        file_name_validate_method,
+    ]
+
+    # Validate user input
+    for function, var_name, input_str in validate_methods:
+        
+        # Get user input
+        var = input(input_str)
+
+        # Define function parameters
+        function_params = tuple([var])
+        
+        # Check for special cases
+        if function == FilePath.validate_file_name:     
+            # Define function parameters
+            function_params = (var, user_input['to_language'])
+            
+        # Run validation
+        error = function(*function_params)
     
-    # If error encountered, print error and exit
-    if error: Error.parse_error()
+        # If error encountered, print error and exit
+        while error: 
+            
+            # Parse the error
+            Error.parse(error, user_input=True)
+            
+            # Retry getting user input
+            var = input(input_str)
+            
+            # Log debug message
+            logging.debug("{} {}".format(var_name, var))
 
-    # Validate to conversion language
-    error = Language.validate(language)
+            # Redefine function paramters
+            function_params = tuple([var])
 
-    # If error encountered, print error and exit
-    if error: Error.parse_error()
+            # Check if special cases
+            if function == FilePath.validate_file_name:
+                function_params = (var, user_input['to_language'])
+            
+            # Validate user input
+            error = function(*function_params)
 
-    # Validate output file name
-    FilePath.validate_file_name(output_file_name)
-    
-    # If error encountered, print error and exit
-    if error: Error.parse_error()
+        # Store latest value of var
+        user_input[var_name] = var
 
+        # If var_name is file_path recognize language of infile
+        if var_name == "file_path":
+            from_language = Language.recognize(var)
     #
     # Start Conversion
     #
 
-    # Recognize Language
-    from_language = Language.recognize(file_path)
-    print(from_language, '->', to_language)
+    # Make local variables for keys in user_input dict
+    file_path = user_input['file_path']
+    to_language = user_input['to_language']
+    output_file_name = user_input['output_file_name']
+
+    print(from_language, "->", to_language)
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

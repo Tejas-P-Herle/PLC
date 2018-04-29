@@ -26,6 +26,82 @@ ERROR:root:Valid Error Message
 ERROR:root:b'Invalid Error Message'
 ERROR:root:123
 ERROR:root:
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:File - asfd Does not exist
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:Parameter file_path must be a string
+ERROR:root:Parameter file_path must be a string
+DEBUG:root:var q
+ERROR:root:User Abort
+ERROR:root:User Abort
+ERROR:root:File - asdf Does not exist
+DEBUG:root:var q
+ERROR:root:User Abort
+ERROR:root:File - asdf Does not exist
+DEBUG:root:var gjs;fdgi
+ERROR:root:File - gjs;fdgi Does not exist
+DEBUG:root:var q
+ERROR:root:User Abort
+ERROR:root:Unsupported file type
+DEBUG:root:var test_examples/python_file_1.py
+ERROR:root:Valid Error Message
+ERROR:root:b'Invalid Error Message'
+ERROR:root:123
+ERROR:root:
+ERROR:root:User Abort
+ERROR:root:Parameters file_name and input_language must be a string
+DEBUG:root:var ja.java
+ERROR:root:Parameters file_name and input_language must be a string
+ERROR:root:Parameters file_name and input_language must be a string
+DEBUG:root:var q
+ERROR:root:Parameters file_name and input_language must be a string
+DEBUG:root:var q
+ERROR:root:Parameters file_name and input_language must be a string
+ERROR:root:Parameters file_name and input_language must be a string
+DEBUG:root:var q
+ERROR:root:Parameters file_name and input_language must be a string
+ERROR:root:File - java Does not exist
+DEBUG:root:file_path test_examples/python_file_1.py
 ERROR:root:Valid Error Message
 ERROR:root:b'Invalid Error Message'
 ERROR:root:123
@@ -50,7 +126,17 @@ ERROR:root:Valid Error Message
 ERROR:root:b'Invalid Error Message'
 ERROR:root:123
 ERROR:root:
-ERROR:root:Valid Error Message
-ERROR:root:b'Invalid Error Message'
-ERROR:root:123
-ERROR:root:
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name ja.jva
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name ja.java
+ERROR:root:Extension and language don't match
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name q
+ERROR:root:User Abort
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name ja.java
+ERROR:root:Unsupported language java.
+DEBUG:root:to_language java
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name asdfasdfas123454-?/!.java

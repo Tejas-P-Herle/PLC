@@ -11,14 +11,14 @@ class Language:
         """Get corresponding language for extension"""
         # Check if extension is a string
         if not isinstance(extension, str):
-            return "Parameter extension must be a string"
+            return (None, "Parameter extension must be a string")
         
         try:
             # Try to return corresponding language
             return dict(zip(cls.extensions, cls.languages))[extension.lower()]
         except KeyError:
             # If unknown extension, return error
-            return "Unsupported file extension {}".format(extension)
+            return (None, "Unsupported file extension {}".format(extension))
 
     @classmethod
     def recognize(cls, file_path):
@@ -26,7 +26,7 @@ class Language:
         
         # Check if file_path is a string
         if not isinstance(file_path, str):
-            return "Parameter file_path must be a string"
+            return (None, "Parameter file_path must be a string")
         
         # Get Extension from file_path
         extension = path.splitext(file_path.lower())[1]
@@ -41,6 +41,10 @@ class Language:
         # Check if language is a string
         if not isinstance(language, str):
             return "Parameter language must be a string"
+
+        # Check if user request abort
+        if language == "q":
+            return "User Abort"
 
         # Check for language in supported languages
         try:

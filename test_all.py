@@ -3,8 +3,9 @@ import unittest
 from test_language import TestLanguage
 from test_file_path import TestFilePath
 from test_error import TestError
+from test_PLC import TestPLC
 
-test_cases = (TestLanguage, TestFilePath, TestError)
+test_cases = (TestLanguage, TestFilePath, TestError, TestPLC)
 
 
 def load_tests():
