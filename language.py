@@ -52,3 +52,32 @@ class Language:
 
             # Else return unsupported language
             return "Unsupported language {}".format(language)
+
+    def if_convert(self, definition):
+        """Converts if defenition"""
+        pass
+
+    def for_convert(self, definition):
+        """Converts for definition"""
+        pass
+
+    def while_convert(self, definition):
+        """Converts while definition"""
+        pass
+
+    def function_convert(self, definition):
+        """Converts function definition"""
+        pass
+
+    def block_convert(self, block):
+        """Converts all lines of code except definitions"""
+        pass
+
+    def class_convert(self, definition):
+        """Converts class definition"""
+        pass
+
+    def method_convert(self, definition):
+        """Converts method of class"""
+        pass
+
