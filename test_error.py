@@ -29,7 +29,7 @@ class TestError(unittest.TestCase):
         with open(LOG_FILE, "r+") as file:
             
             # Read lines from file
-            file_lines = [line.strip('\n') for line in file.readlines()]
+            file_lines = [line.strip("\n") for line in file.readlines()]
             
             # Count number of lines
             number_of_lines = len(file_lines)
@@ -49,9 +49,10 @@ class TestError(unittest.TestCase):
             
             # Truncate file
             file.truncate(0)
+            file.seek(0)
             
             # Write all modified lines
-            file.writelines(file_lines)
+            file.write("\n".join(file_lines) + "\n")
 
 
 if __name__ == "__main__":

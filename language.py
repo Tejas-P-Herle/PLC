@@ -42,10 +42,6 @@ class Language:
         if not isinstance(language, str):
             return "Parameter language must be a string"
 
-        # Check if user request abort
-        if language == "q":
-            return "User Abort"
-
         # Check for language in supported languages
         try:
             cls.languages.index(language.lower())

@@ -63,10 +63,10 @@ class TestFilePath(unittest.TestCase):
 
         # Create test set with valid data
         valid_test_set = [
-            ("test_examples/python_file_1.py", "python"),
-            ("test_examples/java_file_1.java", "java"), 
-            ("test_examples/cpp_file_1.cpp", "cpp"),
-            ("test_examples/c_file_1.c", "c"),
+            ("python_file_1.py", "python"),
+            ("java_file_1.java", "java"), 
+            ("cpp_file_1.cpp", "cpp"),
+            ("c_file_1.c", "c"),
         ]
 
         # Add expected results
@@ -75,16 +75,22 @@ class TestFilePath(unittest.TestCase):
             valid_test_set[i] += tuple([valid_test_return_value])
 
         # Define error string
-        invalid_file_name_error = "Extension and language don't match"
+        mismatch_file_name_error = "Extension and language don't match"
         parameters = "file_name and input_language"
+        invalid_file_name_error = "File name must not contain '\\/:*?\"<>|'"
         invalid_type_error = "Parameters %s must be a string" % parameters
        
         # Create list of invalid file paths
-        invalid_file_name_test_set = [
+        mismatch_file_name_test_set = [
             ("python_file_1.py", "java"),
-            ("test_examsples/c_file_1", "c"),
+            ("test_examples_c_file_1", "c"),
             ("abcdef.c", "python"),
-            ("1234-?/!__.;:'\"", "cpp"),
+        ]
+
+        # Create invalid file_name test set
+        invalid_file_name_test_set = [
+            ("random|file.extension", "python"),
+            ("completely_|nvalid<>\\/:*?\".java", "java")
         ]
 
         # Create test set of invalid type
@@ -95,14 +101,19 @@ class TestFilePath(unittest.TestCase):
         ]
 
         # Add expected results
-        for i, file_path in enumerate(invalid_file_name_test_set):
+        for i, file_path in enumerate(mismatch_file_name_test_set):
+            mismatch_file_name_test_set[i] += tuple([mismatch_file_name_error])
+
+        for i, file_name in enumerate(invalid_file_name_test_set):
             invalid_file_name_test_set[i] += tuple([invalid_file_name_error])
         
         for i, test in enumerate(invalid_type_test_set):
             invalid_type_test_set[i] += tuple([invalid_type_error])
 
         # Merge invalid test sets
-        invalid_test_set = invalid_file_name_test_set + invalid_type_test_set
+        invalid_test_set = (mismatch_file_name_test_set
+                            + invalid_file_name_test_set
+                            + invalid_type_test_set)
         
         # Merge both test sets
         test_set = valid_test_set + invalid_test_set

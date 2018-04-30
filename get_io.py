@@ -14,6 +14,10 @@ class GetIO:
         # Save if stdout is default
         self.reset = True
 
+        # Declare variables for storing line count
+        self.stdout_line_count = 0
+        self.stderr_line_count = 0
+
         # Stubs stdout
         self.stub_output()
 
@@ -38,13 +42,16 @@ class GetIO:
         # Stores reset
         self.reset = True
 
-    def read_stdout(self):
+    def read_stdout(self, return_line_count=False):
         """Reads stdout and returns value"""
         
         # If stdout is not set to defaut read stdout
         if not self.reset:
             value = sys.stdout.getvalue()
             self.truncate_stdout()
+            self.stdout_line_count += 1
+            if return_line_count:
+                return value, self.stdout_line_count
             return value
 
     def read_stderr(self):
@@ -92,4 +99,7 @@ class GetIO:
 
         # Truncate stderr
         self.truncate_stderr()
+    
+    def reset_stdout_line_count(self):
+        self.stdout_line_count = 0
 

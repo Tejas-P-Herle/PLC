@@ -1,6 +1,7 @@
 """Parse and manage file_path related functions"""
 from os import path
 from language import Language
+from error import Error
 
 
 class FilePath:
@@ -11,10 +12,6 @@ class FilePath:
         # Check if file_path is a string
         if not isinstance(file_path, str):
             return "Parameter file_path must be a string"
-
-        # Check if user requests quit action
-        if file_path == "q":
-            return "User Abort"
         
         # Check if file exists
         if not path.isfile(file_path):
@@ -24,13 +21,17 @@ class FilePath:
         response = Language.recognize(file_path)
 
         # Check if error encountered
-        if isinstance(response, list) and response[0] == None:
+        if isinstance(response, tuple) and response[0] == None:
             
             # Parse error
             Error.parse(response)
 
-        # Else save response
-        extension = response
+            # Save error response
+            extension = response[1]
+
+        else:
+            # Else save response
+            extension = response
 
         # Check if is supported language source code
         if extension.startswith('Unsupported file extension '):
@@ -42,10 +43,6 @@ class FilePath:
         # Check if file_name and input_language are strings
         if not (isinstance(file_name, str) and isinstance(input_language, str)):
             return "Parameters file_name and input_language must be a string"
-
-        # Check if user requests quit action
-        if file_name == "q":
-            return "User Abort"
         
         # Get file extension
         response = Language.recognize(file_name)
@@ -56,7 +53,11 @@ class FilePath:
             # Parse error
             Error.parse(response)
 
-        # TODO Check if file_name is a valid
+        # Check if file_name is a valid
+        special_characters = "\\/:*?\"<>|"
+        for character in special_characters:
+            if file_name.find(character) != -1:
+                return "File name must not contain '%s'" % special_characters
 
         # Else save response
         recognized_language = response

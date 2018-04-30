@@ -7,8 +7,8 @@ import PLC
 
 
 class TestPLC(unittest.TestCase):
-    def test_main(self):
-        """Tests main method of PLC"""
+    def test_PLC(self):
+        """Tests PLC function of file PLC.py"""
 
         # Initialize io_stream
         io_stream = GetIO()
@@ -52,92 +52,113 @@ class TestPLC(unittest.TestCase):
         
         # Create test set for file not found error
         file_not_found_error = "File - {} Does not exist"
-        file_path_not_found_test_set = [
+        file_path_not_found_test_set = (
             "test_examples/python_file_1",
             "python_file_1.py",
             "random_file.py",
-        ]
+        )
 
-        # Add expected error response
-        for i, path in enumerate(file_path_not_found_test_set):
-            file_path_not_found_test_set[i] = (
-                path,
-                file_not_found_error.format(path),
-            )
+        # Store expected error response
+        file_not_found_expected_error = []
+        for path in file_path_not_found_test_set:
+            error_string = file_not_found_error.format(path)
+            file_not_found_expected_error.append(error_string)
 
         # Create test set for unsupported file types
-        unsupported_type_error = "Unsupported_file_type"
-        unsupported_type_test_set = [
+        unsupported_type_error = "Unsupported file type"
+        unsupported_type_test_set = (
             "test_examples/unsupported_file.format",
-        ]
+        )
 
-        # Add expected error response
-        for i, path in enumerate(unsupported_type_test_set):
-            unsupported_type_test_set[i] = (path, unsupported_type_error)
+        # Store expected error response
+        test_size = len(unsupported_type_test_set)
+        unsupported_type_expected_error = [unsupported_type_error] * test_size
 
         # Create test set for unknown language
         unsupported_language_error = "Unsupported language {}" 
-        unsupported_language_test_set = [
+        unsupported_language_test_set = (
             "J.A.V.A",
             "My own language",
             "Ruby",
             "Perl",
             "Python Console",
-        ]
+        )
 
-        # Add expected error response
+        # Store expected error response
+        unsupported_language_expected_error = []
         for i, language in enumerate(unsupported_language_test_set):
-            unsupported_language_test_set[i] = (
-                language,
-                unsupported_language_error.format(language),
-            )
+            error_string = unsupported_language_error.format(language)
+            unsupported_language_expected_error.append(error_string)
 
         # Create test set for mismatched file name
         unsupported_extension_error = "Extension and language don't match" 
-        unsupported_extension_test_set = [
+        unsupported_extension_test_set = (
             "some file.random extension",
             "this name is completely.insane",
             file_name[3],
             file_name[2],
-        ]
+        )
 
-        # Add expected error response
-        for i, file_name in enumerate(unsupported_extension_test_set):
-            unsupported_extension_test_set[i] = (file_name,
-                                                 unsupported_extension_error)
+        # Store expected error response
+        test_size = len(unsupported_extension_test_set)
+        unsupported_extension_expected_error = ([unsupported_extension_error]
+                                                 * test_size)
 
-        # TODO Create test set for invalid file names
-        invalid_file_names_test_set = []
+        # Create test set for invalid file names
+        invalid_file_name_error = "File name must not contain '\\/:*?\"<>|'"
+        invalid_file_name_test_set = (
+            "java_file/\\\"Epic:<*|*>?\".java",
+            "file\\my\\path.py"
+        )
+
+        # Store expected error response
+        invalid_file_name_expected_error = ([invalid_file_name_error]
+                                            * len(invalid_file_name_test_set))
 
         # Check user abort
-        user_abort_input = ["q", "User Abort"]
+        user_abort = ("q", "User Abort")
 
         # Add one valid test set value to let the program proceed
 
         # Merge all invalid file path test sets
-        invalid_file_path_test_set = [file_path_not_found_test_set
+        invalid_file_path_test_set = (file_path_not_found_test_set
                                       + unsupported_type_test_set
-                                      + [valid_file_path[0]]]
+                                      + tuple([valid_file_path[0][0]]))
+
+        # Merge all file path related expected errors
+        file_path_expected_error = (file_not_found_expected_error
+                                    + unsupported_type_expected_error
+                                    + [""])
 
         # Merge all invalid language test sets
-        invalid_language_test_set = [unsupported_language_test_set 
-                                    + [valid_language[0]]]
+        invalid_language_test_set = (unsupported_language_test_set 
+                                    + tuple([valid_language[0]]))
+        
+        # Merge all language related expected errors
+        language_expected_error = (unsupported_language_expected_error
+                                   + [""])
 
         # Merge all invalid file name test sets
-        invalid_file_name_test_set = [unsupported_extension_test_set
-                                      + invalid_file_names_test_set
-                                      + [file_name[0]]]
+        invalid_file_name_test_set = (unsupported_extension_test_set
+                                      + invalid_file_name_test_set
+                                      + tuple([file_name[0]]))
+        
+        # Merge all file name related expected errors
+        valid_input_result = "{} -> {}\n".format(valid_file_path[0][1],
+                                                 valid_language[0].lower())
+        file_name_expected_error = (unsupported_extension_expected_error
+                                    + invalid_file_name_expected_error
+                                    + [valid_input_result])
         
         # Merge all invalid test sets
         invalid_test_set = (invalid_file_path_test_set
                             + invalid_language_test_set
                             + invalid_file_name_test_set)
-
-        invalid_test_set = [('asdv', 'test_examples/python_file_1.py', 'JaVa', 'java.jaVa', 'python -> java\n')]
-
-        invalid_test_set = [('asdv', 'test_examples/python_file_1.py', 'JaVa', 'java.jaVa', 'python -> java\n')]
-
-        error = "File - asdv Does not exist"
+        
+        # Merge all expected error lists
+        expected_error = ("\n\n".join(file_path_expected_error)
+                          + "\n\n".join(language_expected_error)
+                          + "\n\n".join(file_name_expected_error))
 
         # Run test for all tests in valid_test_set
         for test in valid_test_set:
@@ -146,17 +167,16 @@ class TestPLC(unittest.TestCase):
                 self.assertEqual(io_stream.read_stdout(), test[3])
 
         # Run test for all tests in invalid_test_set
-        responses = []
-        for test in invalid_test_set:
-            with patch('builtins.input', side_effect=test[:-1]):
+        io_stream.reset_stdout_line_count()
+        with patch('builtins.input', side_effect=invalid_test_set):
+            PLC.PLC()
+            self.assertEqual(io_stream.read_stdout(), expected_error)
+
+        # Run test for user abort function
+        with patch('builtins.input', return_value=user_abort[0]):
+            with self.assertRaises(SystemExit):
                 PLC.PLC()
-                response = io_stream.read_stdout()
-                responses.append(response)
-                try:
-                    self.assertEqual(response, error)
-                except AssertionError:
-                    pass
-        io_stream.print(responses)
+                self.assertEqual(io_stream.read_stdout(), user_abort[1])
 
 
 if __name__ == "__main__":
