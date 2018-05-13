@@ -2078,3 +2078,339 @@ ERROR:root:File name must not contain '\/:*?"<>|'
 DEBUG:root:output_file_name java.jaVa
 DEBUG:root:file_path q
 ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:to_language CpP
+DEBUG:root:output_file_name cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:to_language C
+DEBUG:root:output_file_name c.C
+DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:to_language PytHOn
+DEBUG:root:output_file_name python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:to_language J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:to_language My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:to_language Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:to_language Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:to_language Python Console
+ERROR:root:Unsupported language Python Console
+DEBUG:root:to_language JaVa
+DEBUG:root:output_file_name some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name python.pY
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name c.C
+ERROR:root:Extension and language don't match
+DEBUG:root:output_file_name java_file/\"Epic:<*|*>?".java
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name file\my\path.py
+ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:output_file_name java.jaVa
+DEBUG:root:file_path q
+ERROR:root:User Abort

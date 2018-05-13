@@ -55,7 +55,16 @@ class Language:
 
     def if_convert(self, definition):
         """Converts if defenition"""
-        pass
+         
+        # Get if definition
+        line = definition.lstrip("if")
+        
+        # Remove whitespace
+        line = line.strip()
+
+        # Return if condition
+        return line
+
 
     def for_convert(self, definition):
         """Converts for definition"""
@@ -79,5 +88,23 @@ class Language:
 
     def method_convert(self, definition):
         """Converts method of class"""
+        pass
+
+    def get_if_scope(self, definition):
+        """Gets scope of if definition"""
+        pass
+
+    def get_for_iterations(self, definition):
+        """Gets number of iterations of for loop"""
+        
+        # Break line into sub pieces
+        word_split = definition.split(' ')
+        has_semicolon = definition.find(';') != -1
+        semicolon_split = definition.split(';')
+        return semicolon_split if has_semicolon else word_split
+
+    def get_function_variable_types(self, definition):
+        """Gets type of all variables in function definition
+        including return value type"""
         pass
 
