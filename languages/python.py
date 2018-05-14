@@ -3,7 +3,7 @@ from language import Language
 
 
 class Python(Language):
-    python_source_code = []
+    source_code = []
 
     def replace_logical_ops(self, line):
         """Replaces all logical operators"""
@@ -19,33 +19,50 @@ class Python(Language):
         line = line.replace(not_str, "!")
         return line
 
-    def if_convert(self, definition): 
-        """Converts if statement to python"""
-        super().if_convert(definition)        
+    def convert_if(self, condition): 
+        """Converts if statement to python(vital condition to be provided)"""
         
-    def for_convert(self, definition):
+        # Run super definition
+        condition = super().convert_if(condition)
+
+        # Add converted if statement to source code
+        self.source_code.append("if {cond}:".format(cond=condition))
+        
+    def convert_for(self, definition):
         """Converts for statement to python"""
-        super().for_convert(definition) 
+        
+        # Run super definition
+        line = super().convert_for(definition)
     
-    def while_convert(self, definition):
+    def convert_while(self, definition):
         """Converts while statement to python"""
-        super().while_convert(definition)
+        
+        # Run super definition
+        line = super().convert_while(definition)
     
-    def function_convert(self, definition):
+    def convert_function(self, definition):
         """Converts function definition to python"""
-        super().function_convert(definition)
+        
+        # Run super definition
+        line = super().convert_function(definition)
     
-    def class_convert(self, definition):
+    def convert_class(self, definition):
         """Converts class definition to python"""
-        super().class_convert(definition)
+        
+        # Run super definition
+        line = super().convert_class(definition)
     
-    def method_convert(self, definition):
+    def convert_method(self, definition):
         """Converts mathod definition to python"""
-        super().method_convert(definition)
+        
+        # Run super definition
+        line = super().convert_method(definition)
     
-    def block_convert(self, definition):
+    def convert_block(self, definition):
         """Converts block statements to python"""
-        super().block_convert(definition)
+        
+        # Run super definition
+        line = super().convert_block(definition)
 
     def get_if_condition(self, definition):
         """Gets the condition from if definition"""
@@ -61,10 +78,6 @@ class Python(Language):
 
         # Return if condition
         return line
-
-    def get_if_scope(self, definition):
-        """Gets scope of if definition"""
-        super().get_if_scope(definition)
 
     def get_for_iterations(self, definition):
         """Gets number of iterations of for loop"""

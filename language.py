@@ -53,31 +53,33 @@ class Language:
             # Else return unsupported language
             return "Unsupported language {}".format(language)
 
-    def if_convert(self, definition):
+    def convert_if(self, condition):
         """Converts if defenition"""
-        pass
+        
+        # Return processed condition
+        return condition
 
-    def for_convert(self, definition):
+    def convert_for(self, definition):
         """Converts for definition"""
         pass
 
-    def while_convert(self, definition):
+    def convert_while(self, definition):
         """Converts while definition"""
         pass
 
-    def function_convert(self, definition):
+    def convert_function(self, definition):
         """Converts function definition"""
         pass
 
-    def block_convert(self, block):
+    def convert_block(self, block):
         """Converts all lines of code except definitions"""
         pass
 
-    def class_convert(self, definition):
+    def convert_class(self, definition):
         """Converts class definition"""
         pass
 
-    def method_convert(self, definition):
+    def convert_method(self, definition):
         """Converts method of class"""
         pass
 
@@ -95,10 +97,6 @@ class Language:
 
         # Return if condition
         return line
-
-    def get_if_scope(self, definition):
-        """Gets scope of if definition"""
-        pass
 
     def get_for_iterations(self, definition):
         """Gets number of iterations of for loop"""
