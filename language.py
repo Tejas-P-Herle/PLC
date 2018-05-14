@@ -55,16 +55,7 @@ class Language:
 
     def if_convert(self, definition):
         """Converts if defenition"""
-         
-        # Get if definition
-        line = definition.lstrip("if")
-        
-        # Remove whitespace
-        line = line.strip()
-
-        # Return if condition
-        return line
-
+        pass
 
     def for_convert(self, definition):
         """Converts for definition"""
@@ -90,6 +81,21 @@ class Language:
         """Converts method of class"""
         pass
 
+    def get_if_condition(self, definition):
+        """Gets if condition from definition"""
+        
+        # Get raw if condition
+        line = definition.lstrip("if")
+        
+        # Remove curly braces if present
+        line = line.strip("{")
+        
+        # Remove whitespace
+        line = line.strip()
+
+        # Return if condition
+        return line
+
     def get_if_scope(self, definition):
         """Gets scope of if definition"""
         pass
@@ -103,8 +109,31 @@ class Language:
         semicolon_split = definition.split(';')
         return semicolon_split if has_semicolon else word_split
 
-    def get_function_variable_types(self, definition):
-        """Gets type of all variables in function definition
-        including return value type"""
-        pass
+    
+    def get_while_condition(self, definition):
+        """Gets condition of while loop"""
+        
+        # Get raw while condition
+        line = definition.lstrip("while")
+
+        # Remove curly braces if present
+        line = line.strip("{")
+        
+        # Remove whitespaces
+        line = line.strip()
+
+        # Return while condition
+        return line
+
+    def get_function_definition(self, definition):
+        """Gets processed function definition"""
+        
+        # Find opening parentheses for fuction parameters
+        index = definition.find("(")
+
+        # Split at opening parentheses
+        definition, params = definition[:index], definition[index+1:]
+
+        # Return definition and parameters
+        return definition, params
 
