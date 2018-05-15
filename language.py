@@ -5,6 +5,7 @@ from os import path
 class Language:
     languages = ['python', 'java', 'cpp', 'c']
     extensions = ['.py', '.java', '.cpp', '.c']
+    source_code = []
     
     @classmethod
     def get_language(cls, extension):
@@ -59,9 +60,11 @@ class Language:
         # Return processed condition
         return condition
 
-    def convert_for(self, definition):
+    def convert_for(self, variable, start, stop, step, array):
         """Converts for definition"""
-        pass
+        
+        # Return processed for variables
+        return variable, start, stop, step, array
 
     def convert_while(self, definition):
         """Converts while definition"""

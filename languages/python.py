@@ -19,6 +19,48 @@ class Python(Language):
         line = line.replace(not_str, "!")
         return line
 
+    def get_list_slice_vars(self, list_):
+        """Gets the start, stop and step from a list sliceing call"""
+
+        # Dump unwanted portions
+        array, list_ = list_.split("[")
+        list_ = list_.rstrip("]")
+
+        # Split at ':'
+        variables = list_.split(":")
+        var_count = len(variables)
+
+        start = ""
+        stop = ""
+        step = ""
+
+        # If step provided
+        if var_count == 3:
+            
+            # If provided, store provided values
+            start, stop, step = variables
+        else:
+
+            # Else store start, stop with default step
+            start, stop = variables
+
+        # If values are not provided by user, fall back to defaults
+        
+        # Set start default to 0
+        if not start:
+            start = "0"
+
+        # Set stop default to array length
+        if not stop:
+            stop = "array.length"
+
+        # Set step default to 1
+        if not step:
+            step = "1"
+
+        # Return stripped array with extracted values
+        return array, start, stop, step
+
     def convert_if(self, condition): 
         """Converts if statement to python(vital condition to be provided)"""
         
@@ -28,11 +70,43 @@ class Python(Language):
         # Add converted if statement to source code
         self.source_code.append("if {cond}:".format(cond=condition))
         
-    def convert_for(self, definition):
+    def convert_for(self, variable, start, stop, step, array):
         """Converts for statement to python"""
         
         # Run super definition
-        line = super().convert_for(definition)
+        variable, start, stop, step, array = super().convert_for(
+            variable, start, stop, step, array
+        )
+
+        # Define loop condition
+        loop_cond = ""
+        if array:
+            # If array if given, loop through array
+            loop_cond = array
+
+            # If step is default, omit step
+            if step == "1":
+                pass
+        else:
+            # Else make range template
+            loop_cond = "range({})"
+
+            # If step if default, omit step
+            if step == "1":
+                
+                # If start is default, omit start
+                if start == "0":
+                    loop_cond = loop_cond.format(stop)
+                
+                else:
+                    # Else add start to range call
+                    loop_cond = loop_cond.format(start + ", " + stop)
+            else:
+                # Add all three parameters if step is provided
+                loop_cond = loop_cond.format(start + ", " + stop + ", " + step)
+
+        # Add converted for statement to source code
+        self.source_code.append("for {} in {}:".format(variable, loop_cond))
     
     def convert_while(self, definition):
         """Converts while statement to python"""
@@ -92,8 +166,8 @@ class Python(Language):
         for_range = for_range.rstrip(":")
         
         # Set start and step to default
-        start = 0
-        step = 1
+        start = "0"
+        step = "1"
 
         # Parse for_range
         if for_range.find("range") != -1:
@@ -130,8 +204,12 @@ class Python(Language):
             # Get array
             array = for_range
 
-            # Set stop
+            # Set default stop
             stop = "arr.length"
+
+            # Check of array slicing
+            if array.find("[") != -1 and array.find(":") != -1:
+                array, start, stop, step = self.get_list_slice_vars(array)
 
             # Return all four variables, including array
             return variable, start, stop, step, array
