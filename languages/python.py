@@ -164,11 +164,17 @@ class Python(Language):
         # Return converted for statement
         return "for {} in {}:".format(variable, loop_cond)
     
-    def convert_while(self, definition):
+    def convert_while(self, condition):
         """Converts while statement to python"""
         
         # Run super definition
-        line = super().convert_while(definition)
+        condition = super().convert_while(condition)
+
+        # Replace logical operators
+        condition = self.replace_logical_ops(condition, direction="from")
+
+        # Return converted if statement
+        return "while {cond}:".format(cond=condition)
     
     def convert_function(self, definition):
         """Converts function definition to python"""
@@ -281,7 +287,7 @@ class Python(Language):
         line = line.rstrip(":")
         
         # Replace logical operators
-        line = self.replace_logical_ops(line)
+        line = self.replace_logical_ops(line, direction="to")
 
         # Return while loop condition
         return line

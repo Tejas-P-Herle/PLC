@@ -66,9 +66,11 @@ class Language:
         # Return processed for variables
         return variable, start, stop, step, array
 
-    def convert_while(self, definition):
+    def convert_while(self, condition):
         """Converts while definition"""
-        pass
+        
+        # Return processed condition
+        return condition
 
     def convert_function(self, definition):
         """Converts function definition"""
