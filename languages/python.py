@@ -1,22 +1,54 @@
 """Python language class for conversion to and from python"""
 from language import Language
+import re
 
 
 class Python(Language):
     source_code = []
 
-    def replace_logical_ops(self, line):
+    def replace_logical_ops(self, line, direction):
         """Replaces all logical operators"""
 
-        # Replace and, or operators
-        line = line.replace("and", "&&")
-        line = line.replace("or", "||")
-        
-        # Replace not operator
-        not_str = "not" if line[line.find("not") + 3] == "(" else "not "
+        # Check if conversion is from or to
+        index = 0 if direction == "to" else 1
 
-        # Replace 'not' and whitespace/s with '!', return result
-        line = line.replace(not_str, "!")
+        # Find list indexes for to and from conversions
+        index_a = index
+        index_b = (index + 1) % 2
+        
+        # Create replacement maps
+        replacement_list = [["and", "&&", -1], ["or", "||", -1]]
+
+        # Create not replacement list
+        not_rep_list = ["not", "!"]
+
+        # Choose not replacement string
+        not_rep_str = not_rep_list[index_a]
+
+        # Find indexes for not match string(to and from)
+        indexes = [match.start() for match in re.finditer(not_rep_str, line)]
+        # Replace not match indexes
+        for index in indexes:
+            
+            # Create not replacement string. Check if space required
+            if line[index + len(not_rep_str)] == "(":
+                not_rep_list[0] = "not"
+            else:
+                not_rep_list[0] = "not "
+
+            # Add to replacement list
+            # Add in proper order
+            not_list = [not_rep_list[index_a], not_rep_list[index_b]]
+            replacement_list.append([not_list[index_a], not_list[index_b], 1])
+        
+        # For operator in operators
+        for replacement in replacement_list:
+
+            # Replace with appropriate replacements
+            line = line.replace(replacement[index_a], replacement[index_b],
+                                replacement[2])
+        
+        # Return modified line
         return line
 
     def get_list_slice_vars(self, list_):
@@ -67,8 +99,11 @@ class Python(Language):
         # Run super definition
         condition = super().convert_if(condition)
 
-        # Add converted if statement to source code
-        self.source_code.append("if {cond}:".format(cond=condition))
+        # Replace logical operators
+        condition = self.replace_logical_ops(condition, direction="from")
+
+        # Return converted if statement
+        return "if {cond}:".format(cond=condition)
         
     def convert_for(self, variable, start, stop, step, array):
         """Converts for statement to python"""
@@ -83,10 +118,31 @@ class Python(Language):
         if array:
             # If array if given, loop through array
             loop_cond = array
+            
+            # Check if array slicing is required
+            if step != "1" or stop != "array.length" or start != "0":
 
-            # If step is default, omit step
-            if step == "1":
-                pass
+                # Make template for array slicing
+                loop_cond = "{}[{{}}]".format(array)
+
+                if start == "0":
+                    start = ""
+
+                if stop == "array.length":
+                    stop = ""
+
+                if step == "1":
+                    step = ""
+
+                # If step is default, omit step
+                if not step:
+
+                    # Else add start to range call
+                    loop_cond = loop_cond.format(start + ":" + stop)
+                else:
+                    # Add all three parameters if step is provided
+                    loop_cond = loop_cond.format(start + ":" + stop + ":" + step)
+ 
         else:
             # Else make range template
             loop_cond = "range({})"
@@ -105,8 +161,8 @@ class Python(Language):
                 # Add all three parameters if step is provided
                 loop_cond = loop_cond.format(start + ", " + stop + ", " + step)
 
-        # Add converted for statement to source code
-        self.source_code.append("for {} in {}:".format(variable, loop_cond))
+        # Return converted for statement
+        return "for {} in {}:".format(variable, loop_cond)
     
     def convert_while(self, definition):
         """Converts while statement to python"""
@@ -148,7 +204,7 @@ class Python(Language):
         line = line.rstrip(":")
 
         # Replace logical operators
-        line = self.replace_logical_ops(line)
+        line = self.replace_logical_ops(line, direction="to")
 
         # Return if condition
         return line
