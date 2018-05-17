@@ -176,12 +176,22 @@ class Python(Language):
         # Return converted if statement
         return "while {cond}:".format(cond=condition)
     
-    def convert_function(self, definition):
+    def convert_function(self, access_modifier, return_type, definition, params):
         """Converts function definition to python"""
         
         # Run super definition
-        line = super().convert_function(definition)
-    
+        line = super().convert_function(access_modifier, return_type,
+                                        definition, params)
+
+        # Make function template
+        function = "def {}({}) -> {}:"
+
+        # Make parameters string
+        params_str = ", ".join([": ".join(param) for param in params])
+
+        # Return processed function definition
+        return function.format(definition, params_str, return_type)
+
     def convert_class(self, definition):
         """Converts class definition to python"""
         
@@ -303,12 +313,12 @@ class Python(Language):
 
         # Get return value from function definition
         params = params.rstrip(":")
-        params, return_val = params.split("->")
-        return_val = return_val.strip()
+        params, return_type = params.split("->")
+        return_type = return_type.strip()
         params = params.strip()
         
         # Dump unwanted portions
-        definition = definition.lstrip("def ")
+        definition = definition.lstrip("def").strip()
         params = params.rstrip(")")
         params = [param.strip() for param in params.split(",")]
 
@@ -319,5 +329,5 @@ class Python(Language):
         params = [[param[0].strip(), param[1].strip()] for param in params]
     
         # Return all variables of function definition
-        return access_modifier, return_val, definition, params
+        return access_modifier, return_type, definition, params
 

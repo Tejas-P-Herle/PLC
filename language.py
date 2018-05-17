@@ -63,7 +63,7 @@ class Language:
     def convert_for(self, variable, start, stop, step, array):
         """Converts for definition"""
         
-        # Return processed for variables
+        # Return processed 'for variables'
         return variable, start, stop, step, array
 
     def convert_while(self, condition):
@@ -72,9 +72,12 @@ class Language:
         # Return processed condition
         return condition
 
-    def convert_function(self, definition):
+    def convert_function(self, access_modifier, return_type,
+                         definition, params):
         """Converts function definition"""
-        pass
+        
+        # Return processed function variables
+        return access_modifier, return_type, definition, params
 
     def convert_block(self, block):
         """Converts all lines of code except definitions"""
