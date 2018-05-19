@@ -84,11 +84,6 @@ class Language:
         return access_modifier, return_type, func_name, params
 
     @staticmethod
-    def convert_block(block):
-        """Converts all lines of code except definitions"""
-        pass
-
-    @staticmethod
     def convert_class(access_modifier, class_name, super_classes):
         """Converts class definition"""
         
@@ -96,9 +91,12 @@ class Language:
         return access_modifier, class_name, super_classes
 
     @staticmethod
-    def convert_method(definition):
+    def convert_method(access_modifier, return_type,
+                       func_name, params):
         """Converts method of class"""
-        pass
+        
+        # Return processed variables
+        return access_modifier, return_type, func_name, params
 
     @staticmethod
     def get_if_condition(definition):

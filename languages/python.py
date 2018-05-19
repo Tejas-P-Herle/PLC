@@ -102,8 +102,13 @@ class Python(Language):
         if len(definition_split) != 1:
             decorator, definition = definition_split
 
-            # Parse decorator
-            decorator = convert_decorator
+            # Check if standard decorators
+            if decorator in ["@staticmethod", "@classmethod"]:
+                # Save decorators as is(without @)
+                decorator = decorator.lstrip("@")
+            else:
+                # Else parse decorator
+                decorator = self.convert_decorator(decorator)
 
         # Get return value from function definition
         params = params.rstrip(":")
@@ -221,14 +226,10 @@ class Python(Language):
 
         # Return converted if statement
         return [while_template.format(cond=condition)]
-    
-    def convert_function(self, access_modifier, return_type, func_name, params):
-        """Converts function definition to python"""
-        
-        # Run super func_name
-        line = super().convert_function(access_modifier, return_type,
-                                        func_name, params)
 
+    def make_function_definition(self, return_type, func_name, params):
+        """Make function definition from variables"""
+        
         # Make function template
         function_template = "def {}({}) -> {}:"
 
@@ -237,6 +238,18 @@ class Python(Language):
 
         # Return processed function func_name
         return [function_template.format(func_name, params_str, return_type)]
+        
+    
+    def convert_function(self, access_modifier, return_type, func_name, params):
+        """Converts function definition to python"""
+        
+        # Run super func_name
+        access_modifier, return_type, func_name, params =\
+            super().convert_function(access_modifier, return_type,
+                                        func_name, params)
+
+        # Make and return processd function definition
+        return [self.make_function_definition(return_type, func_name, params)]
 
     def convert_class(self, access_modifier, class_name, super_classes):
         """Converts class definition to python"""
@@ -262,17 +275,25 @@ class Python(Language):
         # Return processed class definition
         return [class_template.format(class_name, super_cls_str)]
     
-    def convert_method(self, definition):
+    def convert_method(self, access_modifier, return_type, func_name, params):
         """Converts mathod definition to python"""
         
         # Run super definition
-        line = super().convert_method(definition)
-    
-    def convert_block(self, definition):
-        """Converts block statements to python"""
-        
-        # Run super definition
-        line = super().convert_block(definition)
+        access_modifier, return_type, func_name, params =\
+            super().convert_method(access_modifier, return_type,
+                                   func_name, params)
+
+        # Make function definition
+        function = []
+        function += self.make_function_definition(return_type,
+                                                  func_name, params)
+
+        # Add decorator if required
+        if "static" in access_modifier:
+            function.insert(0, "@staticmethod")
+
+        # Return processed function definition
+        return function
 
     def convert_decorator(self, definition):
         """Convert python decorator to standard code"""
@@ -404,7 +425,8 @@ class Python(Language):
             self.parse_function_definition(definition, params)
 
         # Define access modifier
-        access_modifier = "private" if func_name.startswith("_") else "public"
+        is_private = func_name.startswith("__") and func_name.count("__") < 2
+        access_modifier = "private" if is_private else "public"
 
         # Create start and end for function call
         start = []
@@ -437,7 +459,8 @@ class Python(Language):
         class_name = class_name.strip()
 
         # Define access modifier
-        access_modifier = "private" if class_name.startswith("_") else "public"
+        is_private = func_name.startswith("__") and func_name.count("__") < 2
+        access_modifier = "private" if is_private else "public"
 
         # Create start and end for class call
         start = []
@@ -446,7 +469,7 @@ class Python(Language):
         # Return all variables of function definition
         return access_modifier, class_name, super_classes, start, end
 
-    def get_method_definition(self, definition):
+    def get_method_definition(self, definition, class_name):
         """Gets processed method definition"""
     
         # Run super definition
@@ -457,11 +480,18 @@ class Python(Language):
             self.parse_function_definition(definition, params)
 
         # Define access modifier
-        access_modifier = "private" if func_name.startswith("_") else "public"
+        is_private = func_name.startswith("__") and func_name.count("__") < 2
+        access_modifier = "private" if is_private else "public"
 
         # Create start and end for function call
         start = []
         end = []
+
+        # Check if decorator states static method or class method
+        if decorator == "staticmethod":
+            access_modifier += " static"
+        elif decorator == "classmethod":
+           start += [params[0][0] + " = " + class_name]
     
         # Return all variables of function definition
         return access_modifier, return_type, func_name, params, start, end
