@@ -31,7 +31,7 @@ class Python(Language):
         for index in indexes:
             
             # Create not replacement string. Check if space required
-            if line[index + len(not_rep_str)] == "(":
+            if line[index+ len(not_rep_str)] == "(":
                 not_rep_list[0] = "not"
             else:
                 not_rep_list[0] = "not "
@@ -92,6 +92,43 @@ class Python(Language):
 
         # Return stripped array with extracted values
         return array, start, stop, step
+
+    def parse_function_definition(self, definition, params):
+        """Parse function definition and extract useful info"""
+
+        # Sepereate decorator if any
+        decorator = ""
+        definition_split = definition.split("\n")
+        if len(definition_split) != 1:
+            decorator, definition = definition_split
+
+            # Parse decorator
+            decorator = convert_decorator
+
+        # Get return value from function definition
+        params = params.rstrip(":")
+        params, return_type = params.split("->")
+        return_type = return_type.strip()
+        params = params.strip()
+
+        # Dump unwanted portions
+        func_name = definition.lstrip("def").strip()
+        params = params.rstrip(")")
+        params = [param.strip() for param in params.split(",")]
+
+        # Seperate annotate of parameter(for variable type)
+        params = [param.split(":") for param in params]
+
+        # Check if parameters are given
+        if params == [[""]]:
+            params = []
+        else:
+            
+            # Remove whitespaces if any
+            params = [[param[0].strip(), param[1].strip()] for param in params]
+
+        # Return all variables
+        return return_type, func_name, params, decorator
 
     def convert_if(self, condition): 
         """Converts if statement to python(vital condition to be provided)"""
@@ -362,24 +399,9 @@ class Python(Language):
         # Run super definition
         definition, params = super().get_function_definition(definition)
 
-        # Sepereate decorator if any
-        definition_split = definition.split("\n")
-        if len(definition_split) != 1:
-            decorator, definition = definition_split
-
-            # Parse decorator
-            decorator = convert_decorator
-
-        # Get return value from function definition
-        params = params.rstrip(":")
-        params, return_type = params.split("->")
-        return_type = return_type.strip()
-        params = params.strip()
-        
-        # Dump unwanted portions
-        func_name = definition.lstrip("def").strip()
-        params = params.rstrip(")")
-        params = [param.strip() for param in params.split(",")]
+        # Parse function definition
+        return_type, func_name, params, decorator =\
+            self.parse_function_definition(definition, params)
 
         # Define access modifier
         access_modifier = "private" if func_name.startswith("_") else "public"
@@ -387,17 +409,6 @@ class Python(Language):
         # Create start and end for function call
         start = []
         end = []
-
-        # Seperate annotate of parameter(for variable type)
-        params = [param.split(":") for param in params]
-       
-        # Check if parameters are given
-        if params == [[""]]:
-            params = []
-        else:
-            
-            # Remove whitespaces if any
-            params = [[param[0].strip(), param[1].strip()] for param in params]
     
         # Return all variables of function definition
         return access_modifier, return_type, func_name, params, start, end
@@ -440,4 +451,18 @@ class Python(Language):
     
         # Run super definition
         definition, params = super().get_method_definition(definition)
+
+        # Parse function definition
+        return_type, func_name, params, decorator =\
+            self.parse_function_definition(definition, params)
+
+        # Define access modifier
+        access_modifier = "private" if func_name.startswith("_") else "public"
+
+        # Create start and end for function call
+        start = []
+        end = []
+    
+        # Return all variables of function definition
+        return access_modifier, return_type, func_name, params, start, end
 

@@ -54,46 +54,54 @@ class Language:
             # Else return unsupported language
             return "Unsupported language {}".format(language)
 
-    def convert_if(self, condition):
+    @staticmethod
+    def convert_if(condition):
         """Converts if defenition"""
         
         # Return processed condition
         return condition
 
-    def convert_for(self, variable, start, stop, step, array):
+    @staticmethod
+    def convert_for(variable, start, stop, step, array):
         """Converts for definition"""
         
         # Return processed 'for variables'
         return variable, start, stop, step, array
 
-    def convert_while(self, condition):
+    @staticmethod
+    def convert_while(condition):
         """Converts while definition"""
         
         # Return processed condition
         return condition
 
-    def convert_function(self, access_modifier, return_type,
+    @staticmethod
+    def convert_function(access_modifier, return_type,
                          func_name, params):
         """Converts function definition"""
         
         # Return processed function variables
         return access_modifier, return_type, func_name, params
 
-    def convert_block(self, block):
+    @staticmethod
+    def convert_block(block):
         """Converts all lines of code except definitions"""
         pass
 
-    def convert_class(self, access_modifier, class_name, super_classes):
+    @staticmethod
+    def convert_class(access_modifier, class_name, super_classes):
         """Converts class definition"""
         
         # Return processed class variables
         return access_modifier, class_name, super_classes
 
-    def convert_method(self, definition):
+    @staticmethod
+    def convert_method(definition):
         """Converts method of class"""
         pass
 
-    def get_if_condition(self, definition):
+    @staticmethod
+    def get_if_condition(definition):
         """Gets if condition from definition"""
         
         # Get raw if condition
@@ -108,7 +116,8 @@ class Language:
         # Return if condition
         return line
 
-    def get_for_iterations(self, definition):
+    @staticmethod
+    def get_for_iterations(definition):
         """Gets number of iterations of for loop"""
         
         # Break line into sub pieces
@@ -118,7 +127,8 @@ class Language:
         return semicolon_split if has_semicolon else word_split
 
     
-    def get_while_condition(self, definition):
+    @staticmethod
+    def get_while_condition(definition):
         """Gets condition of while loop"""
         
         # Get raw while condition
@@ -133,7 +143,8 @@ class Language:
         # Return while condition
         return line
 
-    def get_function_definition(self, definition):
+    @staticmethod
+    def get_function_definition(definition):
         """Gets processed function definition"""
         
         # Find opening parentheses for fuction parameters
@@ -145,7 +156,8 @@ class Language:
         # Return definition and parameters
         return definition, params
 
-    def get_class_definition(self, definition):
+    @staticmethod
+    def get_class_definition(definition):
         """Gets processed class definition"""
 
         # Dump unwanted 'class' keyword
@@ -154,11 +166,12 @@ class Language:
         # Return processed definition
         return definition
 
-    def get_method_definition(self, definition):
+    @staticmethod
+    def get_method_definition(definition):
         """Gets processed method definition"""
         
         # Parse as a function (Methods are also functions)
-        definition, params = get_function_definition(definition)
+        definition, params = Language.get_function_definition(definition)
 
         # Return processed definition
         return definition, params
