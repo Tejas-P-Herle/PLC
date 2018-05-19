@@ -73,19 +73,21 @@ class Language:
         return condition
 
     def convert_function(self, access_modifier, return_type,
-                         definition, params):
+                         func_name, params):
         """Converts function definition"""
         
         # Return processed function variables
-        return access_modifier, return_type, definition, params
+        return access_modifier, return_type, func_name, params
 
     def convert_block(self, block):
         """Converts all lines of code except definitions"""
         pass
 
-    def convert_class(self, definition):
+    def convert_class(self, access_modifier, class_name, super_classes):
         """Converts class definition"""
-        pass
+        
+        # Return processed class variables
+        return access_modifier, class_name, super_classes
 
     def convert_method(self, definition):
         """Converts method of class"""
@@ -141,5 +143,23 @@ class Language:
         definition, params = definition[:index], definition[index+1:]
 
         # Return definition and parameters
+        return definition, params
+
+    def get_class_definition(self, definition):
+        """Gets processed class definition"""
+
+        # Dump unwanted 'class' keyword
+        definition = definition.lstrip("class").strip()
+
+        # Return processed definition
+        return definition
+
+    def get_method_definition(self, definition):
+        """Gets processed method definition"""
+        
+        # Parse as a function (Methods are also functions)
+        definition, params = get_function_definition(definition)
+
+        # Return processed definition
         return definition, params
 

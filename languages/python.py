@@ -99,11 +99,14 @@ class Python(Language):
         # Run super definition
         condition = super().convert_if(condition)
 
+        # Create if template
+        if_template = "if {cond}:"
+
         # Replace logical operators
         condition = self.replace_logical_ops(condition, direction="from")
 
         # Return converted if statement
-        return "if {cond}:".format(cond=condition)
+        return [if_template.format(cond=condition)]
         
     def convert_for(self, variable, start, stop, step, array):
         """Converts for statement to python"""
@@ -112,6 +115,9 @@ class Python(Language):
         variable, start, stop, step, array = super().convert_for(
             variable, start, stop, step, array
         )
+
+        # Create for template
+        for_template = "for {} in {}:"
 
         # Define loop condition
         loop_cond = ""
@@ -162,7 +168,7 @@ class Python(Language):
                 loop_cond = loop_cond.format(start + ", " + stop + ", " + step)
 
         # Return converted for statement
-        return "for {} in {}:".format(variable, loop_cond)
+        return [for_template.format(variable, loop_cond)]
     
     def convert_while(self, condition):
         """Converts while statement to python"""
@@ -170,33 +176,54 @@ class Python(Language):
         # Run super definition
         condition = super().convert_while(condition)
 
+        # Make while template
+        while_template = "while {cond}:"
+
         # Replace logical operators
         condition = self.replace_logical_ops(condition, direction="from")
 
         # Return converted if statement
-        return "while {cond}:".format(cond=condition)
+        return [while_template.format(cond=condition)]
     
-    def convert_function(self, access_modifier, return_type, definition, params):
+    def convert_function(self, access_modifier, return_type, func_name, params):
         """Converts function definition to python"""
         
-        # Run super definition
+        # Run super func_name
         line = super().convert_function(access_modifier, return_type,
-                                        definition, params)
+                                        func_name, params)
 
         # Make function template
-        function = "def {}({}) -> {}:"
+        function_template = "def {}({}) -> {}:"
 
         # Make parameters string
         params_str = ", ".join([": ".join(param) for param in params])
 
-        # Return processed function definition
-        return function.format(definition, params_str, return_type)
+        # Return processed function func_name
+        return [function_template.format(func_name, params_str, return_type)]
 
-    def convert_class(self, definition):
+    def convert_class(self, access_modifier, class_name, super_classes):
         """Converts class definition to python"""
         
         # Run super definition
-        line = super().convert_class(definition)
+        access_modifier, class_name, super_classes = super().convert_class(
+            access_modifier, class_name, super_classes
+        )
+
+        # Create class template
+        class_template = "class {}{}:"
+
+        # If super classes are provided, make super classes string
+        super_cls_str = ""
+        if super_classes:
+
+            # Create super_classes template
+            super_cls_str = "({})"
+
+            # Add all super_classes to sting
+            super_cls_str = super_cls_str.format(", ".join(super_classes))
+
+        # Return processed class definition
+        return [class_template.format(class_name, super_cls_str)]
     
     def convert_method(self, definition):
         """Converts mathod definition to python"""
@@ -210,6 +237,22 @@ class Python(Language):
         # Run super definition
         line = super().convert_block(definition)
 
+    def convert_decorator(self, definition):
+        """Convert python decorator to standard code"""
+
+        # Strip starting '@'
+        decorator, function = [part.strip() for part in definition.split("\n")]
+        wrapper = decorator.lstrip("@")
+
+        # Get function name
+        function_name = self.get_function_definition(function)[2]
+
+        # Create standard code template
+        decorator_template = "{0} = {1}({0})".format(function_name, wrapper)
+
+        # Return standard code
+        return [decorator_template.format()]
+
     def get_if_condition(self, definition):
         """Gets the condition from if definition"""
         
@@ -222,8 +265,12 @@ class Python(Language):
         # Replace logical operators
         line = self.replace_logical_ops(line, direction="to")
 
+        # Create start and end for while call
+        start = []
+        end = []
+        
         # Return if condition
-        return line
+        return line, start, end
 
     def get_for_iterations(self, definition):
         """Gets number of iterations of for loop"""
@@ -236,6 +283,10 @@ class Python(Language):
 
         # Strip ending semicolon
         for_range = for_range.rstrip(":")
+
+        # Create start and end for 'for loop' call
+        start = []
+        end = []
         
         # Set start and step to default
         start = "0"
@@ -267,9 +318,8 @@ class Python(Language):
                 if var_count == 3:
                     step = variables[2]
             
-            # Return all four variables, including array(None in this case)
+            # Set array to None
             array = None
-            return variable, start, stop, step, array
         else:
             # If range not found, iterate over given array
 
@@ -283,8 +333,8 @@ class Python(Language):
             if array.find("[") != -1 and array.find(":") != -1:
                 array, start, stop, step = self.get_list_slice_vars(array)
 
-            # Return all four variables, including array
-            return variable, start, stop, step, array
+        # Return all variables
+        return variable, start, stop, step, array, start, end
 
 
     def get_while_condition(self, definition):
@@ -299,8 +349,12 @@ class Python(Language):
         # Replace logical operators
         line = self.replace_logical_ops(line, direction="to")
 
+        # Create start and end for while call
+        start = []
+        end = []
+
         # Return while loop condition
-        return line
+        return line, start, end
 
     def get_function_definition(self, definition):
         """Gets processed function definition"""
@@ -308,8 +362,13 @@ class Python(Language):
         # Run super definition
         definition, params = super().get_function_definition(definition)
 
-        # Define access modifier
-        access_modifier = "public"
+        # Sepereate decorator if any
+        definition_split = definition.split("\n")
+        if len(definition_split) != 1:
+            decorator, definition = definition_split
+
+            # Parse decorator
+            decorator = convert_decorator
 
         # Get return value from function definition
         params = params.rstrip(":")
@@ -318,16 +377,67 @@ class Python(Language):
         params = params.strip()
         
         # Dump unwanted portions
-        definition = definition.lstrip("def").strip()
+        func_name = definition.lstrip("def").strip()
         params = params.rstrip(")")
         params = [param.strip() for param in params.split(",")]
 
+        # Define access modifier
+        access_modifier = "private" if func_name.startswith("_") else "public"
+
+        # Create start and end for function call
+        start = []
+        end = []
+
         # Seperate annotate of parameter(for variable type)
         params = [param.split(":") for param in params]
-
-        # Remove whitespaces if any
-        params = [[param[0].strip(), param[1].strip()] for param in params]
+       
+        # Check if parameters are given
+        if params == [[""]]:
+            params = []
+        else:
+            
+            # Remove whitespaces if any
+            params = [[param[0].strip(), param[1].strip()] for param in params]
     
         # Return all variables of function definition
-        return access_modifier, return_type, definition, params
+        return access_modifier, return_type, func_name, params, start, end
+
+    def get_class_definition(self, definition):
+        """Gets processed class definition"""
+
+        # Run super definition
+        definition = super().get_class_definition(definition)
+
+        # Dump unwanted portions
+        definition = definition.rstrip(":")
+
+        # Extract class name and superclasses from class definition
+        super_classes = []
+        
+        # Check if superclass specified
+        if definition.find("(") != -1:
+            class_name, super_classes = definition.split("(")
+            super_classes = super_classes.rstrip(")")
+            super_classes = [class_.strip() for class_ in super_classes.split(",")]
+        else:
+            # If no superclasses specified, extract only classname
+            class_name = definition
+        
+        class_name = class_name.strip()
+
+        # Define access modifier
+        access_modifier = "private" if class_name.startswith("_") else "public"
+
+        # Create start and end for class call
+        start = []
+        end = []
+    
+        # Return all variables of function definition
+        return access_modifier, class_name, super_classes, start, end
+
+    def get_method_definition(self, definition):
+        """Gets processed method definition"""
+    
+        # Run super definition
+        definition, params = super().get_method_definition(definition)
 
