@@ -3,9 +3,8 @@ from os import path
 
 
 class Language:
-    languages = ['python', 'java', 'cpp', 'c']
-    extensions = ['.py', '.java', '.cpp', '.c']
-    source_code = []
+    languages = ["python", "java", "cpp", "c"]
+    extensions = [".py", ".java", ".cpp", ".c"]
     
     @classmethod
     def get_language(cls, extension):
@@ -84,11 +83,11 @@ class Language:
         return access_modifier, return_type, func_name, params
 
     @staticmethod
-    def convert_class(access_modifier, class_name, super_classes):
+    def convert_class(access_modifier, class_name, classes, interfaces):
         """Converts class definition"""
         
         # Return processed class variables
-        return access_modifier, class_name, super_classes
+        return access_modifier, class_name, classes, interfaces
 
     @staticmethod
     def convert_method(access_modifier, return_type,
@@ -99,6 +98,13 @@ class Language:
         return access_modifier, return_type, func_name, params
 
     @staticmethod
+    def convert_interface(interface_name, interfaces):
+        """Converts interface definition"""
+        
+        # Return processed interface variables
+        return interface_name, interfaces
+
+    @staticmethod
     def get_if_condition(definition):
         """Gets if condition from definition"""
         
@@ -106,7 +112,7 @@ class Language:
         line = definition.lstrip("if")
         
         # Remove curly braces if present
-        line = line.strip("{")
+        line = line.rstrip("{")
         
         # Remove whitespace
         line = line.strip()
@@ -118,10 +124,18 @@ class Language:
     def get_for_iterations(definition):
         """Gets number of iterations of for loop"""
         
+        # Strip unwanted portions
+        definition = definition.strip("for").strip()
+
+        # Strip '{', '(', ')' if present
+        definition = definition.strip("{").strip()
+        definition = definition.lstrip("(").strip()
+        definition = definition.rstrip(")").strip()
+
         # Break line into sub pieces
-        word_split = definition.split(' ')
-        has_semicolon = definition.find(';') != -1
-        semicolon_split = definition.split(';')
+        word_split = definition.split(" ")
+        has_semicolon = definition.find(";") != -1
+        semicolon_split = [part.strip() for part in definition.split(";")]
         return semicolon_split if has_semicolon else word_split
 
     
@@ -133,7 +147,7 @@ class Language:
         line = definition.lstrip("while")
 
         # Remove curly braces if present
-        line = line.strip("{")
+        line = line.rstrip("{")
         
         # Remove whitespaces
         line = line.strip()
@@ -159,7 +173,7 @@ class Language:
         """Gets processed class definition"""
 
         # Dump unwanted 'class' keyword
-        definition = definition.lstrip("class").strip()
+        definition = definition.replace("class ", "").strip()
 
         # Return processed definition
         return definition
@@ -173,4 +187,14 @@ class Language:
 
         # Return processed definition
         return definition, params
+
+    @staticmethod
+    def get_interface_definition(definition):
+        """Gets processed interface name"""
+
+        # Dump unwanted 'interface' keyword
+        definition = definition.replace("interface", "").strip()
+
+        # Return processed interface name
+        return definition
 

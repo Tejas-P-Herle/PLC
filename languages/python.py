@@ -4,8 +4,6 @@ import re
 
 
 class Python(Language):
-    source_code = []
-
     def replace_logical_ops(self, line, direction):
         """Replaces all logical operators"""
 
@@ -25,8 +23,9 @@ class Python(Language):
         # Choose not replacement string
         not_rep_str = not_rep_list[index_a]
 
-        # Find indexes for not match string(to and from)
+        # Find indexes for 'not' match(to and from)
         indexes = [match.start() for match in re.finditer(not_rep_str, line)]
+
         # Replace not match indexes
         for index in indexes:
             
@@ -84,7 +83,7 @@ class Python(Language):
 
         # Set stop default to array length
         if not stop:
-            stop = "array.length"
+            stop = "Array.length"
 
         # Set step default to 1
         if not step:
@@ -92,6 +91,18 @@ class Python(Language):
 
         # Return stripped array with extracted values
         return array, start, stop, step
+
+    def get_type(self, value):
+        """Gets type of variable value in python"""
+
+        # Evaluated string statement for type()
+        var_type = str(eval("type({})".format(value)))
+
+        # Remove unwanted portions of string
+        var_type = var_type.replace("<class '", "").rstrip("'>")
+
+        # Return processed string
+        return var_type
 
     def parse_function_definition(self, definition, params):
         """Parse function definition and extract useful info"""
@@ -128,15 +139,41 @@ class Python(Language):
         if params == [[""]]:
             params = []
         else:
-            
+
             # Remove whitespaces if any
             params = [[param[0].strip(), param[1].strip()] for param in params]
+            
+            # Remove quotes for variable type
+            params = [[var[0], var[1].strip("'").strip('"')] for var in params]
+
+        # If return type is None with void(return value is type)
+        if return_type == "None":
+            return_type = "void"
 
         # Return all variables
         return return_type, func_name, params, decorator
 
+    def make_function_definition(self, return_type, func_name, params):
+        """Make function definition from variables"""
+        
+        # Make function template
+        function_template = "def {}({}) -> {}:"
+
+        # Close variable type in quotes
+        params = [[param[0], "'" + param[1] + "'"] for param in params]
+
+        # Make parameters string
+        params_str = ", ".join([": ".join(param) for param in params])
+
+        # If return type is void with None(Python equivalent for void)
+        if return_type == "void":
+            return_type = "None"
+
+        # Return processed function func_name
+        return function_template.format(func_name, params_str, return_type)
+        
     def convert_if(self, condition): 
-        """Converts if statement to python(vital condition to be provided)"""
+        """Converts if statement to python"""
         
         # Run super definition
         condition = super().convert_if(condition)
@@ -158,6 +195,9 @@ class Python(Language):
             variable, start, stop, step, array
         )
 
+        # Remove data type from variable(duck typing in Python)
+        variable = variable.split(" ")[-1]
+
         # Create for template
         for_template = "for {} in {}:"
 
@@ -168,7 +208,7 @@ class Python(Language):
             loop_cond = array
             
             # Check if array slicing is required
-            if step != "1" or stop != "array.length" or start != "0":
+            if step != "1" or stop != "Array.length" or start != "0":
 
                 # Make template for array slicing
                 loop_cond = "{}[{{}}]".format(array)
@@ -176,7 +216,7 @@ class Python(Language):
                 if start == "0":
                     start = ""
 
-                if stop == "array.length":
+                if stop == "Array.length":
                     stop = ""
 
                 if step == "1":
@@ -226,19 +266,6 @@ class Python(Language):
 
         # Return converted if statement
         return [while_template.format(cond=condition)]
-
-    def make_function_definition(self, return_type, func_name, params):
-        """Make function definition from variables"""
-        
-        # Make function template
-        function_template = "def {}({}) -> {}:"
-
-        # Make parameters string
-        params_str = ", ".join([": ".join(param) for param in params])
-
-        # Return processed function func_name
-        return [function_template.format(func_name, params_str, return_type)]
-        
     
     def convert_function(self, access_modifier, return_type, func_name, params):
         """Converts function definition to python"""
@@ -251,30 +278,46 @@ class Python(Language):
         # Make and return processd function definition
         return [self.make_function_definition(return_type, func_name, params)]
 
-    def convert_class(self, access_modifier, class_name, super_classes):
+    def convert_class(self, access_modifier, class_name, classes, interfaces):
         """Converts class definition to python"""
         
         # Run super definition
-        access_modifier, class_name, super_classes = super().convert_class(
-            access_modifier, class_name, super_classes
-        )
+        access_modifier, class_name, classes, interfaces =\
+            super().convert_class(access_modifier, class_name,
+                                  classes, interfaces)
+
+        # Merge classes and interfaces both are the same in python
+        super_ = classes + interfaces
+
+        # Create docstring template for class
+        doc_str = '"""{}"""'
+
+        # Create string to denote super name as interface
+        dnt = ": interface"
+
+        # Create docstring
+        doc_str = doc_str.format(", ".join([name+dnt for name in interfaces]))
+
+        # If docstring is not empty add new line to seperate userinput docstring
+        if doc_str != "'" * 6 and doc_str != '"' * 6:
+            doc_str = doc_str[:-3] + "\n" + doc_str[-3:]
 
         # Create class template
         class_template = "class {}{}:"
 
         # If super classes are provided, make super classes string
         super_cls_str = ""
-        if super_classes:
+        if super_:
 
             # Create super_classes template
             super_cls_str = "({})"
 
             # Add all super_classes to sting
-            super_cls_str = super_cls_str.format(", ".join(super_classes))
+            super_cls_str = super_cls_str.format(", ".join(super_))
 
         # Return processed class definition
-        return [class_template.format(class_name, super_cls_str)]
-    
+        return [class_template.format(class_name, super_cls_str), doc_str]
+
     def convert_method(self, access_modifier, return_type, func_name, params):
         """Converts mathod definition to python"""
         
@@ -285,8 +328,8 @@ class Python(Language):
 
         # Make function definition
         function = []
-        function += self.make_function_definition(return_type,
-                                                  func_name, params)
+        function += [self.make_function_definition(return_type,
+                                                  func_name, params)]
 
         # Add decorator if required
         if "static" in access_modifier:
@@ -295,6 +338,34 @@ class Python(Language):
         # Return processed function definition
         return function
 
+    def convert_interface(self, interface_name, interfaces):    
+        """Converts interface definiton to python"""
+
+        # Run super definition
+        interface_name, interfaces = super().convert_interface(
+            interface_name, interfaces
+        )
+
+        # Set access modifier to public(interfaces are always public)
+        access_modifier = "public"
+
+        # Run class converter(interface and classes are the same in python)
+        class_def = self.convert_class(
+            access_modifier, interface_name, [], interfaces
+        )
+
+        # Add class type to docstring to denote interface
+        doc_str = class_def[-1]
+        intr_dnt = "class_type: interface"
+
+        # Add new line if docstring has seperate text
+        if doc_str != "'" * 6 and doc_str != '"' * 6:
+            intr_dnt += "\n"
+        class_def[-1] = doc_str[:3] + intr_dnt + doc_str[3:]
+
+        # Return processed interface definition
+        return class_def
+    
     def convert_decorator(self, definition):
         """Convert python decorator to standard code"""
 
@@ -337,7 +408,7 @@ class Python(Language):
         line = super().get_for_iterations(definition)
         
         # Save required words
-        variable, for_range = line[1], "".join(line[3:])
+        variable, for_range = line[0], "".join(line[2:])
 
         # Strip ending semicolon
         for_range = for_range.rstrip(":")
@@ -347,7 +418,7 @@ class Python(Language):
         end = []
         
         # Set start and step to default
-        start = "0"
+        begin = "0"
         step = "1"
 
         # Parse for_range
@@ -363,16 +434,16 @@ class Python(Language):
             var_count = len(variables)
             
             # If only one variable is given,
-            # Set stop variable with default start and step
+            # Set stop variable with default begin and step
             if var_count == 1:
                 stop = variables[0]
             # Else if two variable are given,
-            # set start and stop variable with default step
+            # set begin and stop variable with default step
             else:
-                start = variables[0]
+                begin = variables[0]
                 stop = variables[1]
                 # If three variables are given,
-                # set all three start, stop and step variables
+                # set all three begin, stop and step variables
                 if var_count == 3:
                     step = variables[2]
             
@@ -385,14 +456,27 @@ class Python(Language):
             array = for_range
 
             # Set default stop
-            stop = "arr.length"
+            stop = "Array.length"
 
             # Check of array slicing
             if array.find("[") != -1 and array.find(":") != -1:
-                array, start, stop, step = self.get_list_slice_vars(array)
+                array, begin, stop, step = self.get_list_slice_vars(array)
+
+        # Get variable type for variable
+
+        # If array is passed, get type of array
+        if array:
+            var_type = "Array.data_type"
+
+        # Else get type of variable
+        else:
+            var_type = self.get_type(begin)
+
+        # Append variable type to variable
+        variable = var_type + " " + variable
 
         # Return all variables
-        return variable, start, stop, step, array, start, end
+        return variable, begin, stop, step, array, start, end
 
 
     def get_while_condition(self, definition):
@@ -441,25 +525,60 @@ class Python(Language):
         # Run super definition
         definition = super().get_class_definition(definition)
 
+        # Get docstring from definition
+        definition, docstring = definition.rsplit("\n", 1)
+
         # Dump unwanted portions
         definition = definition.rstrip(":")
 
-        # Extract class name and superclasses from class definition
-        super_classes = []
+        # Define storage lists
+        classes = []
+        interfaces = []
+        super_list = [classes, interfaces]
         
-        # Check if superclass specified
+        # Check if superclass or interfaces specified
         if definition.find("(") != -1:
-            class_name, super_classes = definition.split("(")
-            super_classes = super_classes.rstrip(")")
-            super_classes = [class_.strip() for class_ in super_classes.split(",")]
+
+            # Extract class name and superclasses from class definition
+            class_name, super_ = definition.split("(")
+            super_ = super_.rstrip(")")
+
+            # Store all superclasses and interfaces to list
+            super_split = [part.strip() for part in super_.split(",")]
+            for super_ in super_split:
+
+                # Set default to super class
+                index = 0
+
+                # Get superclass or interface name start in docstring
+                var_loc = docstring.find(super_)
+
+                # Check if name found in docstring and specifies interface
+                if var_loc != -1:
+                    
+                    # Get location of specification
+                    spec_loc = var_loc + len(super_) + len(": ")
+
+                    # Check if interface is specified
+                    intr_str = "interface"
+                    if docstring[spec_loc: spec_loc+len(intr_str)] == intr_str:
+                        
+                        # Change specification to interface
+                        index = 1
+
+                # Add superclass or interface name to appropriate list
+                super_list[index] += [super_]
+
         else:
+            
             # If no superclasses specified, extract only classname
             class_name = definition
         
+        # Strip whitespace
         class_name = class_name.strip()
 
         # Define access modifier
-        is_private = func_name.startswith("__") and func_name.count("__") < 2
+        is_private = class_name.startswith("__") and class_name.count("__") < 2
         access_modifier = "private" if is_private else "public"
 
         # Create start and end for class call
@@ -467,7 +586,7 @@ class Python(Language):
         end = []
     
         # Return all variables of function definition
-        return access_modifier, class_name, super_classes, start, end
+        return access_modifier, class_name, classes, interfaces, start, end
 
     def get_method_definition(self, definition, class_name):
         """Gets processed method definition"""
@@ -495,4 +614,39 @@ class Python(Language):
     
         # Return all variables of function definition
         return access_modifier, return_type, func_name, params, start, end
+
+    def get_interface_definition(self, definition):
+        """Gets processed interface definition"""
+
+        # Run super definition
+        definition = super().get_interface_definition(definition)
+
+        # Dump unwanted portions
+        definition = definition.lstrip("class ")
+        definition = definition.rstrip(":").rstrip(")").strip()
+
+        # Try splitting at open parentheses
+        try:
+            # Check if interfaces are mentioned
+            definition, interfaces = definition.split("(")
+            if interfaces:
+                
+                # Get all interfaces
+                interfaces = [intr.strip() for intr in interfaces.split(",")]
+
+            # Else set interfaces to empty list
+            else:
+                interfaces = []
+
+
+        # If failed not inerfaces are provided, hence set to empty list
+        except ValueError:
+            interfaces = []
+
+        # Create start and end for interface call
+        start = []
+        end = []
+
+        # Return processed interface name
+        return definition, interfaces, start, end
 
