@@ -105,11 +105,11 @@ class Language:
         return interface_name, interfaces
 
     @staticmethod
-    def get_if_condition(definition):
+    def get_if_condition(file, i):
         """Gets if condition from definition"""
         
         # Get raw if condition
-        line = definition.lstrip("if")
+        line = file[i].lstrip("if")
         
         # Remove curly braces if present
         line = line.rstrip("{")
@@ -121,11 +121,11 @@ class Language:
         return line
 
     @staticmethod
-    def get_for_iterations(definition):
+    def get_for_iterations(file, i):
         """Gets number of iterations of for loop"""
         
         # Strip unwanted portions
-        definition = definition.strip("for").strip()
+        definition = file[i].strip("for").strip()
 
         # Strip '{', '(', ')' if present
         definition = definition.strip("{").strip()
@@ -140,11 +140,11 @@ class Language:
 
     
     @staticmethod
-    def get_while_condition(definition):
+    def get_while_condition(file, i):
         """Gets condition of while loop"""
         
         # Get raw while condition
-        line = definition.lstrip("while")
+        line = file[i].lstrip("while")
 
         # Remove curly braces if present
         line = line.rstrip("{")
@@ -156,9 +156,12 @@ class Language:
         return line
 
     @staticmethod
-    def get_function_definition(definition):
+    def get_function_definition(file, i):
         """Gets processed function definition"""
         
+        # Save file line to local variable definition
+        definition = file[i].strip()
+
         # Find opening parentheses for fuction parameters
         index = definition.find("(")
 
@@ -169,27 +172,27 @@ class Language:
         return definition, params
 
     @staticmethod
-    def get_class_definition(definition):
+    def get_class_definition(file, i):
         """Gets processed class definition"""
 
         # Dump unwanted 'class' keyword
-        definition = definition.replace("class ", "").strip()
+        definition = file[i].replace("class ", "").strip()
 
         # Return processed definition
         return definition
 
     @staticmethod
-    def get_method_definition(definition):
+    def get_method_definition(file, i):
         """Gets processed method definition"""
         
         # Parse as a function (Methods are also functions)
-        definition, params = Language.get_function_definition(definition)
+        definition, params = Language.get_function_definition(file, i)
 
         # Return processed definition
         return definition, params
 
     @staticmethod
-    def get_interface_definition(definition):
+    def get_interface_definition(file, i):
         """Gets processed interface name"""
 
         # Dump unwanted 'interface' keyword
@@ -197,4 +200,32 @@ class Language:
 
         # Return processed interface name
         return definition
+
+    def is_if(self, file, i):
+        """Recognizes if line is an if block statement in python"""
+        pass
+        
+    def is_for(self, file, i):
+        """Recognizes if line is a for loop statement in python"""
+        pass
+
+    def is_while(self, file, i):
+        """Recognizes if line is a while loop statement in python"""
+        pass
+
+    def is_func(self, file, i):
+        """Recognize if line is a function definition"""
+        pass
+
+    def is_method(self, file, i):
+        """Recognize if line is a method definition"""
+        pass
+
+    def is_cls(self, file, i):
+        """Recognize if line is a class definition"""
+        pass
+
+    def is_interface(self, file, i):  
+        """Recognize if line is an interface definition"""
+        pass
 

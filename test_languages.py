@@ -1,12 +1,8 @@
 """Runs all test files for all classes"""
 import unittest
-from test_language import TestLanguage
-from test_file_path import TestFilePath
-from test_error import TestError
-from test_PLC import TestPLC
 from languages.test_python import TestPython
 
-test_cases = (TestPLC, TestLanguage, TestFilePath, TestError, TestPython)
+test_cases = tuple([TestPython])
 
 
 def load_tests():

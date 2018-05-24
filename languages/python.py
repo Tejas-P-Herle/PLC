@@ -7,48 +7,45 @@ class Python(Language):
     def replace_logical_ops(self, line, direction):
         """Replaces all logical operators"""
 
-        # Check if conversion is from or to
-        index = 0 if direction == "to" else 1
-
         # Find list indexes for to and from conversions
-        index_a = index
-        index_b = (index + 1) % 2
+        index_a = 0 if direction == "to" else 1
+        index_b = (index_a + 1) % 2
         
         # Create replacement maps
-        replacement_list = [["and", "&&", -1], ["or", "||", -1]]
+        replacement_list = [["and", "&&"], ["or", "||"], ["not", "!"]]
 
-        # Create not replacement list
-        not_rep_list = ["not", "!"]
+        # Split line to words list
+        words = re.split("([^&|!\w+])", line)
 
-        # Choose not replacement string
-        not_rep_str = not_rep_list[index_a]
-
-        # Find indexes for 'not' match(to and from)
-        indexes = [match.start() for match in re.finditer(not_rep_str, line)]
-
-        # Replace not match indexes
-        for index in indexes:
+        # Replace logical operators
+        i, words_count = 0, len(words)
+        while i != words_count:
             
-            # Create not replacement string. Check if space required
-            if line[index+ len(not_rep_str)] == "(":
-                not_rep_list[0] = "not"
-            else:
-                not_rep_list[0] = "not "
+            # Catch exception if index error due to last word
+            try:
+                # Remove space after 'not'
+                if words[i] == "not" and words[i+1] == " " and not index_a:
+                    del words[i+1]
+                    words_count -= 1
 
-            # Add to replacement list
-            # Add in proper order
-            not_list = [not_rep_list[index_a], not_rep_list[index_b]]
-            replacement_list.append([not_list[index_a], not_list[index_b], 1])
-        
-        # For operator in operators
-        for replacement in replacement_list:
+            except IndexError:
+                pass
 
-            # Replace with appropriate replacements
-            line = line.replace(replacement[index_a], replacement[index_b],
-                                replacement[2])
-        
+            # Replace words
+            for opr in replacement_list:
+                if words[i] == opr[index_a]:
+                    words[i] = opr[index_b]
+
+            # If '!' is attached with words, replace it with 'not '
+            if words[i].startswith("!") and index_a:
+                words.insert(i+1, words[i][1:])
+                words[i] = "not "
+
+            # Increment count
+            i += 1
+
         # Return modified line
-        return line
+        return "".join(words)
 
     def get_list_slice_vars(self, list_):
         """Gets the start, stop and step from a list sliceing call"""
@@ -104,33 +101,59 @@ class Python(Language):
         # Return processed string
         return var_type
 
-    def parse_function_definition(self, definition, params):
+    def parse_function_definition(self, file, i, definition, params):
         """Parse function definition and extract useful info"""
 
-        # Sepereate decorator if any
-        decorator = ""
-        definition_split = definition.split("\n")
-        if len(definition_split) != 1:
-            decorator, definition = definition_split
-
-            # Check if standard decorators
-            if decorator in ["@staticmethod", "@classmethod"]:
-                # Save decorators as is(without @)
-                decorator = decorator.lstrip("@")
-            else:
-                # Else parse decorator
-                decorator = self.convert_decorator(decorator)
+        # Save line in local variable definition
+        definition = definition.strip()
+        params = params.strip()
 
         # Get return value from function definition
         params = params.rstrip(":")
-        params, return_type = params.split("->")
-        return_type = return_type.strip()
+        try:
+            params, return_type = params.split("->")
+        except:
+
+            # Default to 'void'
+            return_type = "void"
+        return_type = return_type.strip().strip("'").strip('"').strip()
         params = params.strip()
 
         # Dump unwanted portions
         func_name = definition.lstrip("def").strip()
         params = params.rstrip(")")
         params = [param.strip() for param in params.split(",")]
+
+        # Get decorator if any
+        decorators = []
+
+        # Initialize j to i
+        j = i
+
+        try:
+
+            # While decorators found, add to list
+            while file[j-1].strip().startswith("@"):
+
+                # Save decorator line to variable
+                decorator = file[j-1].strip()
+
+                # Check if standard decorators
+                if decorator in ["@staticmethod", "@classmethod"]:
+
+                    # Save decorators as is(without @)
+                    decorators.append(decorator.lstrip("@"))
+                else:
+
+                    # Else parse decorator
+                    decorators += self.convert_decorator(decorator, func_name)
+
+                # Decrement j
+                j -= 1
+
+        # Due to first line in file
+        except IndexError:
+            pass
 
         # Seperate annotate of parameter(for variable type)
         params = [param.split(":") for param in params]
@@ -151,13 +174,13 @@ class Python(Language):
             return_type = "void"
 
         # Return all variables
-        return return_type, func_name, params, decorator
+        return return_type, func_name, params, decorators
 
     def make_function_definition(self, return_type, func_name, params):
         """Make function definition from variables"""
         
         # Make function template
-        function_template = "def {}({}) -> {}:"
+        function_template = "def {}({}) -> {!r}:"
 
         # Close variable type in quotes
         params = [[param[0], "'" + param[1] + "'"] for param in params]
@@ -171,6 +194,77 @@ class Python(Language):
 
         # Return processed function func_name
         return function_template.format(func_name, params_str, return_type)
+
+    def get_class_name(self, file, i):
+        """Gets first previously parsed class"""
+
+        # Iterate over file but backwards
+        for j in range(i, -1, -1):
+            
+            # Check if line is a class definition
+            if self.is_cls(file, j):
+                
+                # Store line in local variable
+                line = file[j].rstrip(":")
+
+                # Get class name
+                class_name = line.replace("class", "").strip().split("(")[0]
+
+                # Return class name
+                return class_name.strip()
+
+    def get_doc_str(self, file, i):
+        """Returns doc string of object"""
+
+        # Save triple double and single quotes in variables
+        single_quotes = "'" * 3
+        double_quotes = '"' * 3
+        quotes = None
+        j = -1
+        doc_str = []
+
+        # Search first occurance of triple quotes
+        for j in range(i, len(file)):
+
+            if single_quotes in file[j]:
+
+                # Append doc string line to doc_str list
+                doc_str.append(file[j].strip().strip("'"))
+                if file[j].count(single_quotes) == 2:
+
+                    # Is a one line doc_str
+                    return doc_str
+                
+                # Quotes to single quotes
+                quotes = single_quotes
+
+            elif double_quotes in file[j]:
+
+                # Append doc string line to doc_str list
+                doc_str.append(file[j].strip().strip('"'))
+                if file[j].count(double_quotes) == 2:
+
+                    # Is a one line doc_str
+                    return doc_str
+                
+                # Quotes to double quotes
+                quotes = double_quotes
+
+            # If first set of quotes are fount set j and break from loop
+            if quotes:
+                j += 1
+                break
+
+        # While ending quotes not found add string to doc_string
+        while quotes not in file[j]:
+
+            # Add line to doc_str and increment line pointer
+            doc_str.append(file[j].strip().strip(quotes))
+            j += 1
+
+        # Add closing line to docstring and return result
+        doc_str.append(file[j].strip().strip(quotes))
+        return doc_str
         
     def convert_if(self, condition): 
         """Converts if statement to python"""
@@ -278,46 +372,6 @@ class Python(Language):
         # Make and return processd function definition
         return [self.make_function_definition(return_type, func_name, params)]
 
-    def convert_class(self, access_modifier, class_name, classes, interfaces):
-        """Converts class definition to python"""
-        
-        # Run super definition
-        access_modifier, class_name, classes, interfaces =\
-            super().convert_class(access_modifier, class_name,
-                                  classes, interfaces)
-
-        # Merge classes and interfaces both are the same in python
-        super_ = classes + interfaces
-
-        # Create docstring template for class
-        doc_str = '"""{}"""'
-
-        # Create string to denote super name as interface
-        dnt = ": interface"
-
-        # Create docstring
-        doc_str = doc_str.format(", ".join([name+dnt for name in interfaces]))
-
-        # If docstring is not empty add new line to seperate userinput docstring
-        if doc_str != "'" * 6 and doc_str != '"' * 6:
-            doc_str = doc_str[:-3] + "\n" + doc_str[-3:]
-
-        # Create class template
-        class_template = "class {}{}:"
-
-        # If super classes are provided, make super classes string
-        super_cls_str = ""
-        if super_:
-
-            # Create super_classes template
-            super_cls_str = "({})"
-
-            # Add all super_classes to sting
-            super_cls_str = super_cls_str.format(", ".join(super_))
-
-        # Return processed class definition
-        return [class_template.format(class_name, super_cls_str), doc_str]
-
     def convert_method(self, access_modifier, return_type, func_name, params):
         """Converts mathod definition to python"""
         
@@ -338,6 +392,44 @@ class Python(Language):
         # Return processed function definition
         return function
 
+    def convert_class(self, access_modifier, class_name, classes, interfaces):
+        """Converts class definition to python"""
+        
+        # Run super definition
+        access_modifier, class_name, classes, interfaces =\
+            super().convert_class(access_modifier, class_name,
+                                  classes, interfaces)
+
+        # Merge classes and interfaces both are the same in python
+        super_ = classes + interfaces
+
+        # Create string to denote super name as interface
+        dnt = ": interface"
+
+        # Create docstring
+        doc_str = [name+dnt for name in interfaces]
+
+        # Create class template
+        class_template = "class {}{}:"
+
+        # If super classes are provided, make super classes string
+        super_cls_str = ""
+        if super_:
+
+            # Create super_classes template
+            super_cls_str = "({})"
+
+            # Add all super_classes to sting
+            super_cls_str = super_cls_str.format(", ".join(super_))
+
+        # If doc string is not empty add starting and ending quotes to docstring
+        if doc_str:
+            doc_str[0] = '"""' + doc_str[0]
+            doc_str[-1] += '"""'
+
+        # Return processed class definition
+        return [class_template.format(class_name, super_cls_str)] + doc_str
+
     def convert_interface(self, interface_name, interfaces):    
         """Converts interface definiton to python"""
 
@@ -355,38 +447,41 @@ class Python(Language):
         )
 
         # Add class type to docstring to denote interface
-        doc_str = class_def[-1]
-        intr_dnt = "class_type: interface"
+        intr_def, doc_str = class_def[0], class_def[1:]
+        intr_dnt = "class type: interface"
 
         # Add new line if docstring has seperate text
-        if doc_str != "'" * 6 and doc_str != '"' * 6:
-            intr_dnt += "\n"
-        class_def[-1] = doc_str[:3] + intr_dnt + doc_str[3:]
+        if doc_str:
+
+            # Remove statring quotes
+            quotes = doc_str[0][:3]
+            doc_str[0] = doc_str[0][3:]
+
+            # Insert text into first line
+            doc_str.insert(0, quotes + intr_dnt)
+        else:
+            doc_str = ['"""' + intr_dnt + '"""']
 
         # Return processed interface definition
-        return class_def
+        return [intr_def] + doc_str
     
-    def convert_decorator(self, definition):
+    def convert_decorator(self, decorator, func_name):
         """Convert python decorator to standard code"""
 
         # Strip starting '@'
-        decorator, function = [part.strip() for part in definition.split("\n")]
         wrapper = decorator.lstrip("@")
 
-        # Get function name
-        function_name = self.get_function_definition(function)[2]
-
         # Create standard code template
-        decorator_template = "{0} = {1}({0})".format(function_name, wrapper)
+        decorator_template = "{0} = {1}({0})".format(func_name, wrapper)
 
         # Return standard code
         return [decorator_template.format()]
 
-    def get_if_condition(self, definition):
+    def get_if_condition(self, file, i):
         """Gets the condition from if definition"""
         
         # Run super definition
-        line = super().get_if_condition(definition)
+        line = super().get_if_condition(file, i)
 
         # Strip ending colon
         line = line.rstrip(":")
@@ -401,11 +496,11 @@ class Python(Language):
         # Return if condition
         return line, start, end
 
-    def get_for_iterations(self, definition):
+    def get_for_iterations(self, file, i):
         """Gets number of iterations of for loop"""
         
         # Run super definition
-        line = super().get_for_iterations(definition)
+        line = super().get_for_iterations(file, i)
         
         # Save required words
         variable, for_range = line[0], "".join(line[2:])
@@ -479,11 +574,11 @@ class Python(Language):
         return variable, begin, stop, step, array, start, end
 
 
-    def get_while_condition(self, definition):
+    def get_while_condition(self, file, i):
         """Gets condition of while loop"""
 
         # Run super definition
-        line = super().get_while_condition(definition)
+        line = super().get_while_condition(file, i)
 
         # Strip ending colon
         line = line.rstrip(":")
@@ -498,15 +593,39 @@ class Python(Language):
         # Return while loop condition
         return line, start, end
 
-    def get_function_definition(self, definition):
+    def get_function_definition(self, file, i):
         """Gets processed function definition"""
         
         # Run super definition
-        definition, params = super().get_function_definition(definition)
+        definition, params = super().get_function_definition(file, i)
 
         # Parse function definition
         return_type, func_name, params, decorator =\
-            self.parse_function_definition(definition, params)
+            self.parse_function_definition(file, i, definition, params)
+
+        # Define access modifier
+        is_private = func_name.startswith("__") and func_name.count("__") < 2
+        access_modifier = "private" if is_private else "public"
+
+        # Create start and end for function call
+        start = []
+        end = [] + decorator
+    
+        # Return all variables of function definition
+        return access_modifier, return_type, func_name, params, start, end
+
+    def get_method_definition(self, file, i):
+        """Gets processed method definition"""
+    
+        # Run super definition
+        definition, params = super().get_method_definition(file, i)
+
+        # Get class name
+        class_name = self.get_class_name(file, i)
+
+        # Parse function definition
+        return_type, func_name, params, decorator =\
+            self.parse_function_definition(file, i, definition, params)
 
         # Define access modifier
         is_private = func_name.startswith("__") and func_name.count("__") < 2
@@ -515,15 +634,21 @@ class Python(Language):
         # Create start and end for function call
         start = []
         end = []
+
+        # Check if decorator states static method or class method
+        if "staticmethod" in decorator:
+            access_modifier += " static"
+        elif "classmethod" in decorator:
+           start += [params[0][0] + " = " + class_name]
     
         # Return all variables of function definition
         return access_modifier, return_type, func_name, params, start, end
 
-    def get_class_definition(self, definition):
+    def get_class_definition(self, file, i):
         """Gets processed class definition"""
 
         # Run super definition
-        definition = super().get_class_definition(definition)
+        definition = super().get_class_definition(file, i)
 
         # Get docstring from definition
         definition, docstring = definition.rsplit("\n", 1)
@@ -588,38 +713,11 @@ class Python(Language):
         # Return all variables of function definition
         return access_modifier, class_name, classes, interfaces, start, end
 
-    def get_method_definition(self, definition, class_name):
-        """Gets processed method definition"""
-    
-        # Run super definition
-        definition, params = super().get_method_definition(definition)
-
-        # Parse function definition
-        return_type, func_name, params, decorator =\
-            self.parse_function_definition(definition, params)
-
-        # Define access modifier
-        is_private = func_name.startswith("__") and func_name.count("__") < 2
-        access_modifier = "private" if is_private else "public"
-
-        # Create start and end for function call
-        start = []
-        end = []
-
-        # Check if decorator states static method or class method
-        if decorator == "staticmethod":
-            access_modifier += " static"
-        elif decorator == "classmethod":
-           start += [params[0][0] + " = " + class_name]
-    
-        # Return all variables of function definition
-        return access_modifier, return_type, func_name, params, start, end
-
-    def get_interface_definition(self, definition):
+    def get_interface_definition(self, file, i):
         """Gets processed interface definition"""
 
         # Run super definition
-        definition = super().get_interface_definition(definition)
+        definition = super().get_interface_definition(file, i)
 
         # Dump unwanted portions
         definition = definition.lstrip("class ")
@@ -649,4 +747,86 @@ class Python(Language):
 
         # Return processed interface name
         return definition, interfaces, start, end
+
+    def is_if(self, file, i):
+        """Recognizes if line is an if block statement in python"""
+
+        # Save line to local variable
+        line = file[i]
+        
+        # If line starts with if and ends with ':' return True, else False
+        if line.startswith("if") and line.endswith(":"):
+            return True
+        return False
+
+    def is_for(self, file, i):
+        """Recognizes if line is a for loop statement in python"""
+
+        # Save line to local variable
+        line = file[i]
+
+        # If line starts with for and ends with ':' return True, else False
+        if line.startwith("for") and line.endswith(":"):
+            return True
+        return False
+
+    def is_while(self, file, i):
+        """Recognizes if line is a while loop statement in python"""
+
+        # Save line to local variable
+        line = file[i]
+
+        # If line starts with while and ends with ':' return True, else False
+        if line.startswith("while") and line.endswith(":"):
+            return True
+        return False
+
+    def is_func(self, file, i):
+        """Recognize if line is a function definition in python"""
+
+        # Save line to local variable
+        line = file[i]
+        
+        # If line starts with 'def' and has parentheses and ends with ':'
+        # Then return True, else False
+        if line.startswith("def") and line.endswith(":"):
+            if line.find("(") != -1 and line.find(")") != -1:
+                return True
+        return False
+
+    def is_method(self, file, i):
+        """Recognize if line is a method definition in python"""
+
+        # Save line to local variable
+        line = file[i]
+
+        # Check if line is a function definition as method is also a function
+        # Note: Don't run is_func() if line found inside class
+        return self.is_func(line)
+
+    def is_cls(self, file, i):
+        """Recognize if line is a class definition"""
+
+        # Save line to local variable
+        line = file[i]
+
+        # If line starts with 'class' and ends with ':' return True, else False
+        if line.startswith("class ") and line.endswith(":"):
+            return True
+        return False
+
+    def is_interface(self, file, i):  
+        """Recognize if line is an interface definition"""
+
+        # Save line to local variable
+        line = file[i]
+
+        # Get doc_str for class
+        doc_str = self.get_doc_str(file, i)
+
+        # If line matches class definition and doc_string specifies interface
+        # Then return True, else False
+        if self.is_cls(line) and "class type: interface" in doc_str:
+            return True
+        return False
 
