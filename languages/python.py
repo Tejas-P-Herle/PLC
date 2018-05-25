@@ -223,8 +223,19 @@ class Python(Language):
         j = -1
         doc_str = []
 
-        # Search first occurance of triple quotes
+        # Increment i to point to possible start of docstring
+        i += 1
+
+        # Get line indent
+        indent = lambda x: len(file[x]) - len(file[x].lstrip())
+        base_indent = indent(i)
+
+        # Search first occurance of triple quotes before increment in indent
         for j in range(i, len(file)):
+            
+            # If indentation changes, return empty docstring
+            if indent(j) != base_indent:
+                return []
 
             if single_quotes in file[j]:
 
@@ -651,7 +662,7 @@ class Python(Language):
         definition = super().get_class_definition(file, i)
 
         # Get docstring from definition
-        definition, docstring = definition.rsplit("\n", 1)
+        doc_str = self.get_doc_str(file, i)
 
         # Dump unwanted portions
         definition = definition.rstrip(":")
@@ -676,20 +687,21 @@ class Python(Language):
                 index = 0
 
                 # Get superclass or interface name start in docstring
-                var_loc = docstring.find(super_)
+                for i, line in enumerate(doc_str):
+                    loc = line.find(super_)
 
-                # Check if name found in docstring and specifies interface
-                if var_loc != -1:
-                    
-                    # Get location of specification
-                    spec_loc = var_loc + len(super_) + len(": ")
+                    # Check if name found in docstring
+                    if loc != -1:
 
-                    # Check if interface is specified
-                    intr_str = "interface"
-                    if docstring[spec_loc: spec_loc+len(intr_str)] == intr_str:
-                        
-                        # Change specification to interface
-                        index = 1
+                        # Get location of specification
+                        spec_loc = loc + len(super_) + len(": ")
+
+                        # Check if interface is specified
+                        intr_str = "interface"
+                        if line[spec_loc: spec_loc+len(intr_str)] == intr_str:
+                            
+                            # Change specification to interface
+                            index = 1
 
                 # Add superclass or interface name to appropriate list
                 super_list[index] += [super_]
@@ -710,7 +722,7 @@ class Python(Language):
         start = []
         end = []
     
-        # Return all variables of function definition
+        # Return all variables of class definition
         return access_modifier, class_name, classes, interfaces, start, end
 
     def get_interface_definition(self, file, i):
@@ -726,7 +738,7 @@ class Python(Language):
         # Try splitting at open parentheses
         try:
             # Check if interfaces are mentioned
-            definition, interfaces = definition.split("(")
+            interface_name, interfaces = definition.split("(")
             if interfaces:
                 
                 # Get all interfaces
@@ -736,23 +748,23 @@ class Python(Language):
             else:
                 interfaces = []
 
-
-        # If failed not inerfaces are provided, hence set to empty list
+        # If failed not interfaces are provided, hence set to empty list
         except ValueError:
             interfaces = []
+            interface_name = definition
 
         # Create start and end for interface call
         start = []
         end = []
 
-        # Return processed interface name
-        return definition, interfaces, start, end
+        # Return all variables of interface definition
+        return interface_name, interfaces, start, end
 
     def is_if(self, file, i):
         """Recognizes if line is an if block statement in python"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
         
         # If line starts with if and ends with ':' return True, else False
         if line.startswith("if") and line.endswith(":"):
@@ -763,10 +775,10 @@ class Python(Language):
         """Recognizes if line is a for loop statement in python"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
 
         # If line starts with for and ends with ':' return True, else False
-        if line.startwith("for") and line.endswith(":"):
+        if line.startswith("for") and line.endswith(":"):
             return True
         return False
 
@@ -774,7 +786,7 @@ class Python(Language):
         """Recognizes if line is a while loop statement in python"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
 
         # If line starts with while and ends with ':' return True, else False
         if line.startswith("while") and line.endswith(":"):
@@ -785,7 +797,7 @@ class Python(Language):
         """Recognize if line is a function definition in python"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
         
         # If line starts with 'def' and has parentheses and ends with ':'
         # Then return True, else False
@@ -798,17 +810,17 @@ class Python(Language):
         """Recognize if line is a method definition in python"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
 
         # Check if line is a function definition as method is also a function
         # Note: Don't run is_func() if line found inside class
-        return self.is_func(line)
+        return self.is_func(file, i)
 
     def is_cls(self, file, i):
         """Recognize if line is a class definition"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
 
         # If line starts with 'class' and ends with ':' return True, else False
         if line.startswith("class ") and line.endswith(":"):
@@ -819,14 +831,27 @@ class Python(Language):
         """Recognize if line is an interface definition"""
 
         # Save line to local variable
-        line = file[i]
+        line = file[i].strip()
 
         # Get doc_str for class
         doc_str = self.get_doc_str(file, i)
 
-        # If line matches class definition and doc_string specifies interface
+
+        # Check if line specifies interface
+        class_type = None
+
+        # Iterate over lines in docstring
+        for line in doc_str:
+
+            # Search for string match "class type: interface"
+            if "class type: interface" in line:
+
+                # Set class type to interface if found
+                class_type = "interface"
+
+        # If line matches class definition and class_type is interface
         # Then return True, else False
-        if self.is_cls(line) and "class type: interface" in doc_str:
+        if self.is_cls(file, i) and class_type == "interface":
             return True
         return False
 

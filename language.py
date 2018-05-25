@@ -109,7 +109,7 @@ class Language:
         """Gets if condition from definition"""
         
         # Get raw if condition
-        line = file[i].lstrip("if")
+        line = file[i].strip().lstrip("if")
         
         # Remove curly braces if present
         line = line.rstrip("{")
@@ -125,7 +125,7 @@ class Language:
         """Gets number of iterations of for loop"""
         
         # Strip unwanted portions
-        definition = file[i].strip("for").strip()
+        definition = file[i].strip().strip("for").strip()
 
         # Strip '{', '(', ')' if present
         definition = definition.strip("{").strip()
@@ -144,7 +144,7 @@ class Language:
         """Gets condition of while loop"""
         
         # Get raw while condition
-        line = file[i].lstrip("while")
+        line = file[i].strip().lstrip("while")
 
         # Remove curly braces if present
         line = line.rstrip("{")
@@ -196,7 +196,7 @@ class Language:
         """Gets processed interface name"""
 
         # Dump unwanted 'interface' keyword
-        definition = definition.replace("interface", "").strip()
+        definition = file[i].strip().replace("interface", "").strip()
 
         # Return processed interface name
         return definition
