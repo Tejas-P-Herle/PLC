@@ -27,8 +27,8 @@ class TestFilePath(unittest.TestCase):
         # Create list of invalid file paths
         invalid_file_path_test_set = [
             "python_file_1.py",
-            "test_examsples/c_file_1",
-            "abcdef.c",
+            "test_examples/c_file_1",
+            "random_string.c",
             "1234-?/!__.;:'\"",
         ]
 
@@ -84,13 +84,13 @@ class TestFilePath(unittest.TestCase):
         mismatch_file_name_test_set = [
             ("python_file_1.py", "java"),
             ("test_examples_c_file_1", "c"),
-            ("abcdef.c", "python"),
+            ("random_string.c", "python"),
         ]
 
         # Create invalid file_name test set
         invalid_file_name_test_set = [
             ("random|file.extension", "python"),
-            ("completely_|nvalid<>\\/:*?\".java", "java")
+            ("completely_|invalid<>\\/:*?\".java", "java")
         ]
 
         # Create test set of invalid type

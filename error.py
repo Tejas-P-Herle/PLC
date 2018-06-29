@@ -7,7 +7,7 @@ logging.basicConfig(filename="PLC_log.log", level=logging.DEBUG)
 
 class Error:
     @staticmethod
-    def parse(error_msg, user_input=False, quit=False):
+    def parse(error_msg, user_input=False, quit_=False):
         """Parse errors(Handle Errors) and Quit(Optional)"""
         # Log error message
         logging.error(error_msg)
@@ -15,15 +15,15 @@ class Error:
         # Check if is user input
         if user_input:
             
-            # If quit requested, print abort and quit
+            # If quit_ requested, print abort and quit_
             if error_msg == "User Abort":
-                quit = True
+                quit_ = True
             
             # Else respond to user with error message
             else:
                 print(error_msg, end="\n\n")
 
         # If quit requested, quit with error_msg
-        if quit:
+        if quit_:
             sys.exit(error_msg)
 

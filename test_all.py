@@ -5,8 +5,10 @@ from test_file_path import TestFilePath
 from test_error import TestError
 from test_PLC import TestPLC
 from languages.test_python import TestPython
+from languages.test_java import TestJava
 
-test_cases = (TestPLC, TestLanguage, TestFilePath, TestError, TestPython)
+test_languages = (TestPython, TestJava)
+test_cases = (TestPLC, TestLanguage, TestFilePath, TestError) + test_languages
 
 
 def load_tests():

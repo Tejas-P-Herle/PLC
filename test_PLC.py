@@ -1,9 +1,12 @@
 """Test class for PLC.py"""
 import unittest
 from unittest.mock import patch
-import sys
+from os import remove
+
 from get_io import GetIO
 import PLC
+
+LOG_FILE = "PLC_log.log"
 
 
 class TestPLC(unittest.TestCase):
@@ -44,8 +47,9 @@ class TestPLC(unittest.TestCase):
                 valid_file_path[i][0],
                 valid_language[i],
                 file_name[i],
-                "{} -> {}\n".format(valid_file_path[i][1],
-                                    valid_language[i].lower()),
+                "{} -> {}\nFile Write SUCCESSFUL\nOutput: {}\n".format(
+                    valid_file_path[i][1],
+                    valid_language[i].lower(), file_name[i]),
             ))
 
         # Create test set with invalid
@@ -102,7 +106,7 @@ class TestPLC(unittest.TestCase):
         # Store expected error response
         test_size = len(unsupported_extension_test_set)
         unsupported_extension_expected_error = ([unsupported_extension_error]
-                                                 * test_size)
+                                                * test_size)
 
         # Create test set for invalid file names
         invalid_file_name_error = "File name must not contain '\\/:*?\"<>|'"
@@ -132,7 +136,7 @@ class TestPLC(unittest.TestCase):
 
         # Merge all invalid language test sets
         invalid_language_test_set = (unsupported_language_test_set 
-                                    + tuple([valid_language[0]]))
+                                     + tuple([valid_language[0]]))
         
         # Merge all language related expected errors
         language_expected_error = (unsupported_language_expected_error
@@ -144,8 +148,11 @@ class TestPLC(unittest.TestCase):
                                       + tuple([file_name[0]]))
         
         # Merge all file name related expected errors
-        valid_input_result = "{} -> {}\n".format(valid_file_path[0][1],
-                                                 valid_language[0].lower())
+        valid_input_result = "{} -> {}\nFile Write SUCCESSFUL\nOutput: {}\n".format(
+            valid_file_path[0][1],
+            valid_language[0].lower(),
+            file_name[0]
+        )
         file_name_expected_error = (unsupported_extension_expected_error
                                     + invalid_file_name_expected_error
                                     + [valid_input_result])
@@ -163,20 +170,47 @@ class TestPLC(unittest.TestCase):
         # Run test for all tests in valid_test_set
         for test in valid_test_set:
             with patch('builtins.input', side_effect=test[:3]):
-                PLC.PLC()
+                PLC.plc()
                 self.assertEqual(io_stream.read_stdout(), test[3])
+                remove(test[2])
 
         # Run test for all tests in invalid_test_set
         io_stream.reset_stdout_line_count()
         with patch('builtins.input', side_effect=invalid_test_set):
-            PLC.PLC()
+            PLC.plc()
             self.assertEqual(io_stream.read_stdout(), expected_error)
+            remove(file_name[0])
 
         # Run test for user abort function
         with patch('builtins.input', return_value=user_abort[0]):
             with self.assertRaises(SystemExit):
-                PLC.PLC()
+                PLC.plc()
                 self.assertEqual(io_stream.read_stdout(), user_abort[1])
+
+        # Reset output streams to default
+        io_stream.reset_output()
+
+        # Check if messages are logged in file
+        with open(LOG_FILE, "r+") as file:
+            
+            # Read lines from file
+            file_lines = [line.strip("\n") for line in file.readlines()]
+            
+            # Count number of lines
+            number_of_lines = len(file_lines)
+
+            # Check if number of lines is greater than 4
+            self.assertTrue(number_of_lines >= 48)
+
+            # Delete all logged lines
+            file_lines = file_lines[:number_of_lines - 48]
+            
+            # Truncate file
+            file.truncate(0)
+            file.seek(0)
+            
+            # Write all modified lines
+            file.write("\n".join(file_lines) + "\n")
 
 
 if __name__ == "__main__":

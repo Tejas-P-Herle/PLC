@@ -11,14 +11,14 @@ class Language:
         """Get corresponding language for extension"""
         # Check if extension is a string
         if not isinstance(extension, str):
-            return (None, "Parameter extension must be a string")
+            return None, "Parameter extension must be a string"
         
         try:
             # Try to return corresponding language
             return dict(zip(cls.extensions, cls.languages))[extension.lower()]
         except KeyError:
             # If unknown extension, return error
-            return (None, "Unsupported file extension {}".format(extension))
+            return None, "Unsupported file extension {}".format(extension)
 
     @classmethod
     def recognize(cls, file_path):
@@ -26,7 +26,7 @@ class Language:
         
         # Check if file_path is a string
         if not isinstance(file_path, str):
-            return (None, "Parameter file_path must be a string")
+            return None, "Parameter file_path must be a string"
         
         # Get Extension from file_path
         extension = path.splitext(file_path.lower())[1]
@@ -55,7 +55,7 @@ class Language:
 
     @staticmethod
     def convert_if(condition):
-        """Converts if defenition"""
+        """Converts if definition"""
         
         # Return processed condition
         return condition
@@ -83,13 +83,6 @@ class Language:
         return access_modifier, return_type, func_name, params
 
     @staticmethod
-    def convert_class(access_modifier, class_name, classes, interfaces):
-        """Converts class definition"""
-        
-        # Return processed class variables
-        return access_modifier, class_name, classes, interfaces
-
-    @staticmethod
     def convert_method(access_modifier, return_type,
                        func_name, params):
         """Converts method of class"""
@@ -98,11 +91,18 @@ class Language:
         return access_modifier, return_type, func_name, params
 
     @staticmethod
-    def convert_interface(interface_name, interfaces):
+    def convert_class(access_modifier, class_name, classes, interfaces):
+        """Converts class definition"""
+        
+        # Return processed class variables
+        return access_modifier, class_name, classes, interfaces
+
+    @staticmethod
+    def convert_interface(access_modifier, intr_name, interfaces):
         """Converts interface definition"""
         
         # Return processed interface variables
-        return interface_name, interfaces
+        return access_modifier, intr_name, interfaces
 
     @staticmethod
     def get_if_condition(file, i):
@@ -112,7 +112,7 @@ class Language:
         line = file[i].strip().lstrip("if")
         
         # Remove curly braces if present
-        line = line.rstrip("{")
+        line = line.split("{", 1)[0]
         
         # Remove whitespace
         line = line.strip()
@@ -130,7 +130,7 @@ class Language:
         # Strip '{', '(', ')' if present
         definition = definition.strip("{").strip()
         definition = definition.lstrip("(").strip()
-        definition = definition.rstrip(")").strip()
+        definition = definition.split(")", 1)[0].strip()
 
         # Break line into sub pieces
         word_split = definition.split(" ")
@@ -138,7 +138,6 @@ class Language:
         semicolon_split = [part.strip() for part in definition.split(";")]
         return semicolon_split if has_semicolon else word_split
 
-    
     @staticmethod
     def get_while_condition(file, i):
         """Gets condition of while loop"""
@@ -147,7 +146,7 @@ class Language:
         line = file[i].strip().lstrip("while")
 
         # Remove curly braces if present
-        line = line.rstrip("{")
+        line = line.split("{", 1)[0]
         
         # Remove whitespaces
         line = line.strip()
@@ -162,7 +161,10 @@ class Language:
         # Save file line to local variable definition
         definition = file[i].strip()
 
-        # Find opening parentheses for fuction parameters
+        # Remove curly braces if present
+        definition = definition.split("{", 1)[0].strip()
+
+        # Find opening parentheses for function parameters
         index = definition.find("(")
 
         # Split at opening parentheses
@@ -170,16 +172,6 @@ class Language:
 
         # Return definition and parameters
         return definition, params
-
-    @staticmethod
-    def get_class_definition(file, i):
-        """Gets processed class definition"""
-
-        # Dump unwanted 'class' keyword
-        definition = file[i].replace("class ", "").strip()
-
-        # Return processed definition
-        return definition
 
     @staticmethod
     def get_method_definition(file, i):
@@ -192,11 +184,27 @@ class Language:
         return definition, params
 
     @staticmethod
+    def get_class_definition(file, i):
+        """Gets processed class definition"""
+
+        # Dump unwanted 'class' keyword
+        definition = file[i]
+        if definition.startswith("class "):
+            definition = file[i].replace("class ", "")
+        definition = definition.strip()
+
+        # Return processed definition
+        return definition
+
+    @staticmethod
     def get_interface_definition(file, i):
         """Gets processed interface name"""
 
         # Dump unwanted 'interface' keyword
-        definition = file[i].strip().replace("interface", "").strip()
+        definition = file[i]
+        if definition.startswith("interface "):
+            definition = definition.strip().replace("interface", "")
+        definition = definition.strip()
 
         # Return processed interface name
         return definition

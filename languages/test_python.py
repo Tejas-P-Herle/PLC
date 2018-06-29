@@ -138,7 +138,7 @@ if __name__ == "__main__":
             "tuple",
             "dict"
         ]
- 
+
         # Run test for all tests in test_set
         for i in range(len(test_set)):
 
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_if(test_set[i]),
-                             [res_set[i]])
+                             ([res_set[i]], []))
 
     def test_convert_for(self):
         """Tests Python.convert_for"""
@@ -288,7 +288,7 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_for(*test_set[i]),
-                             [res_set[i]])
+                             ([res_set[i]], []))
 
     def test_convert_while(self):
         """Tests Python.convert_while"""
@@ -310,7 +310,7 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_while(test_set[i]),
-                             [res_set[i]])
+                             ([res_set[i]], []))
 
     def test_convert_function(self):
         """Tests Python.convert_function"""
@@ -332,7 +332,7 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_function(*test_set[i]),
-                             [res_set[i]])
+                             ([res_set[i]], []))
 
     def test_convert_method(self):
         """Tests Python.convert_method"""
@@ -354,7 +354,7 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_method(*test_set[i]),
-                             res_set[i])
+                             (res_set[i], []))
 
     def test_convert_class(self):
         """Tests Python.convert_class"""
@@ -386,16 +386,16 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_class(*test_set[i]),
-                             res_set[i])
+                             (res_set[i], []))
 
     def test_convert_interface(self):
         """Tests Python.convert_interface"""
 
         # Create test set
         test_set = [
-            ("IntrName", ["ParentIntr", "SuperIntr"]),
-            ("RandIntr", ["MyIntr"]),
-            ("Interface", []),
+            ("public", "IntrName", ["ParentIntr", "SuperIntr"]),
+            ("private static", "RandIntr", ["MyIntr"]),
+            ("public", "Interface", []),
         ]
 
         # Create expected results test set
@@ -416,7 +416,7 @@ if __name__ == "__main__":
 
             # Test function with inputs and expected outputs
             self.assertEqual(Python().convert_interface(*test_set[i]),
-                             res_set[i]) 
+                             (res_set[i], [])) 
 
     def test_convert_decorator(self):
         """Tests Python.convert_decorator"""
@@ -584,8 +584,8 @@ if __name__ == "__main__":
 
         # Create expected results test set
         res_set = [
-            ("MyIntr", [], [], []),
-            ("ChildIntr", ["MyIntr"], [], []),
+            ("public", "MyIntr", [], [], []),
+            ("public", "ChildIntr", ["MyIntr"], [], []),
         ]
  
         # Run test for all tests in test_set

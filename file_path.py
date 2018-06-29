@@ -5,7 +5,7 @@ from error import Error
 
 
 class FilePath:
-
+    @staticmethod
     def validate_file_path(file_path):
         """Checks if file_path is valid"""
 
@@ -21,7 +21,7 @@ class FilePath:
         response = Language.recognize(file_path)
 
         # Check if error encountered
-        if isinstance(response, tuple) and response[0] == None:
+        if isinstance(response, tuple) and not response[0]:
             
             # Parse error
             Error.parse(response)
@@ -37,6 +37,7 @@ class FilePath:
         if extension.startswith('Unsupported file extension '):
             return "Unsupported file type"
 
+    @staticmethod
     def validate_file_name(file_name, input_language):
         """Checks if file_name matches specified language"""
 
@@ -48,7 +49,7 @@ class FilePath:
         response = Language.recognize(file_name)
 
         # Check if error encountered
-        if isinstance(response, list) and response[0] == None:
+        if isinstance(response, list) and not response[0]:
             
             # Parse error
             Error.parse(response)

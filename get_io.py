@@ -1,4 +1,4 @@
-"""Gets output of print statement(stdiout) and stderr"""
+"""Gets output of print statement(stdout) and stderr"""
 import sys
 from io import StringIO
 
@@ -21,7 +21,6 @@ class GetIO:
         # Stubs stdout
         self.stub_output()
 
-
     def stub_output(self):
         """Replaces stdout and stderr with StringIO"""
         
@@ -33,9 +32,9 @@ class GetIO:
         self.reset = False
 
     def reset_output(self):
-        """Resets stdout and stderr to deafult"""
+        """Resets stdout and stderr to default"""
         
-        # Reset stdout to deafult value
+        # Reset stdout to default value
         sys.stderr = self.default_stderr
         sys.stdout = self.default_stdout
 
@@ -45,7 +44,7 @@ class GetIO:
     def read_stdout(self, return_line_count=False):
         """Reads stdout and returns value"""
         
-        # If stdout is not set to defaut read stdout
+        # If stdout is not set to default read stdout
         if not self.reset:
             value = sys.stdout.getvalue()
             self.truncate_stdout()
@@ -77,14 +76,16 @@ class GetIO:
         print(*args, **kwargs)
         sys.stdout = StringIO()
 
-    def truncate_stdout(self):
+    @staticmethod
+    def truncate_stdout():
         """Truncate StringIO object buffer for stdout"""
 
         # Truncate stdout
         sys.stdout.truncate(0)
         sys.stdout.seek(0)
 
-    def truncate_stderr(self):
+    @staticmethod
+    def truncate_stderr():
         """Truncate StringIO object buffer for stderr"""
 
         # Truncate and set cursor to 0

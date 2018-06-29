@@ -1,8 +1,9 @@
 """Runs all test files for all classes"""
 import unittest
 from languages.test_python import TestPython
+from languages.test_java import TestJava
 
-test_cases = tuple([TestPython])
+test_cases = tuple([TestJava, TestPython])
 
 
 def load_tests():
