@@ -1,4 +1,6 @@
 """Java language class for conversion to and from java"""
+from os import path
+
 from language import Language
 
 
@@ -7,9 +9,11 @@ class Java(Language):
         """Initiate Java conversion class"""
 
         # Set Java class attributes
+        self.outfile_name = path.split(outfile_path)[1]
         self.outfile_path = outfile_path
         self.preferred_indent_base = 2
         self.has_semicolon = True
+        self.cmnt_chs = ["//", "/*"]
 
     @staticmethod
     def parse_function_definition(definition, params):
@@ -71,17 +75,17 @@ class Java(Language):
         return function_template.format(access_modifier, return_type,
                                         func_name, params_str)
 
-    def convert_if(self, condition):
+    def convert_if(self, condition, if_kw):
         """Converts if statement to java"""
 
         # Run super definition
         condition = super().convert_if(condition)
 
         # Create if template
-        if_template = "if ({cond}) {{"
+        if_template = "{if_kw} ({cond}) {{" if condition else "{if_kw} {{"
 
         # Return converted if statement
-        return [if_template.format(cond=condition)], ["}"]
+        return [if_template.format(if_kw=if_kw, cond=condition)], ["}"]
 
     def convert_for(self, variable, start, stop, step, array):
         """Converts for statement to java"""
@@ -193,7 +197,7 @@ class Java(Language):
             # And standard main function signature
 
             main_class = ["class {} {{".format(
-                self.outfile_path.split(".")[0].title())]
+                self.outfile_name.split(".")[0].title())]
             main_fn = ["    public static void main(String[] args) {"]
             end = ["}", "}"]
 
@@ -278,6 +282,16 @@ class Java(Language):
         # Run super definition
         line = super().get_if_condition(file, i)
 
+        # Set if keyword for back translation
+        ln_split = line.split(" ")
+        if ln_split[0] == "else":
+            if len(ln_split) > 2 and ln_split[1] == "if":
+                if_kw, line = "else if", " ".join(ln_split[2:]).strip()
+            else:
+                if_kw, line = "else", " ".join(ln_split[1:]).strip()
+        else:
+            if_kw = "if"
+
         # Strip start and ending parentheses
         line = line[1:-1]
 
@@ -286,7 +300,7 @@ class Java(Language):
         end = []
 
         # Return if condition
-        return line, start, end
+        return line, if_kw, start, end
 
     def get_for_iterations(self, file, i):
         """Gets number of iterations of for loop"""
@@ -572,11 +586,17 @@ class Java(Language):
         # Save line to local variable
         line = file[i].strip()
 
-        # If line starts with if and contains (, ) and { return True, else False
+        # Check if is else block
+        if line[:5] == "else " and line[:7] != "else if":
+
+            # Then return True
+            return True
+
+        # If line starts with if and contains ( and )return True, else False
         for delimiter in ["(", ")"]:
             if delimiter not in line:
                 return False
-        if line.startswith("if"):
+        if line[:2] == "if" or line[:7] == "else if":
             return True
         return False
 

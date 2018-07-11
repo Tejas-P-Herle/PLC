@@ -9,10 +9,10 @@ class TestFilePath(unittest.TestCase):
         
         # Create test set with valid data
         valid_test_set = [
-            "test_examples/python_file_1.py",
-            "test_examples/java_file_1.java", 
-            "test_examples/cpp_file_1.cpp",
-            "test_examples/c_file_1.c",
+            "test_examples/python_1.py",
+            "test_examples/java_1.java", 
+            "test_examples/cpp_1.cpp",
+            "test_examples/c_1.c",
         ]
 
         # Add expected results
@@ -26,15 +26,15 @@ class TestFilePath(unittest.TestCase):
        
         # Create list of invalid file paths
         invalid_file_path_test_set = [
-            "python_file_1.py",
-            "test_examples/c_file_1",
+            "python_1.py",
+            "test_examples/c_1",
             "random_string.c",
             "1234-?/!__.;:'\"",
         ]
 
         # Create test set of invalid type
         invalid_type_test_set = [
-            b"test_examples/python_file_1.py",
+            b"test_examples/python_1.py",
             123,
         ]
 
@@ -63,10 +63,10 @@ class TestFilePath(unittest.TestCase):
 
         # Create test set with valid data
         valid_test_set = [
-            ("python_file_1.py", "python"),
-            ("java_file_1.java", "java"), 
-            ("cpp_file_1.cpp", "cpp"),
-            ("c_file_1.c", "c"),
+            ("python_1.py", "python"),
+            ("java_1.java", "java"), 
+            ("cpp_1.cpp", "cpp"),
+            ("c_1.c", "c"),
         ]
 
         # Add expected results
@@ -76,26 +76,26 @@ class TestFilePath(unittest.TestCase):
 
         # Define error string
         mismatch_file_name_error = "Extension and language don't match"
-        parameters = "file_name and input_language"
+        parameters = "file_path and input_language"
         invalid_file_name_error = "File name must not contain '\\/:*?\"<>|'"
         invalid_type_error = "Parameters %s must be a string" % parameters
        
         # Create list of invalid file paths
         mismatch_file_name_test_set = [
-            ("python_file_1.py", "java"),
-            ("test_examples_c_file_1", "c"),
+            ("python_1.py", "java"),
+            ("test_examples_c_1", "c"),
             ("random_string.c", "python"),
         ]
 
         # Create invalid file_name test set
         invalid_file_name_test_set = [
             ("random|file.extension", "python"),
-            ("completely_|invalid<>\\/:*?\".java", "java")
+            ("completely_|invalid<>:*?\".java", "java")
         ]
 
         # Create test set of invalid type
         invalid_type_test_set = [
-            (b"test_examples/python_file_1.py", 123),
+            (b"test_examples/python_1.py", 123),
             (123, "python"),
             ("rand.py", b"python"),
         ]

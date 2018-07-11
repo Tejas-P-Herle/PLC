@@ -10,6 +10,7 @@ LOG_FILE = "PLC_log.log"
 
 
 class TestPLC(unittest.TestCase):
+    maxDiff = None
     def test_PLC(self):
         """Tests PLC function of file PLC.py"""
 
@@ -18,10 +19,10 @@ class TestPLC(unittest.TestCase):
 
         # Create valid file name set
         valid_file_path = [
-            ("test_examples/python_file_1.py", "python"),
-            ("test_examples/java_file_1.java", "java"),
-            ("test_examples/cpp_file_1.cpp", "cpp"),
-            ("test_examples/c_file_1.c", "c"),
+            ("test_examples/python_1.py", "python"),
+            ("test_examples/java_1.java", "java"),
+            ("test_examples/cpp_1.cpp", "cpp"),
+            ("test_examples/c_1.c", "c"),
         ]
 
         # Create valid languages set
@@ -94,6 +95,12 @@ class TestPLC(unittest.TestCase):
             error_string = unsupported_language_error.format(language)
             unsupported_language_expected_error.append(error_string)
 
+        # Create test set for same from and to language file types
+        same_lang_error = "Language of file is same as to conversion language"
+        same_lang_test_set = (
+            "python",
+        )
+
         # Create test set for mismatched file name
         unsupported_extension_error = "Extension and language don't match" 
         unsupported_extension_test_set = (
@@ -112,12 +119,16 @@ class TestPLC(unittest.TestCase):
         invalid_file_name_error = "File name must not contain '\\/:*?\"<>|'"
         invalid_file_name_test_set = (
             "java_file/\\\"Epic:<*|*>?\".java",
-            "file\\my\\path.py"
+            "file\\my\\path:*.py"
         )
 
         # Store expected error response
         invalid_file_name_expected_error = ([invalid_file_name_error]
                                             * len(invalid_file_name_test_set))
+
+        # Store expected error response
+        test_size = len(same_lang_test_set)
+        same_lang_expected_error = [same_lang_error] * test_size
 
         # Check user abort
         user_abort = ("q", "User Abort")
@@ -135,11 +146,13 @@ class TestPLC(unittest.TestCase):
                                     + [""])
 
         # Merge all invalid language test sets
-        invalid_language_test_set = (unsupported_language_test_set 
+        invalid_language_test_set = (unsupported_language_test_set
+                                     + same_lang_test_set
                                      + tuple([valid_language[0]]))
         
         # Merge all language related expected errors
         language_expected_error = (unsupported_language_expected_error
+                                   + same_lang_expected_error
                                    + [""])
 
         # Merge all invalid file name test sets
@@ -170,21 +183,21 @@ class TestPLC(unittest.TestCase):
         # Run test for all tests in valid_test_set
         for test in valid_test_set:
             with patch('builtins.input', side_effect=test[:3]):
-                PLC.plc()
+                PLC.PLC()
                 self.assertEqual(io_stream.read_stdout(), test[3])
                 remove(test[2])
 
         # Run test for all tests in invalid_test_set
         io_stream.reset_stdout_line_count()
         with patch('builtins.input', side_effect=invalid_test_set):
-            PLC.plc()
+            PLC.PLC()
             self.assertEqual(io_stream.read_stdout(), expected_error)
             remove(file_name[0])
 
         # Run test for user abort function
         with patch('builtins.input', return_value=user_abort[0]):
             with self.assertRaises(SystemExit):
-                PLC.plc()
+                PLC.PLC()
                 self.assertEqual(io_stream.read_stdout(), user_abort[1])
 
         # Reset output streams to default

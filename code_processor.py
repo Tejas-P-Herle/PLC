@@ -25,6 +25,9 @@ class CodeProcessor:
     multi_statement = -1
     indent_base = -1
     char_diff = 0
+    in_multiline_cmnt = False
+    var_decleration = False
+    bracket_level_increment = False
 
     def __init__(self, file_path, lang_from, lang_to, outfile_path):
         """Initializes code processor class"""
@@ -32,7 +35,6 @@ class CodeProcessor:
         # Store input parameters into class attributes
         self.file_path = file_path
         self.outfile_path = outfile_path
-
         # Store from and to languages
         self.lang_from = lang_from
         self.lang_to = lang_to
@@ -79,6 +81,9 @@ class CodeProcessor:
 
         # Declare list to store all variables name if language is python
         self.vars = []
+
+        # Reset file_lines to empty list before conversion takes place
+        self.file_lines = []
 
     @staticmethod
     def indent(line):
@@ -154,19 +159,20 @@ class CodeProcessor:
 
             # Check if last line(s) are empty
             empty_lns_count = 0
-            if not self.file_lines[-1].strip():
-                empty_lns_count = 1
-                while True:
-                    
-                    # Check if previous line is empty
-                    if not self.file_lines[-empty_lns_count - 1].strip():
+            if self.file_lines:
+                if not self.file_lines[-1].strip():
+                    empty_lns_count = 1
+                    while True:
+                        
+                        # Check if previous line is empty
+                        if not self.file_lines[-empty_lns_count - 1].strip():
 
-                        # If yes, increment count(to previous line)
-                        empty_lns_count += 1
-                        continue
-                    
-                    # Else break out of loop
-                    break
+                            # If yes, increment count(to previous line)
+                            empty_lns_count += 1
+                            continue
+                        
+                        # Else break out of loop
+                        break
             
             # Remove empty lines from file
             if empty_lns_count:
@@ -184,7 +190,7 @@ class CodeProcessor:
                     "",
                     "if __name__ == \"__main__\":",
                     "    {}().main()".format(
-                        self.outfile_path.split(".")[0].title())]
+                        self.outfile_path.split(".")[0].split("/")[-1].title())]
 
             # Convert file lines list to file string
             self.file_str = "\n".join(self.file_lines) + "\n" * empty_lns_count
@@ -192,8 +198,8 @@ class CodeProcessor:
             # Try to match regex expression
             for match in self.match_regex():
                 # Get start and end of regex match
-                start = match[1].start() + self.char_diff
-                end = match[1].end() + self.char_diff
+                start = match[2].start() + self.char_diff
+                end = match[2].end() + self.char_diff
 
                 # If a regex match is found, run regex substitute function
                 sub = self.regex_substitute(*match, self.file_str[start:end])
@@ -209,11 +215,14 @@ class CodeProcessor:
             # Convert file back to lines
             self.file_lines = self.file_str.split("\n")
 
-    def regex_substitute(self, regex_from, regex_obj, regex_to, regex_str):
+    def regex_substitute(self, regex_from, regex_from_match_str, regex_obj, regex_to, regex_str):
         """Converts line from regex form from to regex form to"""
 
         # Replace all groups with numbers
-        regex_to_str = self.replace_group_no(regex_to, 1)
+        regex_to_str = self.replace_group_no(regex_to)
+
+        # Replace escaped '\(' and '\)' with '(' and ')'
+        regex_to_str = regex_to_str.replace("\\(", "(").replace("\\)", ")")
 
         # Check if line is a variable declaration in python
         if self.lang_from == "python" and "=" in regex_from:
@@ -230,9 +239,9 @@ class CodeProcessor:
             self.vars.append(var_name)
 
         # Substitute and return regex pattern from language A to B
-        return re.sub(regex_from, regex_to_str, regex_str)
+        return re.sub(regex_from_match_str, regex_to_str, regex_str)
 
-    def replace_group_no(self, regex_str, group_no):
+    def replace_group_no(self, regex_str):
         """Replaces groups in regex string with index of group number"""
 
         # Declare variables to store start and end of group
@@ -256,8 +265,12 @@ class CodeProcessor:
                     delete = i
                     continue
 
-                # Then store start index
-                start = i
+                # Get specified group no
+                elif regex_str[i+1] == "$":
+                    group_no = int(regex_str[i+2])
+
+                    # Then store start index
+                    start = i + 1
 
             # Check if end of group
             elif char == ")" and regex_str[i - 1] != "\\":
@@ -270,16 +283,16 @@ class CodeProcessor:
                     if delete != -1:
 
                         # Remove string till current character
-                        return self.replace_group_no(regex_str[:delete] + regex_str[i+1:], group_no)
+                        return self.replace_group_no(regex_str[:delete] + regex_str[i+1:])
                         
                     continue
-
+                
                 # Then replace with group number
-                regex_str = regex_str[:start] + "\\" \
-                            + str(group_no) + regex_str[i + 1:]
+                regex_str = regex_str[:start][:-1] + "\\"\
+                                + str(group_no) + regex_str[i+1:]
 
                 # Call recursively
-                return self.replace_group_no(regex_str, group_no + 1)
+                return self.replace_group_no(regex_str)
 
         # If no groups were found, return input regex string
         return regex_str
@@ -290,9 +303,27 @@ class CodeProcessor:
         # Get current level of line
         curr_level = self.curr_level
 
+        # Check if level increment is required
+        if self.bracket_level_increment:
+            curr_level += 1
+            self.bracket_level_increment = False
+
         # Check if line(s) is the end of definition
         level_decrement = (self.is_def_end(fptr, i) if self.lang_to != "python"
                            else fptr[i].count("}"))
+
+        # Check if is a variable decleration
+        if "{" in fptr[i]:
+            self.var_decleration = self.match_prev_char(
+                fptr, i, "=", fptr[i].index("{") - 1)
+        elif "[" in fptr[i]:
+            self.var_decleration = self.match_prev_char(
+                fptr, i, "=", fptr[i].index("[") - 1)
+            
+            # As '[' are not considered for incrementing level
+            # But increment is required, hence set flag to True
+            if self.var_decleration:
+                self.bracket_level_increment = True
 
         # Check if is a multiline statement
         if self.multi_statement == 1:
@@ -306,8 +337,16 @@ class CodeProcessor:
         # Check for level decrement
         if level_decrement:
 
-            # Add appropriate endings
-            curr_level = self.add_endings(level_decrement, curr_level)
+            # Check if was a variable decleration
+            if self.var_decleration:
+                
+                # If yes, decrement current level
+                curr_level -= 1
+                self.var_decleration = False
+
+            else:
+                # Add appropriate endings
+                curr_level = self.add_endings(level_decrement, curr_level)
 
             # If conversion is to python code, then decrease
             # Current level based on level decrement
@@ -328,12 +367,58 @@ class CodeProcessor:
             # Calculate number of spaces for indentation
             indentation = " " * (curr_level * self.to_indent_preference)
 
-            # Add Semicolon if required
+            # Strip trailing whitespace
             line = line.lstrip()
+
+            # Check if semicolon is present in from language
             if self.lang_to != "python":
                 if line:
-                    semicolon_req = (not self.from_cls.has_semicolon
-                                    and line[-1] not in ["{", "}"])
+
+                    # Check if comment is present in line
+                    cmnt_chs = self.from_cls.cmnt_chs + self.to_cls.cmnt_chs
+                    cmnts = [ch for ch in cmnt_chs if ch in line]
+
+                    # Check if comment start is in string
+                    if cmnts:
+
+                        # Initially set to True
+                        cmnt_in_line = True
+                        for quote in ["'", '"']:
+                            try:
+                                cmnt_in_line = (
+                                    line.index(quote) > line.index(cmnts[0]))
+
+                            # Quote not in line
+                            except ValueError:
+                                pass
+
+                        # Check if comment character is triple quotes(python)
+                        if any(cmnt in ["'''", '"""', "/*", "*/"]
+                               for cmnt in cmnts):
+                            cmnt_in_line = True
+                            if line.count(cmnts[0]) < 2:
+                                self.in_multiline_cmnt = not self.in_multiline_cmnt
+
+                    else:
+                        cmnt_in_line = False
+
+                    # Check if brackets are found in line
+                    var_decleration = None
+                    if "{" in line:
+
+                        # Check if is a variable decleration inclusive of '{'
+                        index = line.index("{") - 1
+                        var_decleration = self.match_prev_char(
+                            [line], 0, "=", index)
+
+                    # Check if a semicolon is required
+                    semicolon_req = (
+                        not self.from_cls.has_semicolon
+                        and (line[-1] not in ["{", "}", "[", "]"]
+                             and not var_decleration)
+                        and not cmnt_in_line
+                        and line.strip()[-1] != ","
+                        and not self.in_multiline_cmnt)
                     line = line.rstrip() + ";" if semicolon_req else line
 
             # Check if language is python
@@ -356,6 +441,31 @@ class CodeProcessor:
 
         # Update global variable
         self.curr_level = curr_level
+    
+    def match_prev_char(self, fptr, i, char, index):
+        """Starting from given index (index) check if immediate previous
+        character(excluding whitespace) matches character (char)"""
+
+        while i > -1:
+            while index > -1:
+
+                # Check if is whitespace character
+                if fptr[i][index].strip() != "":
+
+                    # Check if previous character matches required character
+                    if fptr[i][index] != char:
+                        
+                        # If no, return False
+                        return False
+
+                    # Break out of loop and return True
+                    return True
+
+                # Else decrement index count
+                index -= 1
+
+            # Move to next line
+            i -= 1
 
     def add_endings(self, level_decrement, curr_level):
         """Add appropriate ending lines to file"""
@@ -447,16 +557,19 @@ class CodeProcessor:
         for expr in [record[0] for record in self.conv_db]:
 
             # Compile regex
-            expr_complied = re.compile(expr[-1])
+            regex_from_match_str = re.sub(r"\$[0-9]", "", expr[-1])
+            expr_complied = re.compile(regex_from_match_str)
 
             # Reset character difference as self.file_str is updated
             self.char_diff = 0
 
             # Check if pattern matches
+            if regex_from_match_str == "\\/*([\\S\\s]*?)*\\/":
+                matches = list(expr_complied.finditer(self.file_str))
             for match in expr_complied.finditer(self.file_str):
                 # If expression matches, return corresponding to conversion
                 regex_ln = [ln[1] for ln in self.conv_db if ln[1][0] == expr[0]]
-                yield expr[-1], match, regex_ln[0][-1]
+                yield expr[-1], regex_from_match_str, match, regex_ln[0][-1]
 
     def read_conv_db(self):
         """Read data from conversion database"""
@@ -468,14 +581,30 @@ class CodeProcessor:
         for db in [self.conv_dbs_ptr[self.lang_from], self.conv_dbs_ptr[self.lang_to]]:
             # Open conversion database
             with open(db) as fptr:
+
                 # Read file
                 lines = fptr.readlines()
+
+                # Run code conversions in file
+                lines = self.code_conv(lines)
 
                 # Store in database
                 conv_db.append([line.strip("\n").split(" ", 1) for line in lines])
 
         # Merge file lines and stores as class attribute
         self.conv_db = list(zip(conv_db[0], conv_db[1]))
+
+    def code_conv(self, lines):
+        """Convert code in regex expressions to standard regex expressions"""
+
+        # Iterate over lines in file
+        for line in lines:
+
+            # Replace all spaces with [\s\t]* denoting any number of 
+            # spaces or tabs, this is for matching all whitespaces in file
+            line.replace(" ", "[\\s\\t]*")
+    
+        return lines
 
     def write_file_to_disk(self):
         """Writes converted file from memory to disk"""
@@ -525,9 +654,13 @@ class CodeProcessor:
 if __name__ == "__main__":
     # file = "outfile.java"
     # outfile_path = "outfile.py"
-    # processor = CodeProcessor(file, "java", "python", outfile_path)
-    file = "test_examples/python_file_1.py"
-    outfile_path = "outfile.java"
-    processor = CodeProcessor(file, "python", "java", outfile_path)
+    # file = "test_examples/python_1.py"
+    # outfile_path = "test_examples/python_1_outfile.java"
+    # file = "PLC_copy.py"
+    # outfile_path = "PLC_copy_outfile.java"
+    file = "test_examples/python_1_outfile.java"
+    outfile_path = "test_examples/python_1_outfile.py"
+    # processor = CodeProcessor(file, "python", "java", outfile_path)
+    processor = CodeProcessor(file, "java", "python", outfile_path)
     processor.convert()
     error = processor.write_file_to_disk()

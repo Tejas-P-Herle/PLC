@@ -27,9 +27,9 @@ class ChildCls(ParentCls, ChildIntr):
     processes_running = 100
 
     def __my_func(self: 'Cls.Obj', name: 'str'):
-        if not occupied and not(processes_running > 500):
-            if (name != "" and name) or default:
-                print("Name: ", name)
+        if not occupied and not(processes_running > 500): pass
+        elif (name != "" and name) or default:
+            print("Name: ", name)
 
     @staticmethod
     def for_func(self: 'Cls.Obj', count: 'int'):
@@ -259,7 +259,7 @@ if __name__ == "__main__":
         for i in range(len(test_set)):
 
             # Test function with inputs and expected outputs
-            self.assertEqual(Python().convert_if(test_set[i]),
+            self.assertEqual(Python().convert_if(test_set[i], "if"),
                              ([res_set[i]], []))
 
     def test_convert_for(self):
@@ -451,8 +451,8 @@ if __name__ == "__main__":
 
         # Create expected results test set
         res_set = [
-            ("!occupied && !(processes_running > 500)", [], []),
-            ('(name != "" && name) || default', [], [])
+            ("!occupied && !(processes_running > 500)", "if", [" pass"], []),
+            ('(name != "" && name) || default', "else if", [], [])
         ]
  
         # Run test for all tests in test_set

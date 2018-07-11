@@ -14,6 +14,12 @@ class Outfile {
     if (i == 0) {
       System.out.println(0);
     }
+    else if (i == 1) {
+      System.out.println(1);
+    }
+    else {
+      System.out.println(-1);
+    }
     for (int q = 0; q < 10; q++) {
       System.out.println(10 + q);
     }

@@ -38,12 +38,15 @@ class FilePath:
             return "Unsupported file type"
 
     @staticmethod
-    def validate_file_name(file_name, input_language):
+    def validate_file_name(file_path, input_language):
         """Checks if file_name matches specified language"""
 
         # Check if file_name and input_language are strings
-        if not (isinstance(file_name, str) and isinstance(input_language, str)):
-            return "Parameters file_name and input_language must be a string"
+        if not (isinstance(file_path, str) and isinstance(input_language, str)):
+            return "Parameters file_path and input_language must be a string"
+
+        # Extract file name from file path
+        file_name = path.split(file_path)[1]
         
         # Get file extension
         response = Language.recognize(file_name)

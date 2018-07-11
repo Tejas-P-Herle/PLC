@@ -1,4 +1,6 @@
 """Python language class for conversion to and from python"""
+from os import path
+
 from language import Language
 import re
 
@@ -8,9 +10,11 @@ class Python(Language):
         """Initiate Python conversion class"""
 
         # Set Python class attributes
+        self.outfile_name = path.split(outfile_path)[1]
         self.outfile_path = outfile_path
         self.preferred_indent_base = 4
         self.has_semicolon = False
+        self.cmnt_chs = ["#", "'''", '"""']
 
     @staticmethod
     def indent(fptr, i):
@@ -210,7 +214,7 @@ class Python(Language):
             # Return python main standard definition
             return function_template.format(
                 "main",
-                "self: \"{}\"".format(self.outfile_path.split(".")[0].title()),
+                "self: \"{}\"".format(self.outfile_name.split(".")[0].title()),
                 return_type)
 
         # Close variable type in quotes
@@ -303,20 +307,24 @@ class Python(Language):
         doc_str.append(fptr[j].strip().strip(quotes))
         return doc_str
 
-    def convert_if(self, condition):
+    def convert_if(self, condition, if_kw):
         """Converts if statement to python"""
 
         # Run super definition
         condition = super().convert_if(condition)
 
         # Create if template
-        if_template = "if {cond}:"
+        if_template = "{if_kw} {cond}:" if condition else "{if_kw}:"
+
+        # Convert if keyword from standard to python
+        if if_kw == "else if":
+            if_kw = "elif"
 
         # Replace logical operators
         condition = self.replace_logical_ops(condition, direction="from")
 
         # Return converted if statement
-        return [if_template.format(cond=condition)], []
+        return [if_template.format(if_kw=if_kw, cond=condition)], []
 
     def convert_for(self, variable, start, stop, step, array):
         """Converts for statement to python"""
@@ -527,6 +535,17 @@ class Python(Language):
         line = line.split(":", 1)
         line, multi_statement = line[0], line[1]
 
+        # Set if keyword for back translation
+        ln_split = line.split(" ")
+        if ln_split[0] not in ["elif", "else"]:
+            if_kw = "if"
+        else:
+            if_kw, line = ln_split[0], " ".join(ln_split[1:]).strip()
+
+        # Replace 'elif' with standard
+        if if_kw == "elif":
+            if_kw = "else if"
+
         # Replace logical operators
         line = self.replace_logical_ops(line, direction="to")
 
@@ -539,7 +558,7 @@ class Python(Language):
             start += multi_statement.split(";")
 
         # Return if condition
-        return line, start, end
+        return line, if_kw, start, end
 
     def get_for_iterations(self, file, i):
         """Gets number of iterations of for loop"""
@@ -802,7 +821,7 @@ class Python(Language):
         line = file[i].strip()
 
         # If line starts with if and ends with ':' return True, else False
-        if line.startswith("if") and ":" in line:
+        if (line[:2] == "if" or line[:4] in ["elif", "else"]) and ":" in line:
             return True
         return False
 

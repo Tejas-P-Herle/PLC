@@ -19,7 +19,7 @@ user_input = {
 }
 
 
-def plc():
+def PLC():
     """Main PLC application"""
 
     # Create user input string template
@@ -51,6 +51,11 @@ def plc():
 
         user_input_val = str(user_input_val)
 
+        # Check if input is currently at to language 
+        # and input language is same as output language
+        if var_name == "lang_to" and user_input_val.lower() == lang_from:
+            error = "Language of file is same as to conversion language"
+
         # If error encountered, print error and exit
         while error:
 
@@ -60,6 +65,11 @@ def plc():
             # Get input from user
             user_input_val, error = get_user_input(func, var_name, input_str)
 
+            # Check if input is currently at to language 
+            # and input language is same as output language
+            if var_name == "lang_to" and user_input_val.lower() == lang_from:
+                error = "Language of file is same as to conversion language"
+
         # Store latest value of var
         user_input[var_name] = user_input_val
 
@@ -68,7 +78,7 @@ def plc():
             lang_from = Language.recognize(user_input_val)
 
         # else if var_name is language,
-        # store lower string(no capitals) of var_name
+        # store lowercase string of var_name
         elif var_name == "lang_to":
             user_input[var_name] = user_input_val.lower()
     #
@@ -127,8 +137,8 @@ def get_user_input(func, var_name, input_str):
 def main():
     """Function run on file open"""
 
-    # Run plc function
-    plc()
+    # Run PLC function
+    PLC()
 
 
 if __name__ == "__main__":

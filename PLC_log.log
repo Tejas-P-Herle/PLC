@@ -1,86 +1,65 @@
-
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:Path to Program File or 'q' to abort:  test_examples/python_file_1.py
-DEBUG:root:Path to Program File or 'q' to abort:  test_examples/python_file_1.py
-DEBUG:root:To Language or 'q' to abort:  JaVa
-DEBUG:root:Output File Path or 'q' to abort:  java.jaVa
-DEBUG:root:Path to Program File or 'q' to abort:  test_examples/python_file_1.py
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/java_file_1.java
-DEBUG:root:lang_to CpP
-DEBUG:root:outfile_path cpp.Cpp
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/java_file_1.java
-DEBUG:root:lang_to CpP
-DEBUG:root:outfile_path cpp.Cpp
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/java_file_1.java
-DEBUG:root:lang_to CpP
-DEBUG:root:outfile_path cpp.Cpp
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to Java
-DEBUG:root:outfile_path 1
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4_outfile.java
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path test_examples/python_4_outfile.py
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4.[y
+ERROR:root:File - test_examples/python_4.[y Does not exist
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4_outfile.java
+DEBUG:root:lang_to pythno
+ERROR:root:Unsupported language pythno
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path test_examples/python_4_outfile.py
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_4_outfile.java
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path test_examples/python_4_outfile.p
 ERROR:root:Extension and language don't match
-DEBUG:root:outfile_path q
-ERROR:root:User Abort
-DEBUG:root:file_path test_examples/python_file.py
-ERROR:root:File - test_examples/python_file.py Does not exist
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to Java
-DEBUG:root:outfile_path java_outfile.java
-DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:outfile_path test_examples/python_4_outfile.py
+DEBUG:root:file_path test_examples/python_4_outfile.java
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path test_examples/python_4_outfile.py
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path test_examples/python_4_outfile.py
+DEBUG:root:file_path test_examples/python_4_outfile.java
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path test_examples/python_4_outfile.py
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to python
+ERROR:root:Language of file is same as to conversion language
+DEBUG:root:lang_to asdf
+ERROR:root:Unsupported language asdf
 DEBUG:root:lang_to java
-DEBUG:root:outfile_path java_outfile.java
-DEBUG:root:file_path est_examples/python_file_1.py
-ERROR:root:File - est_examples/python_file_1.py Does not exist
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path java_outfile.py
-ERROR:root:Extension and language don't match
-DEBUG:root:outfile_path java_outfile.java
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to java
-DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:outfile_path test_examples/python_4_outfile.java
+DEBUG:root:file_path test_examples/python_1.py
 DEBUG:root:lang_to JaVa
 DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to JaVa
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:file_path test_examples/java_1.java
 DEBUG:root:lang_to CpP
 DEBUG:root:outfile_path cpp.Cpp
-DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
 DEBUG:root:lang_to C
 DEBUG:root:outfile_path c.C
-DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:file_path test_examples/c_1.c
 DEBUG:root:lang_to PytHOn
 DEBUG:root:outfile_path python.pY
 DEBUG:root:file_path test_examples/python_file_1
@@ -92,7 +71,7 @@ ERROR:root:File - random_file.py Does not exist
 DEBUG:root:file_path test_examples/unsupported_file.format
 ERROR:root:(None, 'Unsupported file extension .format')
 ERROR:root:Unsupported file type
-DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:file_path test_examples/python_1.py
 DEBUG:root:lang_to J.A.V.A
 ERROR:root:Unsupported language J.A.V.A
 DEBUG:root:lang_to My own language
@@ -103,30 +82,36 @@ DEBUG:root:lang_to Perl
 ERROR:root:Unsupported language Perl
 DEBUG:root:lang_to Python Console
 ERROR:root:Unsupported language Python Console
-DEBUG:root:lang_to JaVa
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path JaVa
+ERROR:root:Extension and language don't match
 DEBUG:root:outfile_path some file.random extension
 ERROR:root:Extension and language don't match
 DEBUG:root:outfile_path this name is completely.insane
 ERROR:root:Extension and language don't match
 DEBUG:root:outfile_path python.pY
-ERROR:root:Extension and language don't match
-DEBUG:root:outfile_path c.C
-ERROR:root:Extension and language don't match
-DEBUG:root:outfile_path java_file/\"Epic:<*|*>?".java
-ERROR:root:File name must not contain '\/:*?"<>|'
-DEBUG:root:outfile_path file\my\path.py
-ERROR:root:File name must not contain '\/:*?"<>|'
-DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:file_path test_examples/python_1.py
 DEBUG:root:lang_to JaVa
 DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path test_examples/java_file_1.java
+DEBUG:root:file_path test_examples/java_1.java
 DEBUG:root:lang_to CpP
 DEBUG:root:outfile_path cpp.Cpp
-DEBUG:root:file_path test_examples/cpp_file_1.cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
 DEBUG:root:lang_to C
 DEBUG:root:outfile_path c.C
-DEBUG:root:file_path test_examples/c_file_1.c
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:outfile_path java.jaVa
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
 DEBUG:root:lang_to PytHOn
 DEBUG:root:outfile_path python.pY
 DEBUG:root:file_path test_examples/python_file_1
@@ -138,7 +123,7 @@ ERROR:root:File - random_file.py Does not exist
 DEBUG:root:file_path test_examples/unsupported_file.format
 ERROR:root:(None, 'Unsupported file extension .format')
 ERROR:root:Unsupported file type
-DEBUG:root:file_path test_examples/python_file_1.py
+DEBUG:root:file_path test_examples/python_1.py
 DEBUG:root:lang_to J.A.V.A
 ERROR:root:Unsupported language J.A.V.A
 DEBUG:root:lang_to My own language
@@ -149,121 +134,205 @@ DEBUG:root:lang_to Perl
 ERROR:root:Unsupported language Perl
 DEBUG:root:lang_to Python Console
 ERROR:root:Unsupported language Python Console
-DEBUG:root:lang_to JaVa
+DEBUG:root:lang_to python
+DEBUG:root:outfile_path JaVa
+ERROR:root:Extension and language don't match
 DEBUG:root:outfile_path some file.random extension
 ERROR:root:Extension and language don't match
 DEBUG:root:outfile_path this name is completely.insane
 ERROR:root:Extension and language don't match
 DEBUG:root:outfile_path python.pY
-ERROR:root:Extension and language don't match
-DEBUG:root:outfile_path c.C
-ERROR:root:Extension and language don't match
-DEBUG:root:outfile_path java_file/\"Epic:<*|*>?".java
-ERROR:root:File name must not contain '\/:*?"<>|'
-DEBUG:root:outfile_path file\my\path.py
-ERROR:root:File name must not contain '\/:*?"<>|'
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
 DEBUG:root:outfile_path java.jaVa
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path test_examples/python_file_1.[y
-ERROR:root:File - test_examples/python_file_1.[y Does not exist
-DEBUG:root:file_path File - test_examples/python_ftest_examples/python_file_1.[yile_1.[y Does not exist
-ERROR:root:File - File - test_examples/python_ftest_examples/python_file_1.[yile_1.[y Does not exist Does not exist
-DEBUG:root:file_path test_examples/python_ftest_examples/python_file_1.py
-ERROR:root:File - test_examples/python_ftest_examples/python_file_1.py Does not exist
-DEBUG:root:file_path test_examples/python_ftest_examples/python_file_1.py
-ERROR:root:File - test_examples/python_ftest_examples/python_file_1.py Does not exist
-DEBUG:root:file_path 
-ERROR:root:File -  Does not exist
-DEBUG:root:file_path 
-ERROR:root:File -  Does not exist
-DEBUG:root:file_path test_examples/python_ftest_examples/python_file_1.py
-ERROR:root:File - test_examples/python_ftest_examples/python_file_1.py Does not exist
-DEBUG:root:file_path test_examples/python_ftest_examples/python_file_1.py
-ERROR:root:File - test_examples/python_ftest_examples/python_file_1.py Does not exist
-DEBUG:root:file_path test_examples/python_test_examples/python_file_1.py
-ERROR:root:File - test_examples/python_test_examples/python_file_1.py Does not exist
-DEBUG:root:file_path test_examples/python_test_examples/python_file_1.py
-ERROR:root:File - test_examples/python_test_examples/python_file_1.py Does not exist
-DEBUG:root:file_path test_examples
-ERROR:root:File - test_examples Does not exist
-DEBUG:root:file_path test_examples/python_file_q.py
-ERROR:root:File - test_examples/python_file_q.py Does not exist
-DEBUG:root:file_path test_examples/python_file_1/.py
-ERROR:root:File - test_examples/python_file_1/.py Does not exist
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:file_path 
-ERROR:root:File -  Does not exist
-DEBUG:root:file_path 
-ERROR:root:File -  Does not exist
-DEBUG:root:file_path 
-ERROR:root:File -  Does not exist
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path outfile.java
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path outfile.java
-DEBUG:root:file_path PLC_oopy.py
-ERROR:root:File - PLC_oopy.py Does not exist
-DEBUG:root:file_path PLC_copy.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path PLC_copy.java
-DEBUG:root:file_path q
-ERROR:root:User Abort
-DEBUG:root:file_path q
-ERROR:root:User Abort
-DEBUG:root:file_path q
-ERROR:root:User Abort
-DEBUG:root:file_path test_examples/python_file_1.py
-DEBUG:root:lang_to java
-DEBUG:root:outfile_path ja.java
-DEBUG:root:file_path outfile.java
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:outfile_path java.jaVa
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:lang_to My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:lang_to Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:lang_to Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:lang_to Python Console
+ERROR:root:Unsupported language Python Console
 DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
+DEBUG:root:outfile_path JaVa
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:outfile_path java.jaVa
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:lang_to My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:lang_to Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:lang_to Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:lang_to Python Console
+ERROR:root:Unsupported language Python Console
 DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
+DEBUG:root:outfile_path JaVa
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:outfile_path java.jaVa
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:outfile_path java.jaVa
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:lang_to My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:lang_to Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:lang_to Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:lang_to Python Console
+ERROR:root:Unsupported language Python Console
 DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
+DEBUG:root:outfile_path JaVa
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path some file.random extension
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path this name is completely.insane
+ERROR:root:Extension and language don't match
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:outfile_path java.jaVa
+DEBUG:root:file_path test_examples/java_1.java
+DEBUG:root:lang_to CpP
+DEBUG:root:outfile_path cpp.Cpp
+DEBUG:root:file_path test_examples/cpp_1.cpp
+DEBUG:root:lang_to C
+DEBUG:root:outfile_path c.C
+DEBUG:root:file_path test_examples/c_1.c
+DEBUG:root:lang_to PytHOn
+DEBUG:root:outfile_path python.pY
+DEBUG:root:file_path test_examples/python_file_1
+ERROR:root:File - test_examples/python_file_1 Does not exist
+DEBUG:root:file_path python_file_1.py
+ERROR:root:File - python_file_1.py Does not exist
+DEBUG:root:file_path random_file.py
+ERROR:root:File - random_file.py Does not exist
+DEBUG:root:file_path test_examples/unsupported_file.format
+ERROR:root:(None, 'Unsupported file extension .format')
+ERROR:root:Unsupported file type
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to J.A.V.A
+ERROR:root:Unsupported language J.A.V.A
+DEBUG:root:lang_to My own language
+ERROR:root:Unsupported language My own language
+DEBUG:root:lang_to Ruby
+ERROR:root:Unsupported language Ruby
+DEBUG:root:lang_to Perl
+ERROR:root:Unsupported language Perl
+DEBUG:root:lang_to Python Console
+ERROR:root:Unsupported language Python Console
 DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
-DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
-DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.jav
-ERROR:root:File - outfile.jav Does not exist
-DEBUG:root:file_path outfile.java
+DEBUG:root:outfile_path JaVa
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:file_path test_examples/python_1.py
+DEBUG:root:lang_to JaVa
+DEBUG:root:file_path test_examples/python_1.py
 DEBUG:root:lang_to java
-DEBUG:root:outfile_path q
-ERROR:root:User Abort
-DEBUG:root:file_path outfile.java
-DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
-DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
-DEBUG:root:file_path outfile.java
-DEBUG:root:lang_to python
-DEBUG:root:outfile_path outfile.py
+DEBUG:root:outfile_path test_examples/python_1_outfile.java
+DEBUG:root:file_path test_examples/python_2.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_2_outfile.java
+DEBUG:root:file_path test_examples/python_3.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_3_outfile.java
+DEBUG:root:file_path test_examples/python_4.py
+DEBUG:root:lang_to java
+DEBUG:root:outfile_path test_examples/python_4_outfile.java

@@ -119,7 +119,7 @@ public class MyProgram {
         
             # Test function with inputs and expected outputs
             self.assertEqual(
-                Java().convert_if(test_set[i]), ([res_set[i]], ["}"])
+                Java().convert_if(test_set[i], "if"), ([res_set[i]], ["}"])
             )
         
     def test_convert_for(self):
@@ -294,8 +294,8 @@ public class MyProgram {
         
         # Create expected results test set
         res_set = [
-            ("times < 0 && !accept_null", [], []),
-            ("times == 10", [], [])
+            ("times < 0 && !accept_null", "if", [], []),
+            ("times == 10", "if", [], [])
         ]
         
         # Run test for all tests in test_set

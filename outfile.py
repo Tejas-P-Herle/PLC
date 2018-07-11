@@ -14,6 +14,12 @@ class Outfile:
         if i == 0:
             print(0)
         
+        elif i == 1:
+            print(1)
+        
+        else:
+            print(-1)
+        
         for q in range(10):
             print(10 + q)
         
