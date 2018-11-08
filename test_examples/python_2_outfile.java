@@ -12,4 +12,3 @@ class Python_2_Outfile {
     }
   }
 }
-

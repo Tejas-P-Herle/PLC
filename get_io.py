@@ -46,11 +46,23 @@ class GetIO:
         
         # If stdout is not set to default read stdout
         if not self.reset:
+
+            # Get value from StringIO
             value = sys.stdout.getvalue()
+
+            # Truncate stdout
             self.truncate_stdout()
+
+            # Increment stdout line count
             self.stdout_line_count += 1
+
+            # Check if line count is requested
             if return_line_count:
+
+                # If yes, return string with line count
                 return value, self.stdout_line_count
+
+            # Else return only string from stdout
             return value
 
     def read_stderr(self):

@@ -1,0 +1,126 @@
+<RootLogger root (DEBUG)><class 'logging.RootLogger'>
+<method-wrapper '__delattr__' of RootLogger object at 0x031C8AD0>
+{'filters': [], 'name': 'root', 'level': 10, 'parent': None, 'propagate': True, 'handlers': [<FileHandler C:\Users\Programming\Programming\Python\PLC\PLC_log.log (NOTSET)>], 'disabled': False}
+<built-in method __dir__ of RootLogger object at 0x031C8AD0>
+
+    A root logger is not that different to any other logger, except that
+    it must have a logging level and there is only one instance of it in
+    the hierarchy.
+    
+<method-wrapper '__eq__' of RootLogger object at 0x031C8AD0>
+<built-in method __format__ of RootLogger object at 0x031C8AD0>
+<method-wrapper '__ge__' of RootLogger object at 0x031C8AD0>
+<method-wrapper '__getattribute__' of RootLogger object at 0x031C8AD0>
+<method-wrapper '__gt__' of RootLogger object at 0x031C8AD0>
+<method-wrapper '__hash__' of RootLogger object at 0x031C8AD0>
+<bound method RootLogger.__init__ of <RootLogger root (DEBUG)>>
+<built-in method __init_subclass__ of type object at 0x031D7968>
+<method-wrapper '__le__' of RootLogger object at 0x031C8AD0>
+<method-wrapper '__lt__' of RootLogger object at 0x031C8AD0>
+logging
+<method-wrapper '__ne__' of RootLogger object at 0x031C8AD0>
+<built-in method __new__ of type object at 0x573D3880>
+<built-in method __reduce__ of RootLogger object at 0x031C8AD0>
+<built-in method __reduce_ex__ of RootLogger object at 0x031C8AD0>
+<bound method Logger.__repr__ of <RootLogger root (DEBUG)>>
+<method-wrapper '__setattr__' of RootLogger object at 0x031C8AD0>
+<built-in method __sizeof__ of RootLogger object at 0x031C8AD0>
+<method-wrapper '__str__' of RootLogger object at 0x031C8AD0>
+<built-in method __subclasshook__ of type object at 0x031D7968>
+None
+<bound method Logger._log of <RootLogger root (DEBUG)>>
+<bound method Filterer.addFilter of <RootLogger root (DEBUG)>>
+<bound method Logger.addHandler of <RootLogger root (DEBUG)>>
+<bound method Logger.callHandlers of <RootLogger root (DEBUG)>>
+<bound method Logger.critical of <RootLogger root (DEBUG)>>
+<bound method Logger.debug of <RootLogger root (DEBUG)>>
+False
+<bound method Logger.error of <RootLogger root (DEBUG)>>
+<bound method Logger.exception of <RootLogger root (DEBUG)>>
+<bound method Logger.critical of <RootLogger root (DEBUG)>>
+<bound method Filterer.filter of <RootLogger root (DEBUG)>>
+[]
+<bound method Logger.findCaller of <RootLogger root (DEBUG)>>
+<bound method Logger.getChild of <RootLogger root (DEBUG)>>
+<bound method Logger.getEffectiveLevel of <RootLogger root (DEBUG)>>
+<bound method Logger.handle of <RootLogger root (DEBUG)>>
+[<FileHandler C:\Users\Programming\Programming\Python\PLC\PLC_log.log (NOTSET)>]
+<bound method Logger.hasHandlers of <RootLogger root (DEBUG)>>
+<bound method Logger.info of <RootLogger root (DEBUG)>>
+<bound method Logger.isEnabledFor of <RootLogger root (DEBUG)>>
+10
+<bound method Logger.log of <RootLogger root (DEBUG)>>
+<bound method Logger.makeRecord of <RootLogger root (DEBUG)>>
+<logging.Manager object at 0x031C8AF0>
+root
+None
+True
+<bound method Filterer.removeFilter of <RootLogger root (DEBUG)>>
+<bound method Logger.removeHandler of <RootLogger root (DEBUG)>>
+<RootLogger root (DEBUG)>
+<bound method Logger.setLevel of <RootLogger root (DEBUG)>>
+<bound method Logger.warn of <RootLogger root (DEBUG)>>
+<bound method Logger.warning of <RootLogger root (DEBUG)>>
+<RootLogger root (DEBUG)><class 'logging.RootLogger'>
+<method-wrapper '__delattr__' of RootLogger object at 0x03158B90>
+{'filters': [], 'name': 'root', 'level': 10, 'parent': None, 'propagate': True, 'handlers': [<FileHandler C:\Users\Programming\Programming\Python\PLC\PLC_log.log (NOTSET)>], 'disabled': False}
+<built-in method __dir__ of RootLogger object at 0x03158B90>
+
+    A root logger is not that different to any other logger, except that
+    it must have a logging level and there is only one instance of it in
+    the hierarchy.
+    
+<method-wrapper '__eq__' of RootLogger object at 0x03158B90>
+<built-in method __format__ of RootLogger object at 0x03158B90>
+<method-wrapper '__ge__' of RootLogger object at 0x03158B90>
+<method-wrapper '__getattribute__' of RootLogger object at 0x03158B90>
+<method-wrapper '__gt__' of RootLogger object at 0x03158B90>
+<method-wrapper '__hash__' of RootLogger object at 0x03158B90>
+<bound method RootLogger.__init__ of <RootLogger root (DEBUG)>>
+<built-in method __init_subclass__ of type object at 0x03167968>
+<method-wrapper '__le__' of RootLogger object at 0x03158B90>
+<method-wrapper '__lt__' of RootLogger object at 0x03158B90>
+logging
+<method-wrapper '__ne__' of RootLogger object at 0x03158B90>
+<built-in method __new__ of type object at 0x573D3880>
+<built-in method __reduce__ of RootLogger object at 0x03158B90>
+<built-in method __reduce_ex__ of RootLogger object at 0x03158B90>
+<bound method Logger.__repr__ of <RootLogger root (DEBUG)>>
+<method-wrapper '__setattr__' of RootLogger object at 0x03158B90>
+<built-in method __sizeof__ of RootLogger object at 0x03158B90>
+<method-wrapper '__str__' of RootLogger object at 0x03158B90>
+<built-in method __subclasshook__ of type object at 0x03167968>
+None
+<bound method Logger._log of <RootLogger root (DEBUG)>>
+<bound method Filterer.addFilter of <RootLogger root (DEBUG)>>
+<bound method Logger.addHandler of <RootLogger root (DEBUG)>>
+<bound method Logger.callHandlers of <RootLogger root (DEBUG)>>
+<bound method Logger.critical of <RootLogger root (DEBUG)>>
+<bound method Logger.debug of <RootLogger root (DEBUG)>>
+False
+<bound method Logger.error of <RootLogger root (DEBUG)>>
+<bound method Logger.exception of <RootLogger root (DEBUG)>>
+<bound method Logger.critical of <RootLogger root (DEBUG)>>
+<bound method Filterer.filter of <RootLogger root (DEBUG)>>
+[]
+<bound method Logger.findCaller of <RootLogger root (DEBUG)>>
+<bound method Logger.getChild of <RootLogger root (DEBUG)>>
+<bound method Logger.getEffectiveLevel of <RootLogger root (DEBUG)>>
+<bound method Logger.handle of <RootLogger root (DEBUG)>>
+[<FileHandler C:\Users\Programming\Programming\Python\PLC\PLC_log.log (NOTSET)>]
+<bound method Logger.hasHandlers of <RootLogger root (DEBUG)>>
+<bound method Logger.info of <RootLogger root (DEBUG)>>
+<bound method Logger.isEnabledFor of <RootLogger root (DEBUG)>>
+10
+<bound method Logger.log of <RootLogger root (DEBUG)>>
+<bound method Logger.makeRecord of <RootLogger root (DEBUG)>>
+<logging.Manager object at 0x03158BB0>
+root
+None
+True
+<bound method Filterer.removeFilter of <RootLogger root (DEBUG)>>
+<bound method Logger.removeHandler of <RootLogger root (DEBUG)>>
+<RootLogger root (DEBUG)>
+<bound method Logger.setLevel of <RootLogger root (DEBUG)>>
+<bound method Logger.warn of <RootLogger root (DEBUG)>>
+<bound method Logger.warning of <RootLogger root (DEBUG)>>

@@ -2,7 +2,10 @@
 import unittest
 from error import Error
 
+from logger import Logger
+
 LOG_FILE = "PLC_log.log"
+logger = Logger("test_error")
 
 
 class TestError(unittest.TestCase):
@@ -19,7 +22,7 @@ class TestError(unittest.TestCase):
         # Store expected logging messages
         log_lines = []
         for test in test_cases:
-            log_lines.append("ERROR:root:" + str(test))
+            log_lines.append("error - ERROR - " + str(test))
         
         # For test in test_cases, test if functions as expected
         for test in test_cases:
@@ -38,7 +41,8 @@ class TestError(unittest.TestCase):
             self.assertTrue(number_of_lines >= 4)
 
             # Get lines logged by testing
-            logged_lines = file_lines[number_of_lines - 4:]
+            logged_lines = [" - ".join(line.split(" - ")[1:])
+                for line in file_lines[number_of_lines - 4:]]
             
             # Check if all lines are logged properly
             for line in log_lines:

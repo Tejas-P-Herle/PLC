@@ -2,30 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb7f250-5f67-4c43-9754-bfb44e144359" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.language.py.swp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PLC.py" beforeDir="false" afterPath="$PROJECT_DIR$/PLC.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PLC_log.log" beforeDir="false" afterPath="$PROJECT_DIR$/PLC_log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/code_processor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/error.py" beforeDir="false" afterPath="$PROJECT_DIR$/error.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file_path.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_path.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/get_io.py" beforeDir="false" afterPath="$PROJECT_DIR$/get_io.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/language.py" beforeDir="false" afterPath="$PROJECT_DIR$/language.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/.python.py.swp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/.test_python.py.swp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/c.py" beforeDir="false" afterPath="$PROJECT_DIR$/languages/c.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/cpp.py" beforeDir="false" afterPath="$PROJECT_DIR$/languages/cpp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/java.py" beforeDir="false" afterPath="$PROJECT_DIR$/languages/java.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/python.py" beforeDir="false" afterPath="$PROJECT_DIR$/languages/python.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/ref_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/languages/test_python.py" beforeDir="false" afterPath="$PROJECT_DIR$/languages/test_python.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/array_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/var.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_conv_db.db" beforeDir="false" afterPath="$PROJECT_DIR$/java_conv_db.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/py_conv_db.db" beforeDir="false" afterPath="$PROJECT_DIR$/py_conv_db.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_PLC.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_PLC.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_all.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_examples/python_file_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_examples/python_file_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_file_path.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_file_path.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_language.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_language.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_languages.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_languages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_code_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_code_processor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_error.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_error.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_examples/python_1_outfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_examples/python_1_outfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_examples/python_2_outfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_examples/python_2_outfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_examples/python_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_examples/python_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_examples/python_3_outfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_examples/python_3_outfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_examples/python_4_outfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_examples/python_4_outfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_outfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_outfile.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -36,44 +30,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PLC.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/PLC.py">
+      <file leaf-file-name="test_error.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test_error.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="51" column="26" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
+            <state relative-caret-position="221">
+              <caret line="40" selection-start-line="40" selection-end-line="40" />
               <folding>
-                <element signature="e#81#104#0" expanded="true" />
+                <element signature="e#24#39#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="code_processor.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code_processor.py">
+      <file leaf-file-name="case.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/unittest/case.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="313" column="36" lean-forward="true" selection-start-line="313" selection-start-column="36" selection-end-line="313" selection-end-column="36" />
-              <folding>
-                <element signature="e#58#67#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="11322">
+              <caret line="679" selection-start-line="679" selection-end-line="679" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="outfile.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/outfile.java">
+      <file leaf-file-name="suite.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/unittest/suite.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="python_file_1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_examples/python_file_1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+            <state relative-caret-position="1768">
+              <caret line="107" selection-start-line="107" selection-end-line="107" />
             </state>
           </provider>
         </entry>
@@ -81,53 +63,47 @@
       <file leaf-file-name="error.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/error.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="204">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
+              <folding>
+                <element signature="e#37#47#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="file_path.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/file_path.py">
+      <file leaf-file-name="logger.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logger.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="36" selection-start-line="36" selection-end-line="36" />
+            <state relative-caret-position="614">
+              <caret line="79" column="53" lean-forward="true" selection-start-line="79" selection-start-column="53" selection-end-line="79" selection-end-column="53" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PLC_copy.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PLC_copy.py">
+      <file leaf-file-name="code_processor.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/code_processor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="100" column="73" selection-start-line="100" selection-start-column="73" selection-end-line="100" selection-end-column="73" />
+            <state relative-caret-position="89">
+              <caret line="6" column="29" lean-forward="true" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="python.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/languages/python.py">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/logging/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="174" selection-start-line="174" selection-end-line="174" />
+            <state relative-caret-position="157">
+              <caret line="995" selection-start-line="995" selection-end-line="995" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PLC_copy.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PLC_copy.java">
+      <file leaf-file-name="ntpath.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/ntpath.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="748">
-              <caret line="44" column="5" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="outfile.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/outfile.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
+            <state relative-caret-position="816">
+              <caret line="52" selection-start-line="52" selection-end-line="52" />
             </state>
           </provider>
         </entry>
@@ -139,41 +115,42 @@
       <list>
         <option value="Python Unit Test" />
         <option value="Setup Script" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>subs</find>
-      <find>convert_functi</find>
-      <find>built-in</find>
-      <find>convert_fun</find>
-      <find>convert_me</find>
-      <find>make_func</find>
-      <find>function</find>
-      <find>to_indent</find>
-      <find>regex_su</find>
-      <find>write_</find>
-      <find>is_de</find>
-      <find>fptr[i]</find>
-      <find>indent_base</find>
-      <find>write_to_</find>
-      <find>j</find>
-      <find>get_t</find>
-      <find>var_type</find>
-      <find>write</find>
-      <find>while</find>
-      <find>Java</find>
-      <find>match_</find>
-      <find>&quot;}&quot;</find>
-      <find>input</find>
-      <find>end_app_list</find>
       <find>write_to_file</find>
       <find>add_Endings</find>
       <find>convert</find>
       <find>convert()</find>
       <find>convert(</find>
       <find>get_user_input</find>
+      <find>print(r_gen.regex_from, r_gen.regex_to)</find>
+      <find>nxt</find>
+      <find>regex</find>
+      <find>gen_re</find>
+      <find>(.)</find>
+      <find>diff_dict</find>
+      <find>match_dict</find>
+      <find>match_dict = []</find>
+      <find>print</find>
+      <find>find_super_set(</find>
+      <find>([a-z])*([a-z])*</find>
+      <find>+</find>
+      <find>re.</find>
+      <find>.log</find>
+      <find>from logger import Logge</find>
+      <find>from logger import Logger</find>
+      <find>logger</find>
+      <find>output_logger</find>
+      <find>logger = Logger</find>
+      <find>co</find>
+      <find>_acqui</find>
+      <find>_lock</find>
+      <find>debug</find>
+      <find>Logger(</find>
     </findStrings>
     <replaceStrings>
       <replace>fptr</replace>
@@ -183,6 +160,7 @@
       <replace>func</replace>
       <replace>line</replace>
       <replace>C++</replace>
+      <replace>info</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\Users\Programming\Programming\Python\PLC</dir>
@@ -200,9 +178,7 @@
         <option value="$PROJECT_DIR$/get_io.py" />
         <option value="$PROJECT_DIR$/languages/test_java.py" />
         <option value="$PROJECT_DIR$/test_language.py" />
-        <option value="$PROJECT_DIR$/error.py" />
         <option value="$PROJECT_DIR$/language.py" />
-        <option value="$PROJECT_DIR$/test_code_processor.py" />
         <option value="$PROJECT_DIR$/languages/java.py" />
         <option value="$PROJECT_DIR$/languages/python.py" />
         <option value="$PROJECT_DIR$/languages/test_python.py" />
@@ -215,12 +191,19 @@
         <option value="$PROJECT_DIR$/java_conv_db.db" />
         <option value="$PROJECT_DIR$/test_PLC.py" />
         <option value="$PROJECT_DIR$/PLC_copy.py" />
+        <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/regex_gen.py" />
+        <option value="$PROJECT_DIR$/test_error.py" />
         <option value="$PROJECT_DIR$/PLC.py" />
+        <option value="$PROJECT_DIR$/test_logger.py" />
+        <option value="$PROJECT_DIR$/test_code_processor.py" />
+        <option value="$PROJECT_DIR$/error.py" />
+        <option value="$PROJECT_DIR$/logger.py" />
         <option value="$PROJECT_DIR$/code_processor.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="85" />
     <option name="y" value="25" />
     <option name="width" value="1750" />
@@ -256,9 +239,10 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="editing.templates" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -277,25 +261,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.PLC">
-    <configuration name="PLC" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="PLC" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PLC.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
+  <component name="RunManager" selected="Python.test_all">
     <configuration name="code_processor" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="PLC" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -314,7 +280,7 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="outfile" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="regex_gen" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="PLC" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -326,7 +292,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/outfile.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/regex_gen.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -350,18 +316,56 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="test_code_processor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="PLC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_code_processor.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="test_error" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="PLC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_error.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <list>
-      <item itemvalue="Python.test_all" />
       <item itemvalue="Python.code_processor" />
-      <item itemvalue="Python.outfile" />
-      <item itemvalue="Python.PLC" />
+      <item itemvalue="Python.regex_gen" />
+      <item itemvalue="Python.test_code_processor" />
+      <item itemvalue="Python.test_all" />
+      <item itemvalue="Python.test_error" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.PLC" />
-        <item itemvalue="Python.code_processor" />
         <item itemvalue="Python.test_all" />
-        <item itemvalue="Python.outfile" />
+        <item itemvalue="Python.test_error" />
+        <item itemvalue="Python.code_processor" />
+        <item itemvalue="Python.test_code_processor" />
+        <item itemvalue="Python.regex_gen" />
       </list>
     </recent_temporary>
   </component>
@@ -379,132 +383,131 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="878" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="878" extended-state="7" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22868474" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18307997" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24966443" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32884097" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Python Console" order="8" weight="0.328877" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3395722" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.32884097" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33827493" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.328877" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32884097" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39973262" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.30053908" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Inspection Results" order="9" weight="0.328877" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.328877" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3395722" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22868474" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Inspection Results" order="9" weight="0.328877" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39973262" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.328877" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.328877" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.328877" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="119" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_error.py</url>
+          <line>40</line>
+          <option name="timeStamp" value="137" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="153" />
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="stream.buffer.name" language="Python" />
+        <watch expression="self.logger" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>self.logger</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>stream.buffer.name</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.get_name()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>StreamHandler.get_name()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>StreamHandler.get_name</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>dir(StreamHandler)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>StreamHandler</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>logger</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>logger.handlers</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test_examples/python_file_1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/outfile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="4" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py_conv_db.db">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="31" selection-start-line="1" selection-start-column="31" selection-end-line="1" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/java_conv_db.db">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="35" selection-start-line="1" selection-start-column="35" selection-end-line="1" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PLC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="11" column="43" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/output.java" />
-    <entry file="file://$PROJECT_DIR$/test_examples/python_file_1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="9" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/languages/python.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="901">
-          <caret line="508" column="28" selection-start-line="508" selection-start-column="28" selection-end-line="508" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py_conv_db.db">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/java_conv_db.db">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/code_processor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5508">
-          <caret line="324" selection-start-line="324" selection-end-line="324" />
-          <folding>
-            <element signature="e#58#67#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PLC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="11" column="43" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/languages/python.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="12" column="51" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/re.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4913">
-          <caret line="292" selection-start-line="292" selection-end-line="292" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/py_conv_db.db">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -523,9 +526,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5015">
           <caret line="295" selection-start-line="295" selection-end-line="295" />
-          <folding>
-            <element signature="e#58#67#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -568,9 +568,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1904">
           <caret line="112" column="31" lean-forward="true" selection-start-line="112" selection-start-column="31" selection-end-line="112" selection-end-column="31" />
-          <folding>
-            <element signature="e#58#67#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -585,9 +582,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2499">
           <caret line="147" lean-forward="true" selection-start-line="147" selection-end-line="147" />
-          <folding>
-            <element signature="e#58#67#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -656,13 +650,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/re.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="181" selection-start-line="181" selection-end-line="181" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/sre_parse.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -670,72 +657,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/java_conv_db.db">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="30" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py_conv_db.db">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="35" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_PLC.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2465">
           <caret line="150" column="40" selection-start-line="150" selection-start-column="40" selection-end-line="150" selection-end-column="40" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test_examples/python_file_1.py" />
+    <entry file="file://$PROJECT_DIR$/PLC_copy.java" />
     <entry file="file://$PROJECT_DIR$/outfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
-          <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/error.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file_path.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="36" selection-start-line="36" selection-end-line="36" />
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/languages/python.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="174" selection-start-line="174" selection-end-line="174" />
+        <state relative-caret-position="2975">
+          <caret line="178" selection-start-line="178" selection-end-line="178" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_examples/python_file_1.py">
+    <entry file="file://$PROJECT_DIR$/PLC_copy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+        <state relative-caret-position="1530">
+          <caret line="94" column="33" selection-start-line="94" selection-start-column="33" selection-end-line="94" selection-end-column="33" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code_processor.py">
+    <entry file="file://$PROJECT_DIR$/file_path.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="313" column="36" lean-forward="true" selection-start-line="313" selection-start-column="36" selection-end-line="313" selection-end-column="36" />
-          <folding>
-            <element signature="e#58#67#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="578">
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
         </state>
       </provider>
     </entry>
@@ -746,27 +701,143 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PLC_copy.py">
+    <entry file="file://$PROJECT_DIR$/regex_gen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="100" column="73" selection-start-line="100" selection-start-column="73" selection-end-line="100" selection-end-column="73" />
+        <state relative-caret-position="-34">
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PLC_copy.java">
+    <entry file="file://$PROJECT_DIR$/output_log.log" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/re.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="44" column="5" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
+        <state relative-caret-position="157">
+          <caret line="190" selection-start-line="190" selection-end-line="190" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py_conv_db.db">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="34" selection-start-column="3" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/java_conv_db.db">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="3" selection-start-column="3" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_logger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2499">
+          <caret line="151" column="22" selection-start-line="151" selection-start-column="16" selection-end-line="151" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_code_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="257" column="32" selection-start-line="257" selection-start-column="32" selection-end-line="257" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/PLC.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="51" column="26" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/_bootlocale.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/contextlib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/unittest/util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="266" selection-start-line="266" selection-end-line="266" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/unittest/suite.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1768">
+          <caret line="107" selection-start-line="107" selection-end-line="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/error.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
           <folding>
-            <element signature="e#81#104#0" expanded="true" />
+            <element signature="e#37#47#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/ntpath.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/unittest/case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11322">
+          <caret line="679" selection-start-line="679" selection-end-line="679" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_error.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
+          <folding>
+            <element signature="e#24#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/logging/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="995" selection-start-line="995" selection-end-line="995" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="614">
+          <caret line="79" column="53" lean-forward="true" selection-start-line="79" selection-start-column="53" selection-end-line="79" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/code_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="6" column="29" lean-forward="true" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
         </state>
       </provider>
     </entry>

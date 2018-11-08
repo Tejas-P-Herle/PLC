@@ -6,6 +6,9 @@ from languages.java import Java
 from languages.python import Python
 from languages.cpp import CPP
 from languages.c import C
+from logger import Logger
+
+plc_logger = Logger("code_processor", mode="w")
 
 PY_CONV_DB = "py_conv_db.db"
 JAVA_CONV_DB = "java_conv_db.db"
@@ -35,6 +38,7 @@ class CodeProcessor:
         # Store input parameters into class attributes
         self.file_path = file_path
         self.outfile_path = outfile_path
+
         # Store from and to languages
         self.lang_from = lang_from
         self.lang_to = lang_to
@@ -45,8 +49,10 @@ class CodeProcessor:
 
         # Store all class funcs in list
         lang_rec_funcs = ["get_language", "recognize", "validate"]
+        var_names = ["extensions", "languages"]
         self.funcs = [item for item in dir(Language) if
-                      not (item.startswith("__") or item in lang_rec_funcs)]
+                      not (item.startswith("__") or item in lang_rec_funcs
+                           or item in var_names)]
 
         # Make list to store all recognition functions
         self.rec_funcs = [fn for fn in self.funcs if fn[:2] == "is"]
@@ -55,6 +61,7 @@ class CodeProcessor:
         from_conv_funcs = [fn for fn in self.funcs if fn.startswith("get")]
         self.from_conv_funcs = [from_cls.__getattribute__(fn)
                                 for fn in from_conv_funcs]
+
         to_conv_funcs = [fn for fn in self.funcs if fn.startswith("convert")]
         self.to_conv_funcs = [to_cls.__getattribute__(fn)
                               for fn in to_conv_funcs]
@@ -79,7 +86,7 @@ class CodeProcessor:
         # Save preferred indentation base
         self.to_indent_preference = self.to_cls.preferred_indent_base
 
-        # Declare list to store all variables name if language is python
+        # Declare list to store all variables name if language is python (OBS)
         self.vars = []
 
         # Reset file_lines to empty list before conversion takes place
@@ -102,7 +109,7 @@ class CodeProcessor:
 
         # Store file into local variable
         file_path = self.file_path
-
+        
         # Open file for reading
         with open(file_path) as fptr:
 
@@ -147,11 +154,15 @@ class CodeProcessor:
                     if params[-1]:
                         conv_line = (conv_line[0], conv_line[1] + params[-1])
 
-                # If no conversion failed, set conversion line to input line
+                # If conversion failed, set conversion line to input line
                 if not conv_line:
                     conv_line = tuple([[lines[i].rstrip("\n")]])
 
                 # Log the converted line
+                ### KNOWN ERROR ###
+                # Gives TypeError: write_to_file() takes from 4 to 5 positional
+                # arguments but 7 were given if to language class is not defined
+                ###################
                 self.write_to_file(lines, i, *conv_line)
 
                 # Increment count
@@ -173,7 +184,7 @@ class CodeProcessor:
                         
                         # Else break out of loop
                         break
-            
+
             # Remove empty lines from file
             if empty_lns_count:
                 self.file_lines = self.file_lines[:-empty_lns_count]
@@ -195,8 +206,15 @@ class CodeProcessor:
             # Convert file lines list to file string
             self.file_str = "\n".join(self.file_lines) + "\n" * empty_lns_count
 
+            # LOG CURR CONV LINES
+            plc_logger.log("BEFORE REGEX", self.file_str, level="info")
+
             # Try to match regex expression
             for match in self.match_regex():
+
+                # LOG MATCH
+                plc_logger.log("MATCH", match)
+
                 # Get start and end of regex match
                 start = match[2].start() + self.char_diff
                 end = match[2].end() + self.char_diff
@@ -204,13 +222,20 @@ class CodeProcessor:
                 # If a regex match is found, run regex substitute function
                 sub = self.regex_substitute(*match, self.file_str[start:end])
 
+                # LOG SUBSTITUTION
+                plc_logger.log("SUB", sub)
+
                 # Record file length to calculate character difference
                 # Due to substitution
                 prev_len = len(self.file_str)
+
                 self.file_str = self.file_str[:start] + sub + self.file_str[end:]
 
                 # Increase store difference to match future conversions
                 self.char_diff += len(self.file_str) - prev_len
+
+            # LOG CURR CONV LINES
+            plc_logger.log("AFTER REGEX", self.file_str, level="info")
 
             # Convert file back to lines
             self.file_lines = self.file_str.split("\n")
@@ -221,31 +246,66 @@ class CodeProcessor:
         # Replace all groups with numbers
         regex_to_str = self.replace_group_no(regex_to)
 
-        # Replace escaped '\(' and '\)' with '(' and ')'
-        regex_to_str = regex_to_str.replace("\\(", "(").replace("\\)", ")")
+        # Replace escaped characters
+        regex_to_str = self.replace_esc_char(regex_to_str)
 
         # Check if line is a variable declaration in python
-        if self.lang_from == "python" and "=" in regex_from:
+        if self.is_var_dec(regex_from):
 
             # Then get variable name
             var_name = regex_obj.group(1).split("=")[0].rstrip("+-*/").strip()
 
             # Check if variable name exists in already declared variables
             if var_name in self.vars:
+
                 # Then break out of method
                 return regex_str
 
             # Else add variable name to list
             self.vars.append(var_name)
 
+        # LOG substitution params
+        plc_logger.log("sub_params", " ".join("'" + param + "'" for param in (
+                                regex_from_match_str,regex_to_str, regex_str)))
+
         # Substitute and return regex pattern from language A to B
         return re.sub(regex_from_match_str, regex_to_str, regex_str)
+
+    def is_var_dec(self, line):
+        """Check if is a variable decleration in python"""
+        
+        # Check if language is python and '=' in line
+        word_count = sum([len(substr.split(" ")) for substr in line.split("=", 1)])
+        if self.lang_from == "python" and "=" in line and word_count == 2:
+
+            # If is variable decleration, return True
+            return True
+
+        # Else return False
+        return False
+
+    def replace_esc_char(self, regex_str):
+        """Replaces escaped strings(by database) with parsable regex"""
+        
+        # Create list of characters to be replaced
+        chars = ["(", ")", ".", "+", "/", "*"]
+
+        # Iterate over characters in list
+        for char in chars:
+
+            # Replace current character occurances in regex string
+            regex_str = regex_str.replace("\\" + char, char)
+
+        # Return replaced regex string
+        return regex_str
 
     def replace_group_no(self, regex_str):
         """Replaces groups in regex string with index of group number"""
 
-        # Declare variables to store start and end of group
+        # Declare variables to store start, group_no and brackets count
         start = -1
+        group_no = None
+        bracket = 0
 
         # Check if required to omit next ')', and initialize delete to false(-1)
         omit_count = 0
@@ -271,9 +331,17 @@ class CodeProcessor:
 
                     # Then store start index
                     start = i + 1
+                    
+                # Increment brackets count
+                bracket += 1
 
             # Check if end of group
             elif char == ")" and regex_str[i - 1] != "\\":
+
+                # Check if nested loops are present
+                bracket -= 1
+                if bracket != 0:
+                    continue
 
                 # If under omit, decrease count by one
                 if omit_count:
@@ -287,12 +355,21 @@ class CodeProcessor:
                         
                     continue
                 
-                # Then replace with group number
-                regex_str = regex_str[:start][:-1] + "\\"\
-                                + str(group_no) + regex_str[i+1:]
+                # If starting parentheses found then, replace regex_str
+                if group_no != None:
 
-                # Call recursively
-                return self.replace_group_no(regex_str)
+                    # Then replace with group number
+                    regex_str = regex_str[:start][:-1] + "\\"\
+                                    + str(group_no) + regex_str[i+1:]
+
+                    # LOG REGEX STR
+                    plc_logger.log("regex str", regex_str)
+
+                    # Call recursively
+                    return self.replace_group_no(regex_str)
+
+        # LOG REGEX STR
+        plc_logger.log("regex str", regex_str)
 
         # If no groups were found, return input regex string
         return regex_str
@@ -558,15 +635,15 @@ class CodeProcessor:
 
             # Compile regex
             regex_from_match_str = re.sub(r"\$[0-9]", "", expr[-1])
-            expr_complied = re.compile(regex_from_match_str)
+            expr_compiled = re.compile(regex_from_match_str)
+            plc_logger.log("REGEX MATCH STR", regex_from_match_str)
 
             # Reset character difference as self.file_str is updated
             self.char_diff = 0
 
             # Check if pattern matches
-            if regex_from_match_str == "\\/*([\\S\\s]*?)*\\/":
-                matches = list(expr_complied.finditer(self.file_str))
-            for match in expr_complied.finditer(self.file_str):
+            for match in expr_compiled.finditer(self.file_str):
+
                 # If expression matches, return corresponding to conversion
                 regex_ln = [ln[1] for ln in self.conv_db if ln[1][0] == expr[0]]
                 yield expr[-1], regex_from_match_str, match, regex_ln[0][-1]
@@ -577,8 +654,12 @@ class CodeProcessor:
         # Declare variable to store conversion database
         conv_db = []
 
+        # Declare variable to store index of database
+        db_no = 1
+
         # Open appropriate conv_dbs_ptr
         for db in [self.conv_dbs_ptr[self.lang_from], self.conv_dbs_ptr[self.lang_to]]:
+
             # Open conversion database
             with open(db) as fptr:
 
@@ -586,24 +667,34 @@ class CodeProcessor:
                 lines = fptr.readlines()
 
                 # Run code conversions in file
-                lines = self.code_conv(lines)
+                lines = self.code_conv(lines, db_no)
 
                 # Store in database
-                conv_db.append([line.strip("\n").split(" ", 1) for line in lines])
+                conv_db.append([line.strip("\n").split(" ", 1)
+                                for line in lines])
+
+            # Increment database no
+            db_no += 1
 
         # Merge file lines and stores as class attribute
         self.conv_db = list(zip(conv_db[0], conv_db[1]))
 
-    def code_conv(self, lines):
+    def code_conv(self, lines, db_no):
         """Convert code in regex expressions to standard regex expressions"""
 
         # Iterate over lines in file
-        for line in lines:
+        for i in range(len(lines)):
 
             # Replace all spaces with [\s\t]* denoting any number of 
             # spaces or tabs, this is for matching all whitespaces in file
-            line.replace(" ", "[\\s\\t]*")
-    
+            index, line = lines[i].split(" ", 1)
+            if db_no == 1:
+                line = line.replace(" ", "[\\s\\t]*")
+            elif db_no == 2:
+                line = line.replace("(?<![\"'])", "")
+            line = line.replace("[\\s\\t]*{1}", " ")
+            lines[i] = index + " " + line
+
         return lines
 
     def write_file_to_disk(self):
@@ -639,8 +730,10 @@ class CodeProcessor:
                 return err
 
         if write == "y":
+
             # Overwrite if permission is granted
             with open(file_path, "w") as fptr:
+
                 # Write lines from memory to disk
                 fptr.writelines("\n".join(self.file_lines))
                 print("File Write SUCCESSFUL")
@@ -654,13 +747,16 @@ class CodeProcessor:
 if __name__ == "__main__":
     # file = "outfile.java"
     # outfile_path = "outfile.py"
-    # file = "test_examples/python_1.py"
-    # outfile_path = "test_examples/python_1_outfile.java"
+    file = "test_examples/python_1.py"
+    outfile_path = "test_examples/python_1_outfile.java"
     # file = "PLC_copy.py"
     # outfile_path = "PLC_copy_outfile.java"
-    file = "test_examples/python_1_outfile.java"
-    outfile_path = "test_examples/python_1_outfile.py"
-    # processor = CodeProcessor(file, "python", "java", outfile_path)
-    processor = CodeProcessor(file, "java", "python", outfile_path)
+    # file = "test_examples/python_1_outfile.java"
+    # outfile_path = "test_examples/python_1_outfile.py"
+    # file = "test_examples/python_3.py"
+    # outfile_path = "test_examples/python_3_outfile.java"
+    # processor = CodeProcessor(file, "java", "python", outfile_path)
+    processor = CodeProcessor(file, "python", "java", outfile_path)
     processor.convert()
     error = processor.write_file_to_disk()
+    plc_logger.__exit__()

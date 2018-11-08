@@ -1,8 +1,8 @@
 """Python language class for conversion to and from python"""
 from os import path
+import re
 
 from language import Language
-import re
 
 
 class Python(Language):
@@ -260,7 +260,7 @@ class Python(Language):
         # Get line indent
         try:
             base_indent = cls.indent(fptr, i)
-        except ValueError:
+        except IndexError:
             return []
 
         # Search first occurrence of triple quotes before increment in indent
@@ -296,6 +296,12 @@ class Python(Language):
             if quotes:
                 j += 1
                 break
+
+        # Check if starting quotes are found
+        if not quotes:
+            
+            # If quotes are not found, quit function
+            return doc_str
 
         # While ending quotes not found add string to doc_string
         while quotes not in fptr[j]:

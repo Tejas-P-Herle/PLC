@@ -1,16 +1,18 @@
 """Parse and Create custom Errors"""
 import sys
-import logging
+from logger import Logger
 
-logging.basicConfig(filename="PLC_log.log", level=logging.DEBUG)
+
+plc_logger = Logger("error")
 
 
 class Error:
     @staticmethod
     def parse(error_msg, user_input=False, quit_=False):
         """Parse errors(Handle Errors) and Quit(Optional)"""
+
         # Log error message
-        logging.error(error_msg)
+        plc_logger.log(error_msg, level="error")
 
         # Check if is user input
         if user_input:

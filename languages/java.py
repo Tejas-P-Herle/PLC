@@ -2,6 +2,9 @@
 from os import path
 
 from language import Language
+from logger import Logger
+
+plc_logger = Logger("langauges_java")
 
 
 class Java(Language):
@@ -216,6 +219,7 @@ class Java(Language):
         """Converts class definition to java"""
 
         # Run super definition
+        plc_logger.log("ERROR_2", access_modifier, class_name, classes, interfaces)
         access_modifier, class_name, classes, interfaces = \
             super().convert_class(access_modifier, class_name,
                                   classes, interfaces)

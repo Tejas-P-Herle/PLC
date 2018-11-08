@@ -3,13 +3,13 @@ Python Language Converter(PLC)
 Converts Source Code from language A to B
 """
 from error import Error
-import logging
+from logger import Logger
 from file_path import FilePath
 from language import Language
 from code_processor import CodeProcessor
 
-# Configure logging module
-logging.basicConfig(filename="PLC_log.log", level=logging.DEBUG)
+# Initialize plc_logger
+plc_logger = Logger("PLC")
 
 # Create variables for user input
 user_input = {
@@ -115,7 +115,7 @@ def get_user_input(func, var_name, input_str):
     var = str(input(input_str))
 
     # Log debug message
-    logging.debug("{} {}".format(var_name, var))
+    plc_logger.log("VAR[NAME]", var_name, var)
 
     # Check if user requests abort
     if var == "q":
