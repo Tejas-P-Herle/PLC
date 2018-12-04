@@ -16,6 +16,16 @@ Usage:
 &nbsp; &nbsp; &nbsp; &nbsp; Python interpreter 3.7  
 &nbsp; Download the above git project.  
 &nbsp; Run PLC.py file to launch language converter program.  
+&nbsp; Given below is an example of execution of the program:
+```
+$ python plc.py  
+Path to Program File or 'q' to abort: python_input.py
+To Language or 'q' to abort: java
+Output File Path or 'q' to abort: java_output.java
+python -> java
+File Write SUCCESSFUL
+Output: java_output.java
+``` 
 
 Working: CONVERTING SOURCE CODE FROM PREVIOUSLY LEARNT EXAMPLES  
 For example,  
