@@ -26,7 +26,8 @@ class Logger:
         
         # Set logging format
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            "%(asctime)s - %(name)s - %(levelname).1s - %(message)s",
+            "%M:%S")
         file_handler.setFormatter(formatter)
 
         # Deactivate logger by default

@@ -22,7 +22,7 @@ class TestError(unittest.TestCase):
         # Store expected logging messages
         log_lines = []
         for test in test_cases:
-            log_lines.append("error - ERROR - " + str(test))
+            log_lines.append("error - E - " + str(test))
         
         # For test in test_cases, test if functions as expected
         for test in test_cases:

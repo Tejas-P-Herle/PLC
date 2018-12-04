@@ -160,8 +160,9 @@ class CodeProcessor:
 
                 # Log the converted line
                 ### KNOWN ERROR ###
-                # Gives TypeError: write_to_file() takes from 4 to 5 positional
-                # arguments but 7 were given if to language class is not defined
+                # Gives TypeError: ERROR: "write_to_file() takes from 4 to 5
+                # positional arguments but 7 were given"
+                # REASON: To language class is not defined
                 ###################
                 self.write_to_file(lines, i, *conv_line)
 
@@ -206,9 +207,6 @@ class CodeProcessor:
             # Convert file lines list to file string
             self.file_str = "\n".join(self.file_lines) + "\n" * empty_lns_count
 
-            # LOG CURR CONV LINES
-            plc_logger.log("BEFORE REGEX", self.file_str, level="info")
-
             # Try to match regex expression
             for match in self.match_regex():
 
@@ -233,9 +231,6 @@ class CodeProcessor:
 
                 # Increase store difference to match future conversions
                 self.char_diff += len(self.file_str) - prev_len
-
-            # LOG CURR CONV LINES
-            plc_logger.log("AFTER REGEX", self.file_str, level="info")
 
             # Convert file back to lines
             self.file_lines = self.file_str.split("\n")
@@ -269,7 +264,13 @@ class CodeProcessor:
                                 regex_from_match_str,regex_to_str, regex_str)))
 
         # Substitute and return regex pattern from language A to B
-        return re.sub(regex_from_match_str, regex_to_str, regex_str)
+        try:
+            return re.sub(regex_from_match_str, regex_to_str, regex_str)
+        except Exception as err:
+            plc_logger.log("-" * 50 + "ERR_OCCURED AND CAUGHT" + "-" * 50)
+            print(err)
+            print("'" + regex_from_match_str + "'", "'" + regex_to_str + "'", "'" +
+            regex_str + "'")
 
     def is_var_dec(self, line):
         """Check if is a variable decleration in python"""
@@ -302,76 +303,49 @@ class CodeProcessor:
     def replace_group_no(self, regex_str):
         """Replaces groups in regex string with index of group number"""
 
-        # Declare variables to store start, group_no and brackets count
-        start = -1
-        group_no = None
-        bracket = 0
+        # Declare brackets variable to store start position and group number
+        brackets = []
 
-        # Check if required to omit next ')', and initialize delete to false(-1)
-        omit_count = 0
-        delete = -1
+        # Iterate over characters in regex_str
+        i = 0
+        while i < len(regex_str):
 
-        # Iterate through all characters in to_regex string
-        for i, char in enumerate(regex_str):
+            # If character is an open bracket, then differentiate between new
+            # group start and open bracket literal and lookarounds
+            if regex_str[i] == "(" and (i == 0 or regex_str[i-1] != "\\"):
 
-            # Check if start of group
-            if char == "(" and regex_str[i - 1] != "\\":
-                
-                # Check if group is negative lookbehind
-                if regex_str[i+1:i+4] == "?<!":
+                # Find and group number
+                grp_no = -1
+                if i != len(regex_str) - 5 and regex_str[i+2] == "$":
+                    grp_no = regex_str[i+3:regex_str.find("]", i)]
+                    if not grp_no.isdecimal():
+                        grp_no = -1
 
-                    # If yes continue loop, and set delete group to true
-                    omit_count += 1
-                    delete = i
-                    continue
+                # If is a look around, set group number to -2
+                if regex_str[i+1] == "?":
+                    grp_no = -2
 
-                # Get specified group no
-                elif regex_str[i+1] == "$":
-                    group_no = int(regex_str[i+2])
+                # Store open bracket index and group number
+                brackets.append([i, grp_no])
 
-                    # Then store start index
-                    start = i + 1
-                    
-                # Increment brackets count
-                bracket += 1
+            # If character is a close bracket, then 
+            if regex_str[i] == ")" and (i == 0 or regex_str[i - 1] != "\\"): 
 
-            # Check if end of group
-            elif char == ")" and regex_str[i - 1] != "\\":
+                # Remove last open bracket from list
+                brkt = brackets.pop()
 
-                # Check if nested loops are present
-                bracket -= 1
-                if bracket != 0:
-                    continue
-
-                # If under omit, decrease count by one
-                if omit_count:
-                    omit_count -= 1
-
-                    # If delete, strip till current character(inclusive)
-                    if delete != -1:
-
-                        # Remove string till current character
-                        return self.replace_group_no(regex_str[:delete] + regex_str[i+1:])
-                        
-                    continue
-                
-                # If starting parentheses found then, replace regex_str
-                if group_no != None:
-
-                    # Then replace with group number
-                    regex_str = regex_str[:start][:-1] + "\\"\
-                                    + str(group_no) + regex_str[i+1:]
-
-                    # LOG REGEX STR
-                    plc_logger.log("regex str", regex_str)
-
-                    # Call recursively
-                    return self.replace_group_no(regex_str)
-
-        # LOG REGEX STR
-        plc_logger.log("regex str", regex_str)
-
-        # If no groups were found, return input regex string
+                # Substitute with group number if is a group close bracket else
+                # if is a look around close, then delete look around
+                if brkt[-1] != -1:
+                    sub = "\\" + brkt[-1] if int(brkt[-1]) > -1 else ""
+                    diff = -1 if brkt[-1] == -2 else 1
+                    regex_str = (regex_str[:brkt[0]] + sub + regex_str[i+1:])
+                    i += brkt[0] - i + diff
+            
+            # Increment count of loop
+            i += 1
+        
+        # Return modified regex
         return regex_str
 
     def write_to_file(self, fptr, i, lines, end=None):
@@ -634,9 +608,9 @@ class CodeProcessor:
         for expr in [record[0] for record in self.conv_db]:
 
             # Compile regex
-            regex_from_match_str = re.sub(r"\$[0-9]", "", expr[-1])
+            regex_from_match_str = re.sub(r"\[\$[0-9]\]", "", expr[-1])
+            
             expr_compiled = re.compile(regex_from_match_str)
-            plc_logger.log("REGEX MATCH STR", regex_from_match_str)
 
             # Reset character difference as self.file_str is updated
             self.char_diff = 0
@@ -683,7 +657,15 @@ class CodeProcessor:
         """Convert code in regex expressions to standard regex expressions"""
 
         # Iterate over lines in file
-        for i in range(len(lines)):
+        i = 0
+        while i < len(lines):
+
+            # Check if line starts with # symbol (Commented out)
+            if lines[i].strip()[0:2] == "# ":
+                
+                # Then remove line from lines list
+                lines.pop(i)
+                continue
 
             # Replace all spaces with [\s\t]* denoting any number of 
             # spaces or tabs, this is for matching all whitespaces in file
@@ -694,6 +676,7 @@ class CodeProcessor:
                 line = line.replace("(?<![\"'])", "")
             line = line.replace("[\\s\\t]*{1}", " ")
             lines[i] = index + " " + line
+            i += 1
 
         return lines
 

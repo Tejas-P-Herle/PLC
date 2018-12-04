@@ -230,21 +230,21 @@ class TestCodeProcessor(unittest.TestCase):
 
         # Create test set suppliment list
         test_set_suppliment = [
-            (r"print\(($1[\"'][^\"']*)($2[\"'])\)",
+            (r"print\(([$1][\"'][^\"']*)([$2][\"'])\)",
              "    print('Hello World')",
-             r"System.out.println\(($1[\"'][^\\]*)\\n($2[\"'])\)",
+             r"System.out.println\(([$1][\"'][^\\]*)\\n([$2][\"'])\)",
              "    System.out.println('Hello World\\n')"),
-            (r"print\(($1([\"'])[^\"']*)($2\2), end=([\"'])\4\)",
+            (r"print\(([$1]([\"'])[^\"']*)([$2]\2), end=([$3][\"'])([$3][\"'])\)",
              "    print('Hello World', end=\"\")",
-             r"System\.out\.println\(($1([\"'])[^\"']*)($2\2)\)",
+             r"System\.out\.println\(([$1]([\"'])[^\"']*)([$2]\2)\)",
              "    System.out.println('Hello World')"),
-            (r"print\(($1[\"'].*)($2[\"']), end=[\"']($3[^,]*)[\"']\)",
-             "    print('Hello World', end=\"!\")",
-             r"System\.out\.println\(($1[\"'][^\\)]*)($3\\[a-z])($2[\"'])\)",
-             "    System.out.println('Hello World!')"),
-            (r"(?<!int {1})($1\S+ [+\-*/]{0,2}= [0-9]+)",
+            (r"print\(([$1][\"'].*)([$3][\"']), end=([$3][\"'])([$2][^,]+?)([$3][\"'])\)",
+             "    print('Hello World', end=\"\\n\")",
+             r"System\.out\.println\(([$1][\"'][^\\)]*)([$4]\\[a-z])([$2][\"'])\)",
+             "    System.out.println('Hello World\\n')"),
+            (r"(?<!int {1})([$1]\S+ [+\-*/]{0,2}= [0-9]+)",
              "    var_num = 10",
-             r"int ($1\S+[\s\t]*[+\-*/]{0,2}=[\s\t]*[0-9]+)",
+             r"int ([$1]\S+[\s\t]*[+\-*/]{0,2}=[\s\t]*[0-9]+)",
              "    int var_num = 10")
         ]
 
@@ -255,13 +255,13 @@ class TestCodeProcessor(unittest.TestCase):
         for data in test_set_suppliment:
             
             # Add required data to test_set (from conversion)
-            match_str = re.sub(r"\$[0-9]", "", data[0])
+            match_str = re.sub(r"\[\$[0-9]\]", "", data[0])
             test_set.append(
                 (data[0], match_str, re.match(match_str, data[1].strip()),
                  data[2], data[1]))
             
             # Add required data to test_set (to conversion)
-            match_str = re.sub(r"\$[0-9]", "", data[2])
+            match_str = re.sub(r"\[\$[0-9]\]", "", data[2])
             test_set.append(
                 (data[2], match_str, re.match(match_str, data[3].strip()),
                  data[0], data[3]))
@@ -271,9 +271,9 @@ class TestCodeProcessor(unittest.TestCase):
         res_set = ["    System.out.println('Hello World\\n')",
                    "    print('Hello World')",
                    "    System.out.println('Hello World')",
-                   "    print('Hello World', end=\"\")",
-                   "    System.out.println('Hello World!')",
-                   "    print('Hello World!')",
+                   "    print('Hello World', end='')",
+                   "    System.out.println('Hello World\\n')",
+                   "    print('Hello World', end='\\n')",
                    "    int var_num = 10",
                    "    var_num = 10"]
         

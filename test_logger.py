@@ -95,12 +95,12 @@ class TestLogger(unittest.TestCase):
         
         # Create expected results test set
         res_str = "\n".join([line.strip() for line in """
-        test_logger - DEBUG - Debug message
-        test_logger - ERROR - Error message
-        test_logger - CRITICAL - Critical message
-        test_logger - INFO - Info message
-        test_logger - WARNING - Warning message
-        test_logger - DEBUG - Debug message 2
+        test_logger - D - Debug message
+        test_logger - E - Error message
+        test_logger - C - Critical message
+        test_logger - I - Info message
+        test_logger - W - Warning message
+        test_logger - D - Debug message 2
         """.strip().split("\n")])
 
         # Set omitted messages count
