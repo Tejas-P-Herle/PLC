@@ -1,0 +1,3 @@
+sl_no , python , java , c , cpp , cond
+1 , print\("[^"]*"\) , System\.out\.println\("[^"]*"\) ,  ,  , 
+2 , print\("[^"]*"\, end="[^\\]*\\n[a-z\\]*"\) , System\.out\.println\("[^"]*"\) ,  ,  , 

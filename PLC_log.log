@@ -1,6 +1,29 @@
-41:33 - code_processor - D - MATCH ('print\\(([$1]["\'].*)([$2]["\']),[\\s\\t]*end=["\']([$3][^,]*)["\']\\)', 'print\\((["\'].*)(["\']),[\\s\\t]*end=["\']([^,]*)["\']\\)', <re.Match object; span=(139, 181), match='print("Ends with \'!\'", end=" Ending...\\n")'>, 'System\\.out\\.println\\(([$1]["\'][^\\\\)]*)([$3]\\\\[a-z])([$2]["\'])\\)')
-41:33 - code_processor - D - sub_params 'print\((["'].*)(["']),[\s\t]*end=["']([^,]*)["']\)' 'System.out.println(\1\3\2)' 'print("Ends with '!'", end=" Ending...\n")'
-41:33 - code_processor - D - SUB System.out.println("Ends with '!' Ending...\n")
-41:33 - code_processor - D - MATCH ('(?<!int )([$1][^\\s=]+[\\s\\t]*=[\\s\\t]*[0-9]+)', '(?<!int )([^\\s=]+[\\s\\t]*=[\\s\\t]*[0-9]+)', <re.Match object; span=(77, 82), match='j = 0'>, 'int ([$1][^\\s=]+ = [0-9]+)')
-41:33 - code_processor - D - sub_params '(?<!int )([^\s=]+[\s\t]*=[\s\t]*[0-9]+)' 'int \1' 'j = 0'
-41:33 - code_processor - D - SUB int j = 0
+03:31 - code_processor - D - MATCH ('print\\(([$1]["\'].*)([$2]["\']),[\\s\\t]*end=["\']([$3][^,]*)["\']\\)', 'print\\((["\'].*)(["\']),[\\s\\t]*end=["\']([^,]*)["\']\\)', <re.Match object; span=(60, 90), match='print("Hello World", end="\\n")'>, 'System\\.out\\.println\\(([$1]["\'][^\\\\)]*)([$3]\\\\[a-z])([$2]["\'])\\)')
+03:31 - code_processor - D - sub_params 'print\((["'].*)(["']),[\s\t]*end=["']([^,]*)["']\)' 'System.out.println(\1\3\2)' 'print("Hello World", end="\n")'
+03:31 - code_processor - D - SUB System.out.println("Hello World\n")
+03:31 - code_processor - D - MATCH ('print\\(([$1]["\'].*)([$2]["\']),[\\s\\t]*end=["\']([$3][^,]*)["\']\\)', 'print\\((["\'].*)(["\']),[\\s\\t]*end=["\']([^,]*)["\']\\)', <re.Match object; span=(60, 90), match='print("Hello World", end="\\n")'>, 'System\\.out\\.println\\(([$1]["\'][^\\\\)]*)([$3]\\\\[a-z])([$2]["\'])\\)')
+03:31 - code_processor - D - sub_params 'print\((["'].*)(["']),[\s\t]*end=["']([^,]*)["']\)' 'System.out.println(\1\3\2)' 'print("Hello World", end="\n")'
+03:31 - code_processor - D - SUB System.out.println("Hello World\n")
+03:31 - code_processor - D - sub_params 'print\(([\"'][^\"']*)([\"'])\)' 'System.out.println(\1\\n\2)' '    print('Hello World')'
+03:31 - code_processor - D - sub_params 'System.out.println\(([\"'][^\\]*)\\n([\"'])\)' 'print(\1\2)' '    System.out.println('Hello World\n')'
+03:31 - code_processor - D - sub_params 'print\((([\"'])[^\"']*)(\2), end=([\"'])([\"'])\)' 'System.out.println(\1\2)' '    print('Hello World', end="")'
+03:31 - code_processor - D - sub_params 'System\.out\.println\((([\"'])[^\"']*)(\2)\)' 'print(\1\2, end=\3\3)' '    System.out.println('Hello World')'
+03:31 - code_processor - D - sub_params 'print\(([\"'].*)([\"']), end=([\"'])([^,]+?)([\"'])\)' 'System.out.println(\1\4\2)' '    print('Hello World', end="\n")'
+03:31 - code_processor - D - sub_params 'System\.out\.println\(([\"'][^\\)]*)(\\[a-z])([\"'])\)' 'print(\1\3, end=\3\2\3)' '    System.out.println('Hello World\n')'
+03:31 - code_processor - D - sub_params '(?<!int {1})(\S+ [+\-*/]{0,2}= [0-9]+)' 'int \1' '    var_num = 10'
+03:31 - code_processor - D - sub_params 'int (\S+[\s\t]*[+\-*/]{0,2}=[\s\t]*[0-9]+)' '\1' '    int var_num = 10'
+03:31 - code_processor - D - MATCH ('(?<!int )([$1][^\\s=]+[\\s\\t]*=[\\s\\t]*[0-9]+)', '(?<!int )([^\\s=]+[\\s\\t]*=[\\s\\t]*[0-9]+)', <re.Match object; span=(72, 81), match='value = 1'>, 'int ([$1][^\\s=]+ = [0-9]+)')
+03:31 - code_processor - D - sub_params '(?<!int )([^\s=]+[\s\t]*=[\s\t]*[0-9]+)' 'int \1' 'value = 1'
+03:31 - code_processor - D - SUB int value = 1
+03:31 - code_processor - D - MATCH ('(?<!int )([$1][^\\s=]+[\\s\\t]*=[\\s\\t]*[0-9]+)', '(?<!int )([^\\s=]+[\\s\\t]*=[\\s\\t]*[0-9]+)', <re.Match object; span=(72, 77), match='j = 0'>, 'int ([$1][^\\s=]+ = [0-9]+)')
+03:31 - code_processor - D - sub_params '(?<!int )([^\s=]+[\s\t]*=[\s\t]*[0-9]+)' 'int \1' 'j = 0'
+03:31 - code_processor - D - SUB int j = 0
+03:31 - code_processor - D - MATCH ('print\\(str\\(([$1][^)])\\)[\\s\\t]*\\+[\\s\\t]*str\\(([$2][^)])\\)\\)', 'print\\(str\\(([^)])\\)[\\s\\t]*\\+[\\s\\t]*str\\(([^)])\\)\\)', <re.Match object; span=(138, 160), match='print(str(i) + str(j))'>, 'System\\.out\\.println\\(([$1][^.])\\.toString\\(\\) \\+ ([$2][^.])\\.toString\\(\\)\\)')
+03:31 - code_processor - D - sub_params 'print\(str\(([^)])\)[\s\t]*\+[\s\t]*str\(([^)])\)\)' 'System.out.println(\1.toString() + \2.toString())' 'print(str(i) + str(j))'
+03:31 - code_processor - D - SUB System.out.println(i.toString() + j.toString())
+03:31 - code_processor - D - MATCH ('print\\(([$1]["\'].*)([$2]["\']),[\\s\\t]*end=["\']([$3][^,]*)["\']\\)', 'print\\((["\'].*)(["\']),[\\s\\t]*end=["\']([^,]*)["\']\\)', <re.Match object; span=(72, 103), match='print("Ends with \'!\'", end="!")'>, 'System\\.out\\.println\\(([$1]["\'][^\\\\)]*)([$3]\\\\[a-z])([$2]["\'])\\)')
+03:31 - code_processor - D - sub_params 'print\((["'].*)(["']),[\s\t]*end=["']([^,]*)["']\)' 'System.out.println(\1\3\2)' 'print("Ends with '!'", end="!")'
+03:31 - code_processor - D - SUB System.out.println("Ends with '!'!")
+03:31 - langauges_java - D - ERROR_2 public final MasterClass [] []
+03:31 - langauges_java - D - ERROR_2 private static ChildClass ['MasterClass'] ['ParentIntr']
+03:31 - langauges_java - D - ERROR_2  SubClass ['MasterClass'] ['ParentIntr', 'ChildIntr']

@@ -1,93 +1,12 @@
 import unittest
 from regex_gen import RegexGen
 
-
 class TestRegexGen(unittest.TestCase):
-    def test___init__(self):
+    def test__init__(self):
         """Test case for RegexGen.__init__"""
 
-        # Create test set
-        test_set = []
-        
-        # Create expected results test set
-        res_set = []
-        
-        # Run test for all tests in test_set
-        for i in range(len(test_set)):
-        
-            # Test function with inputs and expected outputs
-            self.assertEqual(
-                RegexGen().__init__(*test_set[i]), res_set[i]
-            )
-        
-    def test_get_diff(self):
-        """Test case for RegexGen.get_diff"""
+        return
 
-        # Create test set
-        test_set = []
-        
-        # Create expected results test set
-        res_set = []
-        
-        # Run test for all tests in test_set
-        for i in range(len(test_set)):
-        
-            # Test function with inputs and expected outputs
-            self.assertEqual(
-                RegexGen().get_diff(*test_set[i]), res_set[i]
-            )
-        
-    def test_ind_str_match(self):
-        """Test case for RegexGen.ind_str_match"""
 
-        # Create test set
-        test_set = []
-        
-        # Create expected results test set
-        res_set = []
-        
-        # Run test for all tests in test_set
-        for i in range(len(test_set)):
-        
-            # Test function with inputs and expected outputs
-            self.assertEqual(
-                RegexGen().ind_str_match(*test_set[i]), res_set[i]
-            )
-        
-    def test_gen_regex(self):
-        """Test case for RegexGen.gen_regex"""
-
-        # Create test set
-        test_set = []
-        
-        # Create expected results test set
-        res_set = []
-        
-        # Run test for all tests in test_set
-        for i in range(len(test_set)):
-        
-            # Test function with inputs and expected outputs
-            self.assertEqual(
-                RegexGen().gen_regex(*test_set[i]), res_set[i]
-            )
-        
-    def test_ind_super_set(self):
-        """Test case for RegexGen.ind_super_set"""
-
-        # Create test set
-        test_set = []
-        
-        # Create expected results test set
-        res_set = []
-        
-        # Run test for all tests in test_set
-        for i in range(len(test_set)):
-        
-            # Test function with inputs and expected outputs
-            self.assertEqual(
-                RegexGen().ind_super_set(*test_set[i]), res_set[i]
-            )
-        
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
