@@ -2,13 +2,14 @@ class Python_2_Outfile {
   public static void main(String[] args) {
     int value = 1;
     if (value == 0) {
-      print("False");
+      System.out.println("False\n");
     }
     else if (value == 1) {
-      print("True");
+      System.out.println("True\n");
     }
     else {
-      print("Undefined");
+      System.out.println("Undefined\n");
     }
   }
 }
+

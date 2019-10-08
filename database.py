@@ -44,15 +44,15 @@ class DataBase:
         self.write("", sl_no=sl_no)
         
     def write(self, data, db_name="regex_gen_data.db",
-                    mode=None, sl_no=None):
+              mode=None, sl_no=None):
         """Open database connection"""
-
-        # Open connction
-        db = open(db_name, "r+" if mode else "a")
 
         # Check if data exists in database
         if self.exists(data):
             return
+
+        # Open connction
+        db = open(db_name, "r+" if mode else "a")
 
         # Overwrite requested line
         data = data if isinstance(data, list) else [data]
@@ -83,6 +83,35 @@ class DataBase:
         else:
             db.writelines(data)
 
+    def write_to_conv_db(self, data, conv_db_files):
+        """Write to conversion Databases"""
+
+        # If write to conversoin database is set to True, get the last indexes
+        # from each of the conversion databases and write to the index one 
+        # exceeding the max last index
+        next_index = max([self.get_last_index(conv_db)
+                          for conv_db in conv_db_files.values()]) + 1
+        lang_from, lang_to = self.langs
+        data_split = data.split(" , ")
+        for i in range(len(self.langs)):
+            col = self.cols[i]
+            lang_data = data_split[col]
+            conv_db = conv_db_files[self.headings[col]]
+            with open(conv_db, "r+") as file:
+                if lang_data not in file.read():
+                    print("Writting To conversion database")
+                    file.write(str(next_index) + " " + lang_data + "\n")
+        
+
+    def get_last_index(self, conv_db):
+        prev_line = "1 "
+        with open(conv_db) as file:
+            line = file.readline()
+            while line:
+                prev_line = line
+                line = file.readline()
+        return int(prev_line.split(" ", 1)[0].strip())
+        
     def exists(self, entry, db_name="regex_gen_data.db"):
         """Check if the given entry is in database"""
 

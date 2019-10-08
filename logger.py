@@ -11,11 +11,13 @@ class Logger:
         "critical": logging.CRITICAL
     }
 
-    def __init__(self, logger_name, filename="PLC_log.log", level="DEBUG", mode="a"):
+    def __init__(self, logger_name, filename="PLC_log.log",
+                 level="DEBUG", mode="a"):
         """Initialize plc_logger class"""
 
         # Change level to lowercase
         level = level.lower()
+        self.level_str = level
 
         # Set debugging level
         level = self.level_map[level]
@@ -82,7 +84,7 @@ class Logger:
         except KeyError:
             
             # Set level to debug as default
-            level = "debug"
+            level = self.level_str
 
         # Set level to lower case level
         level = level.lower()

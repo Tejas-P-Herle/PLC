@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Process code and act as input to conversion classes"""
 import re
 
@@ -32,12 +34,14 @@ class CodeProcessor:
     var_decleration = False
     bracket_level_increment = False
 
-    def __init__(self, file_path, lang_from, lang_to, outfile_path):
+    def __init__(self, file_path, lang_from, lang_to,
+                 outfile_path, corrections=None):
         """Initializes code processor class"""
 
         # Store input parameters into class attributes
         self.file_path = file_path
         self.outfile_path = outfile_path
+        self.corrections = corrections
 
         # Store from and to languages
         self.lang_from = lang_from
@@ -86,14 +90,13 @@ class CodeProcessor:
         # Save preferred indentation base
         self.to_indent_preference = self.to_cls.preferred_indent_base
 
-        # Declare list to store all variables name if language is python (OBS)
-        self.vars = []
+        # Declare set to store all variables name if language is python (OBS)
+        self.vars = set()
 
         # Reset file_lines to empty list before conversion takes place
         self.file_lines = []
 
-    @staticmethod
-    def indent(line):
+    def indent(self, line):
         """Returns indentation level of line"""
 
         # Check if line is just whitespace
@@ -154,9 +157,11 @@ class CodeProcessor:
                     if params[-1]:
                         conv_line = (conv_line[0], conv_line[1] + params[-1])
 
-                # If conversion failed, set conversion line to input line
+                # If conversion recognition failes,
+                # set conversion line to input line
                 if not conv_line:
                     conv_line = tuple([[lines[i].rstrip("\n")]])
+                    self.corrections.append(conv_line)
 
                 # Log the converted line
                 ### KNOWN ERROR ###
@@ -217,6 +222,9 @@ class CodeProcessor:
                 start = match[2].start() + self.char_diff
                 end = match[2].end() + self.char_diff
 
+                # Remove line from corrections list
+                self.corrections.remove(self.file_str[start:end])
+
                 # If a regex match is found, run regex substitute function
                 sub = self.regex_substitute(*match, self.file_str[start:end])
 
@@ -227,7 +235,8 @@ class CodeProcessor:
                 # Due to substitution
                 prev_len = len(self.file_str)
 
-                self.file_str = self.file_str[:start] + sub + self.file_str[end:]
+                self.file_str = (self.file_str[:start] + sub
+                                 + self.file_str[end:])
 
                 # Increase store difference to match future conversions
                 self.char_diff += len(self.file_str) - prev_len
@@ -235,7 +244,8 @@ class CodeProcessor:
             # Convert file back to lines
             self.file_lines = self.file_str.split("\n")
 
-    def regex_substitute(self, regex_from, regex_from_match_str, regex_obj, regex_to, regex_str):
+    def regex_substitute(self, regex_from, regex_from_match_str, regex_obj,
+                         regex_to, regex_str):
         """Converts line from regex form from to regex form to"""
 
         # Replace all groups with numbers
@@ -245,19 +255,13 @@ class CodeProcessor:
         regex_to_str = self.replace_esc_char(regex_to_str)
 
         # Check if line is a variable declaration in python
-        if self.is_var_dec(regex_from):
+        if self.lang_from == "python" and self.is_var_dec(regex_from):
 
             # Then get variable name
-            var_name = regex_obj.group(1).split("=")[0].rstrip("+-*/").strip()
+            var_names = self.get_var_names(regex_obj)
 
-            # Check if variable name exists in already declared variables
-            if var_name in self.vars:
-
-                # Then break out of method
-                return regex_str
-
-            # Else add variable name to list
-            self.vars.append(var_name)
+            # Add variable name to list
+            self.vars = self.vars.union(var_names)
 
         # LOG substitution params
         plc_logger.log("sub_params", " ".join("'" + param + "'" for param in (
@@ -269,21 +273,34 @@ class CodeProcessor:
         except Exception as err:
             plc_logger.log("-" * 50 + "ERR_OCCURED AND CAUGHT" + "-" * 50)
             print(err)
-            print("'" + regex_from_match_str + "'", "'" + regex_to_str + "'", "'" +
-            regex_str + "'")
+            print("'" + regex_from_match_str + "'", "'" + regex_to_str + "'",
+                  "'" + regex_str + "'")
+
+    def get_var_names(self, regex_obj):
+        """Get variable names from matches"""
+        
+        # Declare set to store variable names
+        var_names = set()
+
+        # Find all matches
+        regex_expr = r"(?<![\w])[a-zA-Z_]\w*"
+        for group in regex_obj.groups():
+            var_names = var_names.union(re.findall(regex_expr, group))
+
+        # Return variable names
+        return var_names
 
     def is_var_dec(self, line):
         """Check if is a variable decleration in python"""
-        
-        # Check if language is python and '=' in line
-        word_count = sum([len(substr.split(" ")) for substr in line.split("=", 1)])
-        if self.lang_from == "python" and "=" in line and word_count == 2:
 
-            # If is variable decleration, return True
-            return True
+        # Get index of equal sign
+        index = line.find("=")
 
-        # Else return False
-        return False
+        # Check if line has equals sign
+        ln_has_equals = (index != -1 and (line[index-1] not in "+-*/"))
+
+        # If is variable decleration, return True
+        return ln_has_equals
 
     def replace_esc_char(self, regex_str):
         """Replaces escaped strings(by database) with parsable regex"""
@@ -353,15 +370,16 @@ class CodeProcessor:
 
         # Get current level of line
         curr_level = self.curr_level
+        print_verbose = i in [57, 58, 59]
 
         # Check if level increment is required
+        if print_verbose:
+            print("-" * 50)
+            print("S.BLI", self.bracket_level_increment,
+                  "CL", curr_level)
         if self.bracket_level_increment:
             curr_level += 1
             self.bracket_level_increment = False
-
-        # Check if line(s) is the end of definition
-        level_decrement = (self.is_def_end(fptr, i) if self.lang_to != "python"
-                           else fptr[i].count("}"))
 
         # Check if is a variable decleration
         if "{" in fptr[i]:
@@ -377,6 +395,7 @@ class CodeProcessor:
                 self.bracket_level_increment = True
 
         # Check if is a multiline statement
+        level_decrement = 0
         if self.multi_statement == 1:
             level_decrement = 1
             self.multi_statement = -1
@@ -384,30 +403,6 @@ class CodeProcessor:
         # Set act on multiline statement to true
         if self.multi_statement == 0:
             self.multi_statement = 1
-
-        # Check for level decrement
-        if level_decrement:
-
-            # Check if was a variable decleration
-            if self.var_decleration:
-                
-                # If yes, decrement current level
-                curr_level -= 1
-                self.var_decleration = False
-
-            else:
-                # Add appropriate endings
-                curr_level = self.add_endings(level_decrement, curr_level)
-
-            # If conversion is to python code, then decrease
-            # Current level based on level decrement
-            if self.lang_to == "python":
-
-                curr_level -= level_decrement
-
-                # Remove end bracket from line
-                for j in range(level_decrement):
-                    lines[-j -1] = lines[-j -1].rstrip("}")
 
         # Set indent search file 
         indent_search_fptr = "fptr" if self.lang_to == "python" else "curr_line"
@@ -448,7 +443,8 @@ class CodeProcessor:
                                for cmnt in cmnts):
                             cmnt_in_line = True
                             if line.count(cmnts[0]) < 2:
-                                self.in_multiline_cmnt = not self.in_multiline_cmnt
+                                self.in_multiline_cmnt = not(
+                                    self.in_multiline_cmnt)
 
                     else:
                         cmnt_in_line = False
@@ -482,16 +478,88 @@ class CodeProcessor:
             line = indentation + line
             self.file_lines.append(line)
 
+            if print_verbose:
+                print("CLM", curr_level)
             # If open brackets found in line, increment current level
-            if "{" in (fptr[i] if indent_search_fptr == "fptr" else line):
+            # search_line = fptr[i] if indent_search_fptr == "fptr" else line
+            if print_verbose:
+                print("LINE", '"' + line + '"')
+            if self.is_open_bracket(line):
                 curr_level += 1
 
         # Store line to be added to end of definition
         if end:
             self.end_app_list.append(end)
 
+        # Check if line(s) is the end of definition
+        level_decrement += (self.is_def_end(fptr, i, print_verbose)
+                            if self.lang_from == "python"
+                            else fptr[i].count("}"))
+        if print_verbose:
+            print("LD", level_decrement)
+
+
+        # Check for level decrement
+        if level_decrement:
+
+            # Check if was a variable decleration
+            if self.var_decleration:
+                
+                # If yes, decrement current level
+                curr_level -= 1
+                self.var_decleration = False
+
+            else:
+                # Add appropriate endings
+                curr_level = self.add_endings(level_decrement, curr_level)
+
+            # If conversion is to python code, then decrease
+            # Current level based on level decrement
+            if self.lang_to == "python":
+
+                curr_level -= level_decrement
+
+                # Remove end bracket from line
+                for j in range(level_decrement):
+                    lines[-j -1] = lines[-j -1].rstrip("}")
+
         # Update global variable
         self.curr_level = curr_level
+
+        if print_verbose:
+            print("CLE", curr_level)
+            print("-" * 50)
+
+    def is_open_bracket(self, line):
+        """Check if line has open bracket"""
+
+        # Declare required variables
+        in_quotes = False
+        bracket_count = 0
+
+        # Iterate to characters in given line
+        for char in line:
+            
+            # Check if character is any of the two quotes
+            if char in ['"', "'"]:
+                
+                # If yes, invert the value of in quotes
+                in_quotes = not in_quotes
+
+            # Only in current character is not in quotes,
+            # then, consider it for checking for brackets
+            elif not in_quotes:
+                
+                # For every open bracket, increment the bracket count
+                if char == "{":
+                    bracket_count += 1
+
+                # And for every closeing bracket, decrement the count
+                elif char == "}":
+                    bracket_count -= 1
+
+        # If bracket count is positive and not zero, return True
+        return bracket_count > 0
     
     def match_prev_char(self, fptr, i, char, index):
         """Starting from given index (index) check if immediate previous
@@ -550,21 +618,30 @@ class CodeProcessor:
         # Return updated current level value
         return curr_level
 
-    def is_def_end(self, fptr, i):
+    def is_def_end(self, fptr, i, print_verbose):
         """Checks if the current line is the last line of the definition"""
 
         # Check if is first line of file or line is a blank line
+        if print_verbose:
+            print("FPTRI", '"' + fptr[i] + '"', i)
+
         if i == 0 or fptr[i].strip() == "":
             
             # Return difference in level to be 0
             return 0
 
-        # Get indentation of current line
-        prev_level = self.indent(fptr[i - 1]) // self.indent_base
+        # Get indentation of current line and previous line
         curr_level = self.indent(fptr[i]) // self.indent_base
+        j = i + 1
+        while j < len(fptr):
+            line_strip = fptr[j].strip()
+            if line_strip and not line_strip.startswith("#"):   
+                break
+            j += 1
+        next_level = self.indent(fptr[j]) // self.indent_base
 
         # Return difference if positive
-        diff = prev_level - curr_level
+        diff = curr_level - next_level
         return 0 if diff < 0 else diff
 
     def get_indent_base(self, fptr):
@@ -578,6 +655,7 @@ class CodeProcessor:
 
         # While not difference
         while not diff and i != len(fptr):
+            
             # Calculate the difference in indentation
             diff = self.indent(fptr[i])
 
@@ -606,10 +684,9 @@ class CodeProcessor:
 
         # Iterate over regex expressions
         for expr in [record[0] for record in self.conv_db]:
-
+            
             # Compile regex
             regex_from_match_str = re.sub(r"\[\$[0-9]\]", "", expr[-1])
-            
             expr_compiled = re.compile(regex_from_match_str)
 
             # Reset character difference as self.file_str is updated
@@ -632,7 +709,8 @@ class CodeProcessor:
         db_no = 1
 
         # Open appropriate conv_dbs_ptr
-        for db in [self.conv_dbs_ptr[self.lang_from], self.conv_dbs_ptr[self.lang_to]]:
+        for db in [self.conv_dbs_ptr[self.lang_from],
+                   self.conv_dbs_ptr[self.lang_to]]:
 
             # Open conversion database
             with open(db) as fptr:

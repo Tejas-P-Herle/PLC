@@ -1,128 +1,147 @@
+#!/usr/bin/env python3
+
 """
 Python Language Converter(PLC)
 Converts Source Code from language A to B
 """
 from error import Error
-import logging
+from logger import Logger
 from file_path import FilePath
 from language import Language
 from code_processor import CodeProcessor
 
-class PLC:
-    """Main PLC Class"""
+# Initialize plc_logger
+plc_logger = Logger("PLC")
 
-    # Create variables for user input
-    user_input = {
-        "file_path": None,
-        "to_language": None,
-        "output_file_name": None,
-    }
+# Create variables for user input
+user_input = {
+    "file_path": None,
+    "to_language": None,
+    "output_file_name": None,
+}
 
-    @staticmethod
-    def plc(self: "PLC.Obj") -> None:
-        """Main PLC application"""
 
-        # Create user input string template
-        input_msg = "{} or 'q' to abort: "
+def PLC():
+    """Main PLC application"""
 
-        # Create input messages
-        input_file_path_msg = input_msg.format("Path to Program File")
-        input_language_msg = input_msg.format("To Language")
-        input_file_name_msg = input_msg.format("Output File Path")
-        
-        # Create variable to store function result
-        lang_from = None
+    # Create user input string template
+    input_msg = "{} or 'q' to abort: "
 
-        #
-        # Get User Input
-        #
+    # Create input messages
+    input_file_path_msg = input_msg.format("Path to Program File")
+    input_language_msg = input_msg.format("To Language")
+    input_file_name_msg = input_msg.format("Output File Path")
+    
+    # Create variable to store function result
+    lang_from = None
 
-        validate_methods = [
-            (FilePath.validate_file_path, "file_path", input_file_path_msg),
-            (Language.validate, "lang_to", input_language_msg),
-            (FilePath.validate_file_name, "outfile_path", input_file_name_msg),
-        ]
+    #
+    # Get User Input
+    #
 
-        # Validate user input
-        for func, var_name, input_str in validate_methods:
+    validate_methods = [
+        (FilePath.validate_file_path, "file_path", input_file_path_msg),
+        (Language.validate, "lang_to", input_language_msg),
+        (FilePath.validate_file_name, "outfile_path", input_file_name_msg),
+    ]
+
+    # Validate user input
+    for func, var_name, input_str in validate_methods:
+
+        # Get input from user
+        user_input_val, error = get_user_input(func, var_name, input_str)
+
+        user_input_val = str(user_input_val)
+
+        # Check if input is currently at to language 
+        # and input language is same as output language
+        if var_name == "lang_to" and user_input_val.lower() == lang_from:
+            error = "Language of file is same as to conversion language"
+
+        # If error encountered, print error and exit
+        while error:
+
+            # Parse the error
+            Error.parse(error, user_input=True)
 
             # Get input from user
-            user_input_val, error = self.get_user_input(func, var_name, input_str)
+            user_input_val, error = get_user_input(func, var_name, input_str)
 
-            user_input_val = str(user_input_val)
+            # Check if input is currently at to language 
+            # and input language is same as output language
+            if var_name == "lang_to" and user_input_val.lower() == lang_from:
+                error = "Language of file is same as to conversion language"
 
-            # If error encountered, print error and exit
-            while error:
+        # Store latest value of var
+        user_input[var_name] = user_input_val
 
-                # Parse the error
-                Error.parse(error, user_input=True)
+        # If var_name is file_path recognize language of infile
+        if var_name == "file_path":
+            lang_from = Language.recognize(user_input_val)
 
-                # Get input from user
-                user_input_val, error = self.get_user_input(func, var_name, user_input_val)
+        # else if var_name is language,
+        # store lowercase string of var_name
+        elif var_name == "lang_to":
+            user_input[var_name] = user_input_val.lower()
+    #
+    # Start Conversion
+    #
 
-            # Store latest value of var
-            self.user_input[var_name] = user_input_val
+    # Make local variables for keys in user_input dict
+    file_path = user_input['file_path']
+    lang_to = user_input['lang_to']
+    outfile_path = user_input['outfile_path']
 
-            # If var_name is file_path recognize language of infile
-            if var_name == "file_path":
-                lang_from = Language.recognize(user_input_val)
+    print(lang_from, "->", lang_to)
 
-            # else if var_name is language,
-            # store lower string(no capitals) of var_name
-            elif var_name == "lang_to":
-                self.user_input[var_name] = user_input_val.lower()
+    # Create code processor instance
+    code_processor = CodeProcessor(file_path, lang_from, lang_to, outfile_path)
 
-        #
-        # Start Conversion
-        #
+    # Run convert method of code processor
+    code_processor.convert()
 
-        # Make local variables for keys in user_input dict
-        file_path = self.user_input['file_path']
-        lang_to = self.user_input['lang_to']
-        outfile_path = self.user_input['outfile_path']
+    # Write converted file to disk
+    error = code_processor.write_file_to_disk()
 
-        print(lang_from, "->", lang_to)
+    # Check if error occurred
+    if error:
+        Error.parse(error, user_input=False)
 
-        # Create code processor instance
-        code_processor = CodeProcessor(file_path, lang_from, lang_to, outfile_path)
+    return 0
 
-        # Run convert method of code processor
-        code_processor.convert()
 
-        # Write converted file to disk
-        error = code_processor.write_file_to_disk()
+def get_user_input(func: "method", var_name: "String", input_str: "String"):
+    """Gets input from user and runs standard protocols"""
 
-        # Check if error occurred
-        if error:
-            Error.parse(error, user_input=False)
+    # Get user input
+    var = str(input(input_str))
 
-        return 0
+    # Log debug message
+    plc_logger.log("VAR[NAME]", var_name, var)
 
-    def get_user_input(self: "PLC.Obj", func: "method", var_name: "String", input_str: "String"):
-        """Gets input from user and runs standard protocols"""
+    # Check if user requests abort
+    if var == "q":
+        Error.parse("User Abort", user_input=True)
 
-        # Get user input
-        var = str(input(input_str))
+    # Define function parameters
+    function_params = tuple([var])
 
-        # Log debug message
-        logging.debug("{} {}".format(var_name, var))
-
-        # Check if user requests abort
-        if var == "q":
-            Error.parse("User Abort", user_input=True)
+    # Check for special cases
+    if var_name == "outfile_path":
 
         # Define function parameters
-        function_params = tuple([var])
+        function_params = (var, user_input['lang_to'])
 
-        # Check for special cases
-        if var_name == "outfile_path":
+    # Run validation
+    return var, func(*function_params)
 
-            # Define function parameters
-            function_params = (var, self.user_input['lang_to'])
 
-        # Run validation
-        return var, func(*function_params)
+def main():
+    """Function run on file open"""
+
+    # Run PLC function
+    PLC()
 
 
 if __name__ == "__main__":
-    PLC().plc()
+    main()

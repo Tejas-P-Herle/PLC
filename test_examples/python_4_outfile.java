@@ -1,5 +1,10 @@
 class Python_4_Outfile {
   public static void main(String[] args) {
-    System.out.println("Ends with '!'!");
+    int j = 0;
+    for (int i = 0; i < 10; i++) {
+      j += i;
+      System.out.println("Ends with '!' Ending...\n");
+      print("Another", "Example");
+    }
   }
 }

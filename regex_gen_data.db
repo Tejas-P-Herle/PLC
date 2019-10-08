@@ -1,3 +1,4 @@
 sl_no , python , java , c , cpp , cond
-1 , print\("[^"]*"\) , System\.out\.println\("[^"]*"\) ,  ,  , 
-2 , print\("[^"]*"\, end="[^\\]*\\n[a-z\\]*"\) , System\.out\.println\("[^"]*"\) ,  ,  , 
+1 , print\(([$1][^\)]*)\) , System\.out\.println\(([$1][^\)]*)\) ,  ,  , 
+2 , j \+= i , j \+= i ,  ,  , 
+3 , print\("[a-zA-Z]*o[a-z]*"\, "([$1][a-zA-Z]*)([$2][a-z]*)([$3][a-zA-Z]*)o[a-z]*"\, "[a-zA-Z]*l([$4][a-z]*)"\) , System\.out\.println\("[a-zA-Z]*o[a-zA-Z ]*r([$1][a-zA-Z ]*)([$2][a-zA-Z ]*)([$3][a-zA-Z]*)o([$4][a-zA-Z ]*)r[a-zA-Z ]*l[a-z]*"\) ,  ,  , 

@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+
 import re
 import sys
+import difflib
 from database import DataBase
 
 SIGNS = "!@#$%^&*()_+-={}[]|\\:;\"'<>?,./~`"
@@ -12,28 +15,25 @@ SUPER_SET = NUMBERS + LETTERS + LETTERS.upper()
 
 class RegexGen:
 
-    db_files = {"python": "py_conv_db.db", "java": "java_conv_db.db"}
+    db_files = {"python": "py_conv_db.db", "java": "java_conv_db.db",
+                "cpp": "cpp_conv_db.db", "c": "c_conv_db.db"}
     match_dict = {}
     diff_dict = {}
     escape_chars = ["+", "(", ")", "\\"]
     cols = 0
     offset = 0
     sl_one_offset = None
+    error = 0
 
     def __init__(self, ln_from, ln_to, lang_from, lang_to):
         """INIT method of RegexGen class"""
 
-        # Store function parameters as class attributes
-        # print(self.create_new_regex('print("Hello World 101")', 'print("")'))
-        # return
-
-        self.lang_from = lang_from
-        self.lang_to   = lang_to
-        self.langs = [lang_from, lang_to]
-        self.input_lines = [ln_from, ln_to]
+        # Group lines and languages
+        langs = [lang_from, lang_to]
+        input_lns = [ln_from, ln_to]
 
         # Initiate database connection
-        self.db = db = DataBase(self.langs)
+        self.db = db = DataBase(langs)
         
         # Find the objective specific code (Similarities between code in 
         # 'from line' and 'to line')
@@ -41,89 +41,18 @@ class RegexGen:
         self.OSC = self.LCS(ln_from, ln_to).strip()
 
         # Find language specific code for current conversion
-        LSC = []
-        # LSC.append("".join([char for char in ln_from if char not in self.OSC]))
-        # LSC.append("".join([char for char in ln_to if char not in self.OSC]))
-        LSC.append(self.get_diff(self.OSC, ln_from))
-        LSC.append(self.get_diff(self.OSC, ln_to))
-        self.LSC = LSC
+        # LSC = []
+        # for ln in [ln_from, ln_to]:
+        #     temp = []
+        #     
+        #     # Find difference and store as string
+        #     for diff in self.get_diff(self.OSC, ln):
+        #         temp.append([char[1] for char in diff])
+        #     LSC.append(["".join(lst) for lst in temp])
+        # self.LSC = LSC
         
-        print("Objective Specific Code:", self.OSC)
-        print("Language Specific Code - from, to:", self.LSC)
-
-        # Get previously maped regex
-        # prev_regex, re_id, prev_data = self.match_regex(ln_from)
-        # print("Previous Regex: '" + prev_regex + "'")
-        # print("prev_data_list: " + str(prev_data))
-        # print("Regex ID", re_id)
-
-        # Save LCS of the current and prevoius language specific codes
-        # for line in self.get_data():
-            
-        # with open("regex_gen_data.db") as file:
-        #     file.seek(0)
-        #     lns = file.readlines()
-        #     ln = lns[0].split(" , ")
-        #     cols = [i - 1 for i, v in enumerate(ln) if v in self.langs]
-        #     total_cols = len(ln) - 1
-        #     print("cols", cols)
-        #     lns = [ln.split(" , ") for ln in lns]
-            
-        # if "" not in prev_data:
-        #     with open("regex_gen_data.db", "w+") as file:
-        #         for i, ln in enumerate(lns):
-        #             if ln[0] == re_id:
-
-        #                 # Find LSC strings between previous and current LSCs
-        #                 ln.pop(0)
-        #                 ln_from, ln_to = self.input_lines
-        #                 LSC_from = self.combine(ln_from, prev_data[0])
-        #                 LSC_to   = self.combine(ln_to, prev_data[1])
-
-        #                 # If LSC, of either language terminates to null, then
-        #                 # input is similar or is a duplicate, hence don't modify
-        #                 print("LSC", LSC_from, LSC_to)
-        #                 if "" not in [LSC_from, LSC_to]:
-        #                     # Escape commas
-        #                     LSC = [LSC_from, LSC_to]
-        #                     LSC_from.replace(",", "\\,")
-        #                     LSC_to.replace(",", "\\,")
-        #                     ln_from.replace(",", "\\,")
-        #                     ln_to.replace(",", "\\,")
-        #                     
-        #                     # Increment change resistance
-        #                     # if not all([d in "0123456789." for d in prev_data[0][1]]):
-        #                     #     prev_data[0][1] = "0"
-        #                     # else:
-        #                     #     res = float(prev_data[0][1])
-        #                     #     prev_data[0][1] = str(res + (100 - res)/7)
-        #                     # if not all([d in "0123456789." for d in prev_data[1][1]]):
-        #                     #     prev_data[1][1] = "0"
-        #                     # else:
-        #                     #     res = float(prev_data[1][1])
-        #                     #     prev_data[1][1] = str(res + (100 - res)/7)
-
-        #                     # Replace old LSCs and save them to file
-        #                     ln[cols[0]] = LSC_from
-        #                     ln[cols[1]] = LSC_to
-        #                 lns[i] = [re_id] + ln
-        #             file.writelines(" , ".join(lns[i]))
-        #             file.write("\n")
-        # else:
-        
-        # Add all to and from lines into regex gen database
-        # with open("regex_gen_data.db", "a") as file:
-
-        # LSC_0, LSC_1 = LSC[0], LSC[1]
-        # print("LSC", LSC)
-        # LSC_0.replace(",", "\\,")
-        # LSC_1.replace(",", "\\,")
-
-        # Get regex sl number id
-        # if re_id:
-        #     re_id_next = re_id
-        # else:
-        #     re_id_next = str(prev_data[0])
+        # print("Objective Specific Code:", self.OSC)
+        # print("Language Specific Code - from, to:", self.LSC)
 
         # Escape commas
         data_list = []
@@ -155,6 +84,12 @@ class RegexGen:
                     # unmatchable amongst themselves
                     data_list = self.combine(data_list, ln, cols)
                     print("REGEX:", data_list)
+                    # Add groups to regex, such as to map input OSC code to 
+                    # output OSC code
+                    #data_list = ['print\\("[^"]*"\\, end="[^\\\\]*\\\\n[a-z\\\\]*"\\)', 'System\\.out\\.println\\("[^"]*"\\)']
+                    #input_lns = ['print("Hello World", end="!\\n")','System.out.println("Hello World!")']
+                    data_list = self.map_groups(data_list, input_lns)
+                    print("GRP MAP", data_list)
                     if data_list:
                         re_id = ln[0]
                         data = db.make_data_str(data_list, re_id)
@@ -166,10 +101,11 @@ class RegexGen:
 
         # Write data to file
         db.write(data, sl_no=re_id, mode=re_id)
+        db.write_to_conv_db(data, self.db_files)
 
     def compressable(self, curr_ln):
         """Return compressability checking function"""
-
+        
         def is_compressable(ln):
             """Check if a given 2 lines are mapping to the same function and
             hence determine if they are compressable"""
@@ -179,37 +115,91 @@ class RegexGen:
             ln[1] = self.handle_group_regex(ln[1], max_length=False)
 
             # Get LSC of the 2 lines
-            L0 = self.get_diff(curr_ln[0], curr_ln[1])
-            L1 = self.get_diff(ln[0], ln[1])
+            diff_0 = self.get_diff(curr_ln[0], curr_ln[1])
+            diff_1 = self.get_diff(ln[0], ln[1])
+            
+            # Declare variables to store compressablity status
+            is_compressable_flag = True
+            diff_sec = 0
+            diff_list = [diff_0, diff_1]
 
-            # Find the LCS of the LSCs
-            LCS = self.LCS(L0, L1)
-            
-            # Remove parts in LSC which are suspected to be OSC
-            LSC = [L0, L1]
-            for x in range(len(LSC)):
+            # If addtions and deletions are the same,
+            # then the lines are compressable
+            # Iterate through insertions and deletions
+            while diff_sec < len(diff_0) and is_compressable_flag:
+                
+                # Check if number of insertions and deletions are the same
+                # in both conversions. If not break the loop and set flag False
+                if len(diff_0[diff_sec]) != len(diff_1[diff_sec]):
+                    is_compressable_flag = False
+                    break
+
+                # Else iterate through all the characters in the section
                 i = 0
-                obj_str = ""
-                for char in LCS:
-                    find_res = LSC[x].find(char, i)
-                    if obj_str:
-                        
-                        # If a string which is not common to the 2 examples
-                        # repeat then it is highly probable that it is LSC if it
-                        # is repeated twice as it is common the the 2
-                        # conversions of the same example
-                        if LSC[x].find(obj_str, i) != -1:
-                            LSC[x] = LSC[x].replace(obj_str, "")
+                char_diff = None
+                char_diff = diff_0[diff_sec][0][0] - diff_1[diff_sec][0][0]
+                while i < len(diff_0[diff_sec]):
                     
-                    # Store any mismatches with LCS
-                    if find_res - i != 0:
-                        obj_str = LSC[x][i:find_res]
-                        i = find_res + 1
-                    else:
-                        i += 1
-            
-            print("R", LSC[0], LSC[1], LCS, sep=" - ")
-            return LSC[0] == LSC[1]
+                    # Declare variable for easy access
+                    diff_0_char = diff_0[diff_sec][i]
+                    diff_1_char = diff_1[diff_sec][i]
+
+                    # Check if the characters in the two lists are the same
+                    if diff_0_char[1] != diff_1_char[1]:
+                        is_compressable_flag = False
+                        break
+
+                    # Check continuity of characters
+                    if diff_0_char[0] - diff_1_char[0] != char_diff:
+                        if diff_0[diff_sec][i] - diff_0[diff_sec][i-1] == 1:
+                            is_compressable_flag = False
+                            break
+                        else:
+                            char_diff = diff_0_char[0] - diff_1_char[0]
+                    
+                    # Increment character index
+                    i += 1
+
+                # Increment section
+                diff_sec += 1
+
+            # Return compressablity result
+            return is_compressable_flag
+
+            # print("L0L1 " + " --- " +  L0 + " --- " + L1)
+            #
+            # # Find the LCS of the LSCs
+            # LCS = self.LCS(L0, L1)
+            # 
+            # # Remove parts in LSC which are suspected to be OSC
+            # LSC = [L0, L1]
+            # for x in range(len(LSC)):
+            #     i = 0
+            #     obj_str = ""
+            #     for y, char in enumerate(LCS):
+            #         if obj_str:
+            #             
+            #             # If a string which is not common to the 2 examples
+            #             # repeats then it is highly probable that it is LSC if
+            #             # it is repeated twice as it is common the the 2
+            #             # conversions of the same example
+            #             if LSC[x].find(obj_str, i) != -1:
+            #                 LSC[x] = LSC[x].replace(obj_str, "")
+            #                 obj_str = ""
+            #                 i = LSC[x].find(LCS[y], i) 
+            #             else:
+            #                 i = find_res + 1
+            #         find_res = LSC[x].find(char, i)
+            #         
+            #         # Store any mismatches with LCS
+            #         if find_res - i != 0:
+            #             obj_str = LSC[x][i:find_res]
+            #         else:
+            #             i += 1
+            # 
+            # print("LSC01" + " --- " +  LSC[0] + " --- " + LSC[1])
+            # print(LSC[0] == LSC[1])
+            # return LSC[0] == LSC[1]
 
         return is_compressable
 
@@ -223,12 +213,12 @@ class RegexGen:
             LCS_str_a = self.handle_group_regex(data_list[i])
             LCS_str_b = self.handle_group_regex(db_ln[cols[i]])
             LCS = self.LCS(LCS_str_a, LCS_str_b)
-            print("DL", data_list[i], LCS_str_a)
-            print("DL", db_ln[cols[i]], LCS_str_b)
-            print("LCS", LCS)
 
             # Create a merged string of the 2 examples
-            merged_str = self.merge_str(data_list[i], db_ln[cols[i]], LCS)
+            db_ln_re_handled = self.handle_group_regex(db_ln[cols[i]],
+                                                       max_length=True)
+
+            merged_str = self.merge_str(data_list[i], db_ln_re_handled, LCS)
             print("MS1", merged_str)
 
             # Create regex
@@ -239,6 +229,11 @@ class RegexGen:
 
         return regexes
 
+    def is_group(self, string, i, check):
+        return (check and ((i == 0 or string[i-1] != "\\")
+                or (i != 1 and string[i-2] == "\\")))
+
+
     def handle_group_regex(self, string, max_length=False, sep=False):
         """Replace all group regexes with a representation of the group"""
 
@@ -246,6 +241,8 @@ class RegexGen:
         in_group = False
         super_cls = ""
         super_cls_list = []
+        in_group_index = False
+        omit_bracket = False
 
         # Replace super classes in string with the 2 characters of the group
         # with represent the group
@@ -262,14 +259,24 @@ class RegexGen:
                             super_cls = super_cls.replace(cls, cls[0] + cls[-1])
                         res += super_cls
                 super_cls = ""
-            elif char == "[" and (string[i-1] != "\\" or string[i-2] == "\\"):
-                in_group = True
-            elif char == "]" and (string[i-1] != "\\" or string[i-2] == "\\"):
-                in_group = False
+            elif self.is_group(string, i , char == "["):
+                if string[i+1] == "$":
+                    in_group_index = True
+                    res = res[:-1]
+                else:
+                    in_group = True
+            elif self.is_group(string, i, char == "]"):
+                if in_group:
+                    in_group = False
+                    omit_bracket = True
+                else:
+                    in_group_index = False
             elif in_group:
                 super_cls += char
-            else:
+            elif not in_group_index and not omit_bracket:
                 res += char
+            else:
+                omit_bracket = False
         return (res, super_cls_list) if sep else res
 
     def merge_str(self, str_a, str_b, LCS=""):
@@ -289,7 +296,6 @@ class RegexGen:
             res_str = "".join(["[" + x[:-1] + "]" + x[-1] for x in temp])
             str_y, temp = self.handle_group_regex(str_y, sep=True)
             res_str = "".join(["[" + x[:-1] + "]" + x[-1] for x in temp])
-            print("T", res_str)
             y = 0
             for char in str_x:
                 x = str_y.find(char, y)
@@ -311,8 +317,8 @@ class RegexGen:
         if not LCS:
             return merge_two_strs(str_a, str_b)
 
-        str_a_finder = self.find_next(str_a)
-        str_b_finder = self.find_next(str_b)
+        str_a_finder = self.finder(str_a)
+        str_b_finder = self.finder(str_b)
 
         while k < len(LCS):
             
@@ -337,33 +343,51 @@ class RegexGen:
             
         return merged_str
 
-    def find_next(self, string):
+    def finder(self, string):
         """Return find function"""
+        
+        def find(str_find, start):
+            """Find next matching character or return next index in group"""
 
-        def find(char, start):
-            """Find next matching character"""
-
-            i = start
+            i = 0
+            if start:
+                i = start
             in_group = False
+            start_grp = -1
+            length = len(str_find)
 
-            # Lambda functions to check if open square brackets are escaped
-            cond_one = lambda i: (i == 1 and string[i-1] != "\\")
-            cond_two = lambda i: (i > 1 and (string[i-1] != "\\"
-                                  or string[i-2] == "\\"))
-            for c in string[start:]:
+            while i < len(string) and i <= len(string) - length:
                 
+                curr_str = string[i]
+                curr_str += "".join([string[i+n+1] for n in range(length-1)])
+
                 # Return character index if not in group
-                if c == char and not in_group:
+                if curr_str != "" and curr_str == str_find and not in_group:
                     return i
-                if c == "[":
-                    if i == 0 or cond_one(i) or cond_two(i):
-                        in_group = True
-                if c == "]":
-                    if i == 0 or cond_one(i) or cond_two(i):
-                        in_group = False
+                if (self.is_group(string, i, "[" in curr_str)
+                        and string[i+1] != "$"):
+                    if not str_find:
+                        start_grp = i
+                    in_group = True
+                if self.is_group(string, i, "]" in curr_str):
+                    if not str_find:
+                        return start_grp, i
+                    in_group = False
                 i += 1
         return find
-            
+    
+
+    def escape_str(self, string):
+        """Escape the given input string"""
+
+        # If any character that belongs to escape set, escape the character
+        res = ""
+        for char in string:
+            if char in ESCAPE_CHARS:
+                res += "\\" + char
+            else:
+                res += char
+        return res
 
     def unescape_str(self, string):
         """Unescape the given input string"""
@@ -427,11 +451,6 @@ class RegexGen:
             repeat_char = "?"
         elif repeatablity > 0:
             repeat_char = "+"
-        # elif type(repeatablity) in [list, tuple]:
-        #     if len(repeatablity) == 1:
-        #         repeat_char = "{" + repeatablity[0] + "}"
-        #     elif len(repeatablity) == 2:
-        #         repeat_char = "{{{l[0]}, {l[1]}}}".format(l = repeatablity)
         
         # Find super class of given string
         str_super_cls = "["
@@ -474,40 +493,30 @@ class RegexGen:
 
     def get_diff(self, str_a, str_b):
         """Get Object Specific code for given string"""
-
-        diff = ""
-        j, i = 0, 0
-
-        # Set longer string as str_a and shorter as str_b
-        if len(str_b) > len(str_a):
-            temp = str_a
-            str_a = str_b
-            str_b = temp
-
-        # For each character in the shorter string, check if it is present in
-        # longer string. If not add it to differences string
-        for char in str_b:
-            i = str_a.find(char, j)
-            if i == -1:
-                diff += char
-                j += 1
-            else:
-                diff += str_a[j: i]
-                j = i + 1
         
-        # Add rest of the untouched string to the differences string
-        diff += str_a[j:]
+        # Get differences between the strings
+        insertions = []
+        deletions = []
+        print("STRAB", str_a, str_b)
+        for i, diff in enumerate(difflib.ndiff(str_a, str_b)):
+            if diff[0] == "+":
+                insertions.append((i, diff[-1]))
+            if diff[0] == "-":
+                deletions.append((i, diff[-1]))
+
+        diff = [insertions, deletions]
         return diff
         
 
     def LCS(self, str_a, str_b):
-        """Define a handler of the LCS_recursive function"""
+        """Define a handler of the LCS_rec function"""
 
         # Store lengths of strings
         len_a, len_b = len(str_a), len(str_b)
 
         def LCS_rec(ia, ib, memory):
-            """Get the longest chain of common words between the 2 given strings"""
+            """Get the longest chain of common
+            words between the 2 given strings"""
 
             # If index out of bounds, return function
             if ia == len_a or ib == len_b:
@@ -537,66 +546,163 @@ class RegexGen:
 
         return LCS_rec(0, 0, [[0 for _ in range(len_b)] for _ in range(len_a)])
 
-    
-    def match_regex(self, line):
-        """Return a regex that matches the input line"""
+    def map_groups(self, regexes, examples):
+        """Adds groups into regex to map input variables to output variables"""
 
-        # Check if a regex map exists for given line
-        # Open regex convertion database
-        with open(self.db_files[self.lang_from]) as file:
+        # Iterate through both the regexes and find differences
+        print("MAP", regexes, examples)
+        grand_maps = [[], []]
 
-            # Read each line in file
-            for re_expr in file.readlines():
+        # Get start and stop indexes for regexes
+        # And find example matches for the given regex indexes
+        for x in range(len(regexes)):
+            i = 0
+            j = 0
+            start_ex = -1
+            start_re, ex_re = -1, -1
+            re_finder = self.finder(regexes[x])
+            diff = ""
+            finding_diff = False
+            regex = regexes[x]
+            example = self.escape_str(examples[x])
+            while i < len(regex) and j < len(example):
+                if not finding_diff and diff:
+                    grand_maps[x].append([start_re, end_re + 2, diff])
+                    diff = ""
 
-                # Get regex expression from line
-                re_id, re_expr = re_expr.split(" ", 1)
-                re_expr = re.sub(r"\[\$[0-9]\]", "",
-                                    re_expr).strip()
-                print("REP", re_expr)
+                if self.is_group(regex, i, regex[i] == "["):
+                    start_re, end_re = re_finder("", i)
+                    i = end_re + 2
+                    start_ex = j
+                    print("SE", start_re, end_re)
+                    finding_diff = True
 
-                # Search of match between line and expression
-                if re.search(re_expr, line):
+                elif regex[i] == example[j]:
+                    i += 1
+                    j += 1
+                    finding_diff = False
+                else:
+                    diff += example[j]
+                    j += 1
+
+        print("REMPS", grand_maps)
+        # Match appropriate regex groups
+        group_maps = []
+        grand_maps_sorted = [[], []]
+        for i, map_ in enumerate(grand_maps):
+            grand_maps_sorted[i] += sorted(map_, key=lambda l: len(l[2]),
+                                           reverse=True)
+        for map_a in grand_maps_sorted[0]:
+            for map_b in grand_maps_sorted[1]:
+                if map_a[-1] in map_b[-1]:
+                    str_a, str_b = map_a[-1], map_b[-1]
+                else:
+                    str_a, str_b = map_b[-1], map_a[-1]
+                is_sub_str = str_b.find(str_a)
+                if is_sub_str != -1:
+                    map_ = [map_a[:2], map_b[:2]]
+                    if map_ not in group_maps:
+                        group_maps.append(map_)
+                    break
+        print("REGRPS", group_maps)
+        # Add group numbers in the regex
+        return self.insert_groups(group_maps, regexes)
+
+    def insert_groups(self, maps, regexes):
+        """Insert group numbers for replacement of regex matches"""
+
+        print("RE", regexes, maps)
+
+        # For both direction, to and from replace indexed ranges with group
+        # numbers
+        template = "([${}]{})"
+        regxs_grpd = []
+        for i, regex in enumerate(regexes):
+            grp_no = 1
+            end = 0
+            regx_grpd = ""
+            for map_ in maps:
+                regx_grpd += (regex[end: map_[i][0]]
+                              + template.format(grp_no,
+                                                regex[map_[i][0]: map_[i][1]]))
+                end = map_[i][1]
+
+                grp_no += 1
+            regxs_grpd.append(regx_grpd + regex[end:])
+        return regxs_grpd
                     
-                    # Get regex_gen data
-                    with open("regex_gen_data.db") as file:
+    def replace_groups(self, ex_a, ex_b, maps_set):
+        """Replace appropriate groups with their maps"""
+        for map_ in maps_set:
+            print("MAP")
 
-                        # Split line at comma
-                        ln = [ln.strip() for ln in file.readline().split(" , ")]
-                        db_lns = [ln]
+    def discover_map(self, ex_a, ex_b_finder):
 
-                        # Get data
-                        cols = self.db.cols
-                        lns = [ln.strip("\n").split(" , ") for ln in file.readlines()]
-                        db_lns += lns
+        # Discover map of conversions for given group
+        def find(i, j, end_a):
+            maps = []
+            ex_a_buffer = ""
+            start = -1
+            prev_find = None
+            find      = None
+            for x, char in enumerate(ex_a[i:end_a]):
+                find = ex_b_finder(ex_a_buffer+char, j)
+                if find != None:
+                    prev_find = find
+                    if start == -1:
+                        start = i + x
+                    ex_a_buffer += char
+                else:
+                    if ex_a_buffer:
+                        from_ = (start, i + x)
+                        to = (prev_find, prev_find + len(ex_a_buffer))
+                        maps.append([ex_a_buffer, from_, to])
+                        start = -1
+                        ex_a_buffer = ""
+            if ex_a_buffer:
+                from_ = (start, end_a)
+                to = (prev_find, prev_find + len(ex_a_buffer))
+                maps.append([ex_a_buffer, from_, to])
+            return maps
 
-                        # Else get previous data from line
-                        print("cols", cols)
-                        print("LNS", lns)
-                        data = []
-                        if lns:
-                            data = [ln[1:] for ln in lns if ln[0] == re_id][0]
-                        
-                        # If line is not found get last regex id, quit loop
-                        if not data:
-                            re_id_next = max([ln[0] for ln in lns] + [1])
-                            return re_expr, re_id, [re_id_next, None]
+        def find_handler(y, z, end_a):
+            maps = []
+            next_index = -1
+            start = y 
+            x = 0
+            indexes = []
+            omitted = 1
 
-                        print("data", data)
-                        data = [data[cols[0]+1].strip(),data[cols[1]+1].strip()]
-                    
-                    # If found, return it
-                    return re_expr, re_id, data
+            # Find conversion maps and return it
+            for i in range(y, end_a):
+                res = find(i, z, end_a)
+                
+                # Check if result is previous map shifted by one letter
+                omit = False
+                if maps:
+                    # print("MA", maps)
+                    map_req = []
+                    # for map_ in maps[-1]:
+                        # print("RES", res[0][0], maps[-1][i][0][i-1-start:], maps)
+                        # map_ = maps[-1][i][0][i-1-start:]
+                        # print("map==", map_ == res[0][0], next_index == i, next_index)
+                    indexes = [(m[1][0] + omitted, m[1][1]) for m in maps[-1]]
 
-                # Return only the regex_expression whick is matched
-                return re_expr, None, ["", ""]
-        return None, None, ["", ""]
+                    for m in res:
+                        # print("RES", m, next_index)
+                        if m[1] in indexes:
+                            next_index += 1
+                            omit = True
+                            omitted += 1
+                            break
+                if not omit:
+                    maps.append(res)
+                    # print("Not Omit")
+                    next_index = i+1
+                    # print("next_index", next_index, x)
+            return maps
 
-    def __del__(self):
-        """Destructor method of RegexGen class"""
-        
-        # Close database
-        # self.db.close()
-        pass
+        return find_handler
 
 
 if __name__ == "__main__":
@@ -614,7 +720,12 @@ if __name__ == "__main__":
     #    r_gen = RegexGen(a, b)
     #    print("{:<70}  {}".format(r_gen.regex_from, r_gen.regex_to))
     # res = RegexGen('print("Hello World")', 'System.out.println("Hello World")', "python", "java")
+    res = RegexGen('print("Hello", "World")', 'System.out.println("Hello World")', "python", "java")
+    res = RegexGen('print("Another", "Example")', 'System.out.println("Another Example")', "python", "java")
     # res = RegexGen('print("Hello!")', 'System.out.println("Hello!")', "python", "java")
+    # res = RegexGen('print("auto end return")', 'System.out.println("auto end return")', "python", "java")
+    # res = RegexGen('print("rand")', 'System.out.println("rand")', "python", "java")
+    # res = RegexGen("print('single quotes')", "System.out.println('single quotes')", "python", "java")
     # res = RegexGen('print("auto end return")', 'System.out.printf("auto end return\\n")', "python", "java")
     # res = RegexGen('print("Hello World 2")', 'System.out.println("Hello World 2")', "python", "java")
     # res = RegexGen('print("ABCD")', 'System.out.println("ABCD")', "python", "java")
@@ -622,9 +733,9 @@ if __name__ == "__main__":
     # res = RegexGen('print(str(1) + str(2))', 'System.out.println(Integer.toString(1) + Integer.toString(2))', "python", "java")
     # res = RegexGen('math.sqrt(4)', 'Math.sqrt(4)', "python", "java")
     # res = RegexGen('print("Hello", end="\\n\\n")', 'System.out.println("Hello\\n\\n")', "python", "java")
-    # res = RegexGen('print("HI", end="!\\n")', 'System.out.println("HI!\\n")', "python", "java")
-    # res = RegexGen('print("Good Bye", end="!\\n")', 'System.out.println("Good Bye")', "python", "java")
+    # res = RegexGen('print("HI", end="!\\n")', 'System.out.println("HI!")', "python", "java")
+    # res = RegexGen('print("Good Bye", end=":(\\n")', 'System.out.println("Good Bye:(")', "python", "java")
     # res = RegexGen('print("3.14 ", end="This is the value of pi\\n")', 'System.out.println("3.14 This is the value of pi")', "python", "java")
-    res = RegexGen('print("Hours in day = ", end="24hrs - time wasted\\n")', 'System.out.println("Hours in day = 24hrs - time wasted")', "python", "java")
+    # res = RegexGen('print("Hours in day = ", end="24hrs - time wasted\\n")', 'System.out.println("Hours in day = 24hrs - time wasted")', "python", "java")
     
 

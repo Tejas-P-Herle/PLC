@@ -15,7 +15,7 @@ class TestOutfile(unittest.TestCase):
         """Returns PLC output for given input parameters"""
 
         # Make new temporary file
-        with TemporaryFile(delete=False, suffix=".py", dir=".", mode="x+") as file:
+        with TemporaryFile(suffix=".py", dir=".", mode="x+") as file:
             
             # Write test program to file
             file.write("\n".join(file_content))
@@ -60,7 +60,7 @@ class TestOutfile(unittest.TestCase):
                     file.close()
 
                     # Delete file after using it
-                    remove(file_name)
+                    # remove(file_name)
 
                 # Open output file
                 with open(outfile_name) as file:

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Python Language Converter(PLC)
 Converts Source Code from language A to B
@@ -7,6 +9,7 @@ from logger import Logger
 from file_path import FilePath
 from language import Language
 from code_processor import CodeProcessor
+from get_corrections import GetCorrections
 
 # Initialize plc_logger
 plc_logger = Logger("PLC")
@@ -14,9 +17,13 @@ plc_logger = Logger("PLC")
 # Create variables for user input
 user_input = {
     "file_path": None,
-    "to_language": None,
+    "lang_from": None,
+    "lang_to": None,
     "output_file_name": None,
 }
+
+# Create variable to store corrections
+corrections = GetCorrections()
 
 
 def PLC():
@@ -89,11 +96,13 @@ def PLC():
     file_path = user_input['file_path']
     lang_to = user_input['lang_to']
     outfile_path = user_input['outfile_path']
+    user_input['lang_from'] = lang_from
 
     print(lang_from, "->", lang_to)
 
     # Create code processor instance
-    code_processor = CodeProcessor(file_path, lang_from, lang_to, outfile_path)
+    code_processor = CodeProcessor(file_path, lang_from, lang_to,
+                                   outfile_path, corrections)
 
     # Run convert method of code processor
     code_processor.convert()
@@ -139,6 +148,13 @@ def main():
 
     # Run PLC function
     PLC()
+
+    # Request corrections for unknown conversion
+    corrections.get()
+
+    # Learn corrections
+    corrections.digest(user_input["lang_from"], user_input["lang_to"])
+
 
 
 if __name__ == "__main__":

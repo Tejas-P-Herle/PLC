@@ -195,7 +195,7 @@ class TestCodeProcessor(unittest.TestCase):
         for i in range(len(test_set)):
 
             # Make new temporary file
-            with TemporaryFile(delete=False, suffix=".py", dir=".", mode="x+") as file:
+            with TemporaryFile(suffix=".py", dir=".", mode="x+") as file:
                 
                 # Write test program to file
                 file.write("\n".join(test_set[i]))
