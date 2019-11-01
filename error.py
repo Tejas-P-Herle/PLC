@@ -17,8 +17,8 @@ class Error:
         # Check if is user input
         if user_input:
             
-            # If quit_ requested, print abort and quit_
-            if error_msg == "User Abort":
+            # If quit_ requested, print exit and quit_
+            if error_msg == "Exitting":
                 quit_ = True
             
             # Else respond to user with error message
@@ -27,5 +27,8 @@ class Error:
 
         # If quit requested, quit with error_msg
         if quit_:
-            sys.exit(error_msg)
+            if type(error_msg) == int:
+                sys.exit(error_msg)
+            else:
+                sys.exit()
 

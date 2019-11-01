@@ -24,10 +24,13 @@ user_input = {
 
 # Create variable to store corrections
 corrections = GetCorrections()
+code_processer = None
 
 
 def PLC():
     """Main PLC application"""
+
+    global code_processor
 
     # Create user input string template
     input_msg = "{} or 'q' to abort: "
@@ -112,6 +115,8 @@ def PLC():
 
     # Check if error occurred
     if error:
+        if error == 5:
+            Error.parse(5, quit_ = True)
         Error.parse(error, user_input=False)
 
     return 0
@@ -142,6 +147,20 @@ def get_user_input(func, var_name, input_str):
     # Run validation
     return var, func(*function_params)
 
+def implement_corrections():
+    """Implement the corrections learnt from the user"""
+
+    global code_processor
+
+    # Read new conversions from data base
+    code_processor.read_conv_db()
+
+    # Run the new conversions
+    code_processor.run_regex_conversion()
+
+    # Write the outputfile to disk
+    code_processor.write_file_to_disk(ask_overwrite=1)
+
 
 def main():
     """Function run on file open"""
@@ -154,6 +173,9 @@ def main():
 
     # Learn corrections
     corrections.digest(user_input["lang_from"], user_input["lang_to"])
+
+    # Implement corrections
+    implement_corrections()
 
 
 

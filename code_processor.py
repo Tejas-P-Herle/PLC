@@ -212,37 +212,60 @@ class CodeProcessor:
             # Convert file lines list to file string
             self.file_str = "\n".join(self.file_lines) + "\n" * empty_lns_count
 
-            # Try to match regex expression
-            for match in self.match_regex():
+            # Run regex conversions
+            self.run_regex_conversion()
 
-                # LOG MATCH
-                plc_logger.log("MATCH", match)
+    def run_regex_conversion(self):
+        """Run the regex conversion on the converted file"""
 
-                # Get start and end of regex match
-                start = match[2].start() + self.char_diff
-                end = match[2].end() + self.char_diff
+        # Try to match regex expression
+        for match in self.match_regex():
 
-                # Remove line from corrections list
-                self.corrections.remove(self.file_str[start:end])
+            # LOG MATCH
+            plc_logger.log("MATCH", match)
 
-                # If a regex match is found, run regex substitute function
-                sub = self.regex_substitute(*match, self.file_str[start:end])
+            # Get start and end of regex match
+            start = match[2].start() + self.char_diff
+            end = match[2].end() + self.char_diff
 
-                # LOG SUBSTITUTION
-                plc_logger.log("SUB", sub)
+            # Remove line from corrections list
+            self.corrections.remove(self.file_str[start:end])
 
-                # Record file length to calculate character difference
-                # Due to substitution
-                prev_len = len(self.file_str)
+            # If a regex match is found, run regex substitute function
+            regex_str = self.file_str[start:end]
+            sub = self.regex_substitute(*match, regex_str)
 
-                self.file_str = (self.file_str[:start] + sub
-                                 + self.file_str[end:])
+            # If the input is the sub string of the result, check if the
+            # line is already converted
+            
+            # Find the deference in length between the input and substituted
+            # lines and also the sides to which they belong
+            str_sub_diff = len(sub) - len(regex_str)
+            start_diff = sub.find(regex_str)
 
-                # Increase store difference to match future conversions
-                self.char_diff += len(self.file_str) - prev_len
+            # Find the starting and ending index of substitution
+            start_i = start - start_diff
+            end_i = end + (str_sub_diff - start_diff)
 
-            # Convert file back to lines
-            self.file_lines = self.file_str.split("\n")
+            # Check if line is already substituted
+            if start_diff != -1 and sub == self.file_str[start_i: end_i]:
+                continue
+
+            # LOG SUBSTITUTION
+            plc_logger.log("SUB", sub)
+
+            # Record file length to calculate character difference
+            # Due to substitution
+            prev_len = len(self.file_str)
+
+            self.file_str = (self.file_str[:start] + sub
+                             + self.file_str[end:])
+
+            # Increase store difference to match future conversions
+            self.char_diff += len(self.file_str) - prev_len
+
+        # Convert file back to lines
+        self.file_lines = self.file_str.split("\n")
 
     def regex_substitute(self, regex_from, regex_from_match_str, regex_obj,
                          regex_to, regex_str):
@@ -758,7 +781,7 @@ class CodeProcessor:
 
         return lines
 
-    def write_file_to_disk(self):
+    def write_file_to_disk(self, ask_overwrite=0):
         """Writes converted file from memory to disk"""
 
         # Get output file name
@@ -778,7 +801,12 @@ class CodeProcessor:
 
                 # If yes, prompt for overwrite permission
                 print("File {} exists".format(file_path))
-                write = input("Overwrite? <Y/N> ").lower()
+                if ask_overwrite == 0:
+                    write = input("Overwrite? <Y/N> ").lower()
+                elif ask_overwrite == 1:
+                    write = "y"
+                else:
+                    write = "n"
 
                 # Request valid input if input is invalid
                 while write not in ["y", "n"]:
@@ -803,6 +831,7 @@ class CodeProcessor:
         else:
             # Else permission is denied
             print("File write permission DENIED")
+            return 5
 
 
 if __name__ == "__main__":

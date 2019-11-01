@@ -11,18 +11,11 @@ class GetCorrections():
     lns_list = []
     corrections = []
 
-    def __init__(self):
-        """Initialize GetCorrections Class"""
-
-        pass
-
-
     def append(self, lns):
         """Add line to list of lines to be corrected"""
         
         if lns != ([""],):
             self.lns_list.append("\n".join(ln[0].strip() for ln in lns).strip())
-
 
     def remove(self, line):
         """Remove given line form the list"""
@@ -43,7 +36,6 @@ class GetCorrections():
             # Increment count
             i += 1
 
-
     def get(self):
         """Get the corrections for the unknown lines"""
         
@@ -58,7 +50,6 @@ class GetCorrections():
                 # Append corrected lines to list
                 self.corrections.append([ln, input("To Line: ")])
 
-
     def digest(self, lang_from, lang_to):
         """Learn from the user input corrections"""
         
@@ -72,4 +63,5 @@ class GetCorrections():
                 err_msg = "ERR - GetCorrections: " + str(err)
                 print(err_msg, file=sys.stderr)
                 Error.parse(err_msg)
+
 

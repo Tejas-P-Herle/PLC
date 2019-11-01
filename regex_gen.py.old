@@ -1,166 +1,432 @@
+#!/usr/bin/env python3
+
+import re
+import sys
+import difflib
+from database import DataBase
+
+SIGNS = "!@#$%^&*()_+-={}[]|\\:;\"'<>?,./~`"
+SPECIAL_CHARS = "^&#*()-+=[]{}\"':;/?><.,\\"
+ESCAPE_CHARS = "+*?^$\.[]{}()|/"
+LETTERS = "abcdefghijklmnopqrstuvwxyz"
+NUMBERS = "0123456789"
+SUPER_CLASSES = ["0-9", "a-z", "A-Z"]
+SUPER_SET = NUMBERS + LETTERS + LETTERS.upper()
+
+
 class RegexGen:
 
-    def gen_regex(self):
-        """Generate regex given differences and matches between strings"""
+    db_files = {"python": "py_conv_db.db", "java": "java_conv_db.db",
+                "cpp": "cpp_conv_db.db", "c": "c_conv_db.db"}
+    match_dict = {}
+    diff_dict = {}
+    escape_chars = ["+", "(", ")", "\\"]
+    cols = 0
+    offset = 0
+    sl_one_offset = None
+    error = 0
 
-        # Define regex and index to store index and
-        regex = ""
+    def __init__(self, ln_from, ln_to, lang_from, lang_to):
+        """INIT method of RegexGen class"""
+
+        # Group lines and languages
+        langs = [lang_from, lang_to]
+        input_lns = [ln_from, ln_to]
+
+        # Initiate database connection
+        self.db = db = DataBase(langs)
+        
+        # Escape commas
+        data_list = []
+        data = ""
+        for heading in db.headings:
+            for ln, lang in [(ln_from, lang_from), (ln_to, lang_to)]:
+                if heading == lang:
+                    data_list.append(ln)
+
+        # Find lines in database which can be condensed to a single line
+        # The condensed line must statisfy both the input lines but no other
+        # lines
+        cols = db.cols
+        re_id = None
+        tmp = []
+        for ln in data_list:
+            tmp += ["".join(["\\" + c if c in ESCAPE_CHARS else c for c in ln])]
+        data_list = tmp
+        print("data_list", data_list)
+        is_compressable = self.compressable(data_list)
         i = 0
+        for ln in db.read():
+            db_ln = [ln[cols[0]], ln[cols[1]]]
+            if db_ln != data_list:
+                changes = is_compressable(db_ln)
+                if changes != -1:
 
-        # Run a while loop through all elements of the array
-        while i in range(len(self.line_from)):
+                    grpd_regex = ""
+                    data_list = self.create_regex(data_list, db_ln, changes[-1])
+                    print("REGEX", data_list)
+                    break
+                    
+        # If data string has not be formed, add the data from data_list to file
+        if not data:
+            data = db.make_data_str(data_list, db.total_rows + 1)
 
-            # Iterate through all elements in differences dict
-            # And check if current index in difference dict
-            if i in self.diff_dict.keys():
+        # Write data to file
+        db.write(data, sl_no=re_id, mode=re_id)
+        db.write_to_conv_db(data, self.db_files)
 
-                # Check if character is to be escaped
-                if self.line_from[i] in self.escape_chars:
+    def create_regex(self, curr_ln, db_ln, changes):
+        """Create regex for the given two lines"""
+        
+        print(curr_ln, db_ln)
+        # Split the lines into words and special characters
+        split_to_words_re = r"[\w]+|.+?"
+        curr_ln_words = [re.findall(split_to_words_re, ln) for ln in curr_ln]
+        db_ln_words = [re.findall(split_to_words_re, ln) for ln in db_ln]
+        
+        # Find commonalities between the two examples
+        commons = self.find_most_commons(curr_ln_words[0], db_ln_words[0])
+        print("COMMONS", commons)
+        
+        # If a word is not common to both the lines, then it is objective
+        # specific code (OSC)
+        curr_ln_OSC = [word for word in curr_ln_words[0] if word not in commons]
+        db_ln_OSC = [word for word in db_ln_words[0] if word not in commons]
 
-                    # Then add a preceding backslash
-                    regex += "\\"
-
-                # If yes, then copy text from start to end of diff
-                regex += self.line_from[i]
-            
-            # Else it is in match list
-            else:
-
-                # Iterate through all ranges in match dictionary
-                for rng in self.match_dict.keys():
-
-                    # Check if current index is range start
-                    if i == rng[0]:
-
-                        # Then get next anticipated character
-                        # Set default next anticipated character to white space
-                        nxt_char = "\\n" if rng[1] == len(self.line_from) else ""
-
-                        # Iterate through difference dict and check indexes
-                        for j, char in self.diff_dict.items():
-                            
-                            # If index is greater than current character
-                            # Then set it as next anticipated character
-                            if i < j and char.strip():
-                                nxt_char = char
-                                
-                                # Break out of loop to stop at immediate next character
-                                break
-
-                        # Check if next character is a null string
-                        if nxt_char:
-
-                            # Set regex to accept all characters
-                            # Except next anticipated character
-                            regex += "([^{}])*".format(nxt_char)
-
-                        else:
-
-                            # If is null string, get super sets for substring
-                            super_sets = self.find_super_set(
-                                self.line_from[rng[0]: rng[1]])
-
-                            possible_matches = "(["
-                            
-                            # For super set add possible match
-                            if super_sets & 1:
-
-                                # If is an alphabet, add [a-z] to matches
-                                possible_matches += "a-z"
-                            
-                            if super_sets & 2:
-                                
-                                # If is an alphabet(upper), add [A-Z] to matches
-                                possible_matches += "A-Z"
-                            
-                            if super_sets & 4:
-                                
-                                # If is an number, add [0-9] to matches
-                                possible_matches += "0-9"
-
-                            if super_sets & 8:
-
-                                # If has whitespace space(' '), add ' ' to matches
-                                possible_matches += " "
-
-                            if super_sets & 16:
-                                # If is a sign, add all signs to matches
-                                possible_matches += SIGNS.replace("\\", "\\\\").replace("-", "\-").replace("]", "\]")
-
-                            possible_matches += "])"
-
-                            # Check if possible matches is all or null
-                            if possible_matches == "([])" or \
-                                    not bin(super_sets)[2:].find("0"):
-
-                                # Then set possible matches to .(all)
-                                possible_matches = "(.)"
-                            
-                            # Add infinite number of matches to accept
-                            possible_matches += "*"
-
-                            # Add to final regex
-                            regex += possible_matches
-
-                        # Increment count by one less than matched characters
-                        i = rng[1] - 1
-                        
-                        # Break out of loop
-                        break    
-
-            # Increment count by one
-            i += 1
-
-        # Return final regex
+        print("OSC_A", curr_ln_OSC)
+        print("OSC_B", db_ln_OSC)
+        
+        # Map the OSC to their locations in the converted statement
+        regex = self.map_regex(curr_ln_words, curr_ln_OSC)
         return regex
 
-    @staticmethod
-    def find_super_set(substring):
-        """Find super set for given input substring"""
+    def map_regex(self, ln_words, OSC):
+        """Map groups between the two languages based on the OSC"""
 
-        # Define super sets
-        alphabets = "abcdefghijklmnopqrstuvwxyz"
-        alphabets_upper = alphabets.upper()
+        # Replace word in given list with its replacement
+        def replace(string, replacement):
+            print(string, ln_words)
+            for j in range(len(ln_words)):
+                for k, word in enumerate(ln_words[j]):
+                    if word == string:
+                        ln_words[j][k] = replacement
+                        return
 
-        numbers = "0123456789"
+        # For every word in OSC, replace it with a group number and group
+        # repesentative
+        i = 1
+        group = "([${}]{})"
+        for string in OSC:
+            super_cls = self.str_super_cls(string)
+            replace(string, group.format(i, super_cls))
+            replace(string, group.format(i, super_cls))
+            i += 1
+        return ["".join(words_list) for words_list in ln_words]
 
-        # Define variable to store find results
-        res_bin = 0
+    def find_most_commons(self, list_a, list_b):
+        """Find the most number of common element which are in order"""
+        
+        len_list_a = len(list_a)
+        len_list_b = len(list_b)
 
-        # Check if any character in sub string is persent in 
-        # Either of the super sets
-        for char in substring:
+        def longest_list(list_m, list_n):
+            
+            # If lists are equal return any of the lists
+            if list_m == list_n:
+                return list_m
 
-            # Check of superset alphabets
-            if char in alphabets:
+            # Else compare the lengths of the lists and return the longest list
+            if len(list_m) > len(list_n):
+                return list_m
+            elif len(list_n) > len(list_m):
+                return list_n
+            else:
+                
+                # If both the list length are equal, then
+                # return the list with more number of special characters
+                list_m_chars = 0
+                list_n_chars = 0
+                for char in SPECIAL_CHARS:
+                    list_m_chars += list_m.count(char)
+                    list_n_chars += list_n.count(char)
+                if list_m_chars > list_n_chars:
+                    return list_m
+                elif list_n_chars > list_m_chars:
+                    return list_n
+                else:
+                    
+                    # Request user to segrigate the two lines
+                    print(list_m)
+                    print(list_n)
+                    raise ValueError
+                
 
-                # Set in alphabets bit to True
-                res_bin |= 1
+        def find(i, j, match):
+            
+            # If list is complete, return the commons
+            if i == len_list_a:
+                return []
+            
+            commons = []
+            # Check if the item in list_a at "i th"
+            # position should be matched or ignored
+            if match:
+                try:
+                    
+                    # If index is found, add to commons list
+                    j = list_b[j:].index(list_a[i]) + 1
+                    commons = [list_a[i]]
+                except ValueError:
+                    
+                    # Else break further recursion
+                    return []
 
-            # Check of superset alphabets
-            if char in alphabets_upper:
+            # Run the same process for the next index
+            i += 1
+            
+            return commons + longest_list(find(i, j, True), find(i, j, False))
 
-                # Set in alphabets upper bit to True
-                res_bin |= 2
+        
+        # Return the longest list
+        return longest_list(find(0, 0, True), find(0, 0, False))
 
-            # Check of superset numbers
-            if char in numbers:
+    def compressable(self, curr_ln):
+        """Return compressability checking function"""
+        
+        def is_compressable(ln):
+            """Check if a given 2 lines are mapping to the same function and
+            hence determine if they are compressable"""
 
-                # Set in numbers bit to True
-                res_bin |= 4
+            # Get the shortest form of the lines possible
+            ln[0] = self.handle_group_regex(ln[0], max_length=False)
+            ln[1] = self.handle_group_regex(ln[1], max_length=False)
 
-            # Check of superset whitespace space(' ')
-            if char == " ":
+            # Get LSC of the 2 lines
+            diff_0 = self.get_changes(curr_ln[0], curr_ln[1])
+            diff_1 = self.get_changes(ln[0], ln[1])
+            
+            # Declare variables to store compressablity status
+            is_compressable_flag = True
+            diff_sec = 0
+            diff_list = [diff_0, diff_1]
 
-                # Set has space bit to True
-                res_bin |= 8
+            # If addtions and deletions are the same,
+            # then the lines are compressable
+            # Iterate through insertions and deletions
+            while diff_sec < 2 and is_compressable_flag:
+                
+                # Check if number of insertions and deletions are the same
+                # in both conversions. If not break the loop and set flag False
+                if len(diff_0[diff_sec]) != len(diff_1[diff_sec]):
+                    is_compressable_flag = False
+                    break
 
-            # Check of superset signs (ie. !@#$%^&*(){}[]|\:;"'<>?,./~`)
-            if char in SIGNS:
+                # Else iterate through all the characters in the section
+                i = 0
+                char_diff = None
+                if diff_0[diff_sec] and diff_1[diff_sec]:
 
-                # Set in signs bit to True
-                res_bin |= 16
+                    char_diff = diff_0[diff_sec][0][0] - diff_1[diff_sec][0][0]
+                    while i < len(diff_0[diff_sec]):
+                        
+                        # Declare variable for easy access
+                        diff_0_char = diff_0[diff_sec][i]
+                        diff_1_char = diff_1[diff_sec][i]
 
-        # Return binary result
-        return res_bin
+                        # Check if the characters in the two lists are the same
+                        if diff_0_char[1] != diff_1_char[1]:
+                            is_compressable_flag = False
+                            break
+
+                        # Check continuity of characters
+                        if diff_0_char[0] - diff_1_char[0] != char_diff:
+                            if diff_0[diff_sec][i] - diff_0[diff_sec][i-1] == 1:
+                                is_compressable_flag = False
+                                break
+                            else:
+                                char_diff = diff_0_char[0] - diff_1_char[0]
+                        
+                        # Increment character index
+                        i += 1
+
+                # Increment section
+                diff_sec += 1
+
+            # If it is compressable return the changes between the strings
+            if is_compressable_flag:
+                return diff_list
+            return -1
+        
+        # Return the nested function
+        return is_compressable
+
+    def is_group(self, string, i, check):
+        return (check and ((i == 0 or string[i-1] != "\\")
+                or (i != 1 and string[i-2] == "\\")))
+
+
+    def handle_group_regex(self, string, max_length=False, sep=False):
+        """Replace all group regexes with a representation of the group"""
+
+        res = ""
+        in_group = False
+        super_cls = ""
+        super_cls_list = []
+        in_group_index = False
+        omit_bracket = False
+
+        # Replace super classes in string with the 2 characters of the group
+        # with represent the group
+        for i, char in enumerate(string):
+            if not in_group and super_cls:
+                if sep:
+                    super_cls_list.append(super_cls + char)
+                else:
+                    repeatablity = char
+                    if max_length:  
+                        if re.match(r"\^.", super_cls):
+                            super_cls = "".join(SUPER_CLASSES)
+                        for cls in SUPER_CLASSES:
+                            super_cls = super_cls.replace(cls, cls[0] + cls[-1])
+                        res += super_cls
+                super_cls = ""
+            elif self.is_group(string, i , char == "["):
+                if string[i+1] == "$":
+                    in_group_index = True
+                    res = res[:-1]
+                else:
+                    in_group = True
+            elif self.is_group(string, i, char == "]"):
+                if in_group:
+                    in_group = False
+                    omit_bracket = True
+                else:
+                    in_group_index = False
+            elif in_group:
+                super_cls += char
+            elif not in_group_index and not omit_bracket:
+                res += char
+            else:
+                omit_bracket = False
+        return (res, super_cls_list) if sep else res
     
+    def escape_str(self, string):
+        """Escape the given input string"""
+
+        # If any character that belongs to escape set, escape the character
+        res = ""
+        for char in string:
+            if char in ESCAPE_CHARS:
+                res += "\\" + char
+            else:
+                res += char
+        return res
+
+    def unescape_str(self, string):
+        """Unescape the given input string"""
+        
+        # If any escaped character is found unescape it
+        res = ""
+        for i, char in enumerate(string[:-1]):
+            if not(char == "\\" and string[i+1] in ESCAPE_CHARS):
+                res += char
+        return res + string[-1]
+
+    def str_super_cls(self, string, repeatablity=0):
+        """Find super class for the given input string"""
+
+        # Based on repeatability, set the acceptable number of times a
+        # character can occur
+        repeat_char = "*"
+        # if type(repeatablity) == int:
+        if repeatablity < 0:
+            repeat_char = "?"
+        elif repeatablity > 0:
+            repeat_char = "+"
+        
+        # Find super class of given string
+        str_super_cls = "["
+        if any([num in string for num in NUMBERS]):
+            str_super_cls += SUPER_CLASSES[0]
+        if any([ll in string for ll in LETTERS]):
+            str_super_cls += SUPER_CLASSES[1]
+        if any([ul in string for ul in LETTERS.upper()]):
+            str_super_cls += SUPER_CLASSES[2]
+        used_chars = ""
+        for char in string:
+            if char not in SUPER_SET and char not in used_chars:
+                str_super_cls += char
+                used_chars += char
+
+        # Escape required characters
+        super_cls_escaped = ""
+        for char in str_super_cls[1:]:
+            if char in ESCAPE_CHARS:
+                super_cls_escaped += "\\" + char
+            else:
+                super_cls_escaped += char
+        super_cls_escaped = "[" + super_cls_escaped
+
+        # Add close bracket if there is a matching open bracket
+        if super_cls_escaped[0] == "[":
+            super_cls_escaped += "]"
+                
+        # Concatinate allowed number of repeats character with str_super_cls
+        return super_cls_escaped + repeat_char
+
+
+    def get_changes(self, str_a, str_b):
+        """Get Object Specific code for given string"""
+        
+        # Get changes between the strings
+        insertions = []
+        deletions = []
+        constants = []
+        changes_list = []
+        for i, diff in enumerate(difflib.ndiff(str_a, str_b)):
+            if diff[0] == "+":
+                insertions.append((i, diff[-1]))
+            elif diff[0] == "-":
+                deletions.append((i, diff[-1]))
+            elif diff[0] == " ":
+                constants.append((i, diff[-1]))
+            changes_list.append((i, diff))
+
+        changes = [insertions, deletions, constants, changes_list]
+        return changes
+
+
+if __name__ == "__main__":
+    inputs = [
+        (['System.out.println("Hello World")', 'System.out.println("Second Example")'],
+         ['print("Hello World")', 'print("Second Example")']),
+        (['System.out.println(x)', 'System.out.println(y)'], ['print(x)', 'print(y)']),
+        (['System.out.println(x + " " + y)', 'System.out.println(word + " " + number)'],
+         ['print(x, y)', 'print(word, number)']),
+        (['System.out.println(x.toString() + y.toString())',
+          'System.out.println(array_1_str + array_2_str)'],
+         ['print(x + y)', 'print(array_1_str + array_2_str)'])
+    ]
+    #for a, b in inputs:
+    #    r_gen = RegexGen(a, b)
+    #    print("{:<70}  {}".format(r_gen.regex_from, r_gen.regex_to))
+    # res = RegexGen('print("Hello World")', 'System.out.println("Hello World")', "python", "java")
+    res = RegexGen('print("Hello", "World")', 'System.out.println("Hello World")', "python", "java")
+    # res = RegexGen('print("Another", "Example")', 'System.out.println("Another Example")', "python", "java")
+    # res = RegexGen('print("Hello!")', 'System.out.println("Hello!")', "python", "java")
+    # res = RegexGen('print("auto end return")', 'System.out.println("auto end return")', "python", "java")
+    # res = RegexGen('print("rand")', 'System.out.println("rand")', "python", "java")
+    # res = RegexGen("print('single quotes')", "System.out.println('single quotes')", "python", "java")
+    # res = RegexGen('print("auto end return")', 'System.out.printf("auto end return\\n")', "python", "java")
+    # res = RegexGen('print("Hello World 2")', 'System.out.println("Hello World 2")', "python", "java")
+    # res = RegexGen('print("ABCD")', 'System.out.println("ABCD")', "python", "java")
+    # res = RegexGen('print("Hello World Testing")', 'System.out.println("Hello World Testing")', "python", "java")
+    # res = RegexGen('print(str(1) + str(2))', 'System.out.println(Integer.toString(1) + Integer.toString(2))', "python", "java")
+    # res = RegexGen('math.sqrt(4)', 'Math.sqrt(4)', "python", "java")
+    # res = RegexGen('print("Hello", end="\\n\\n")', 'System.out.println("Hello\\n\\n")', "python", "java")
+    # res = RegexGen('print("HI", end="!\\n")', 'System.out.println("HI!")', "python", "java")
+    # res = RegexGen('print("Good Bye", end=":(\\n")', 'System.out.println("Good Bye:(")', "python", "java")
+    # res = RegexGen('print("3.14 ", end="This is the value of pi\\n")', 'System.out.println("3.14 This is the value of pi")', "python", "java")
+    # res = RegexGen('print("Hours in day = ", end="24hrs - time wasted\\n")', 'System.out.println("Hours in day = 24hrs - time wasted")', "python", "java")
+    
+

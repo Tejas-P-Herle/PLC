@@ -16,7 +16,6 @@ class DataBase:
 
         # Read first line from db
         self.headings = headings = self.read(sl_no="sl_no")
-        print("headings", headings)
         self.cols = [i for i, col in enumerate(headings) if col in self.langs]
         self.total_cols = len(headings) - 1
         with open("regex_gen_data.db") as db:
@@ -119,6 +118,7 @@ class DataBase:
         entry = entry.rstrip("\n").split(" , ")[1:]
         for ln in self.read():
             ln.pop(0)
+            ln = [d.replace(",", "\\,") for d in ln]
             if ln == entry:
                 return True
         return False

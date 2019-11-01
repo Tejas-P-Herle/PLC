@@ -3,10 +3,10 @@ class Python_3_Outfile {
     int j = 0;
     for (int i = 0; i < 10; i++) {
       j += i;
-      print(i);
-      print(j);
+      System.out.println(i);
+      System.out.println(j);
     }
     
-    print("Hello", "World");
+    System.out.println("Hello World");
   }
 }
